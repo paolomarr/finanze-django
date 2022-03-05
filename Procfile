@@ -1,1 +1,1 @@
-web: gunicorn finaze.wsgi
+web: gunicorn finanze.wsgi
