@@ -21,7 +21,11 @@ var applyFilter = function() {
 	filterquery = filteritems.join("&")
 	query = "?" + filterquery;
 	window.location.search = query;
-}
+};
+
+var cleanFilters = function(){
+	window.location.search = "";
+};
 
 $(function(){
 	var searchParams = new URLSearchParams(window.location.search);
