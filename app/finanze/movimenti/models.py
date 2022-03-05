@@ -36,7 +36,7 @@ class Category(models.Model):
         allmovements = self.movement_set.all()
         if month > 0:
             start = date(year, month, 1)
-            if month is 12:
+            if month == 12:
                 end = date(year + 1, 1, 1)
             else:
                 end = date(year, month + 1, 1)
