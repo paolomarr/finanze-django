@@ -1,0 +1,73 @@
+{% extends 'tradinglog/base.html' %}
+{% load static %}
+{% block title %}
+Trading stats
+{% endblock %}
+{% block extra_script %}
+{{ block.super }}
+<script>
+	function updateAll() {
+		// var url = "/tradinglog/updatecurrentprice?";
+		var url = "{% url 'tradinglog:updatePrice' %}";
+		var symbols = [];
+		{% for stock in tradedStocks %}symbols.push("symbol={{stock.symbol}}");
+		{% endfor %}
+		url += "?" + symbols.join("&");
+		$('#refresh-spinner').addClass('spinner-loading');
+		$.ajax({
+			url: url,
+			method: "GET",
+			success: function(data){
+				console.log(data);
+				window.location.reload();
+			},
+			complete: function(){
+				$('#refresh-spinner').removeClass('spinner-loading');
+			}
+		});
+	}
+</script>
+<script type="text/javascript" src="{% static 'tradinglog/tradingstats.js' %}"></script>
+{% endblock %}
+{% block content %}
+<table>
+	<thead>
+		<tr>
+			<th>Stock</th>
+			<th>Quantity</th>
+			<th>Invested</th>
+			<th>Current val.</th>
+			<th>Updated</th>
+			<th colspan="2">GAIN/LOSS</th>
+		</tr>
+		<tr>
+			<th colspan="3"></th>
+			<th style="text-align: center;"><a href="#" onclick="updateAll()"><i class="fas fa-sync-alt" id="refresh-spinner"></i></a></th>
+			<th></th>
+			<th>gross</th>
+			<th>net</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for stock in tradedStocks %}
+		<tr>
+			<td><a href="#" data-stock="{{stock.id}}">{{stock.symbol}}</a></td>
+			<td class="currency">{{stock.quantity}}</td>
+			<td class="currency">{{stock.amountOrdered | floatformat:2}}</td>
+			<td class="currency">{{stock.currentAsset | floatformat:2}}</td>
+			<td>{{stock.last_price_update | timesince }}</td>
+			<td class="currency">{{stock.currentGrossGain | floatformat:2}}</td>
+			<td class="currency">{{stock.currentNetGain | floatformat:2}}</td>
+		</tr>
+		{% endfor %}
+		<tr class="table-total">
+			<td colspan="2"></td>
+			<td class="currency">{{totalone | floatformat:2 }}</td>
+			<td class="currency">{{totaltwo | floatformat:2 }}</td>
+			<td></td>
+			<td><span id="grossgain" class="diff">{{ totalthree | floatformat:2 }}</span></td>
+			<td><span id="netgain" class="diff">{{ totalfour | floatformat:2 }}</span></td>
+		</tr>
+	</tbody>
+</table>
+{% endblock %}

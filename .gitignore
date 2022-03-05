@@ -1,0 +1,7 @@
+*.pyc
+.DS_Store
+*.sql
+*.sqlite3
+__pycache__/*
+*secrets.py
+*/**/fixtures/*

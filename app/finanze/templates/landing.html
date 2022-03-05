@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+My beautiful personal finance app!
+{% endblock %}
+{% block content %}
+<div class="list-group">
+  <a href="tradinglog/" class="list-group-item list-group-item-action">
+    Trading Log
+  </a>
+  <a href="movimenti/" class="list-group-item list-group-item-action" aria-current="true">
+    Expenses log
+  </a>
+</div>
+{% endblock %}

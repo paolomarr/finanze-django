@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>{% block title %}Trading Log App{% endblock %}</title>
+
+	<!-- BOOTSTRAP -->
+	{# Load the tag library #}
+	{% load django_bootstrap5 %}
+	
+	{# Load CSS and JavaScript #}
+	{% bootstrap_css %}
+	{% bootstrap_javascript %}
+
+	{# Display django.contrib.messages as Bootstrap alerts #}
+	{% bootstrap_messages %}
+
+	
+	<!-- JQUERY -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+	<script type="text/javascript" src="{% static 'scripts.js' %}"></script>
+	{% block extra_script %}{% endblock %}
+	
+	<!-- FONTAWESOME -->
+	<script src="https://kit.fontawesome.com/4106bab399.js" crossorigin="anonymous"></script>
+	
+	<!-- MONTSERRAT GOOGLE FONT -->
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+	{% block extra_link %}{% endblock %}
+</head>
+<body>
+	<div class="container">
+	{% block nav%}{% endblock %}
+	{% block content %}{% endblock %}
+	</div>
+	{% block end_scripts %}{% endblock %}
+</body>
+</html>

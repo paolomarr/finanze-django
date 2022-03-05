@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'tradinglog/scripts.js' %}"></script>
+{% endblock %}
+{% block nav %}
+<nav class="nav nav-pills">
+  <a class="nav-link" href="{% url 'tradinglog:orders' %}">Storico ordini</a>
+  <a class="nav-link" href="{% url 'tradinglog:tradingStats' %}">Statistiche</a>
+  <a class="nav-link" href="{% url 'tradinglog:neworder' %}">Nuovo ordine</a>
+</nav>
+{% endblock %}
