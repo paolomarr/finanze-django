@@ -1,5 +1,6 @@
 from .default import *
 import os
+import re
 
 DEBUG = False
 
@@ -10,9 +11,12 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+dbhost = os.environ['DATABASE_URL']
+dbname = re.sub(r'.*\/', '', dbhost)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ['DATABASE_URL'],
+        'HOST': dbhost,
+        'NAME': dbname,
     }
 }
