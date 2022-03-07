@@ -17,7 +17,7 @@ dbhost = dburl.hostname
 dbport = dburl.port
 dbuser = dburl.username
 dbpass = dburl.password
-dbname = dburl.path
+dbname = re.sub(r'^\/', '', dburl.path)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
