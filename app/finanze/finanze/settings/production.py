@@ -1,6 +1,7 @@
 from .default import *
 import os
 import re
+from urllib.parse import urlparse
 
 DEBUG = False
 
@@ -11,12 +12,19 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-dbhost = os.environ['DATABASE_URL']
-dbname = re.sub(r'.*\/', '', dbhost)
+dburl = urlparse(os.environ['DATABASE_URL'])
+dbhost = dburl.hostname
+dbport = dburl.port
+dbuser = dburl.username
+dbpass = dburl.password
+dbname = dburl.path
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': dbhost,
+        'PORT': dbport,
         'NAME': dbname,
+        'USER': dbuser,
+        'PASSWORD': dbpass,
     }
 }

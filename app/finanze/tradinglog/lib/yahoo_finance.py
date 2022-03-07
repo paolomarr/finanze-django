@@ -23,7 +23,7 @@ def getQuoteForSymbol(symbol, fromTimestamp, toTimestamp=0, interval=ONE_DAY, re
 
     url = APIDOJO_BASEURL + GET_CHART_API
 
-    if toTimestamp is 0:
+    if toTimestamp == 0:
         toTimestamp = int(time.time())
 
     querystring = {
