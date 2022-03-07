@@ -3,4 +3,4 @@ gunicorn
 django-heroku
 django_bootstrap5
 requests
-psycopg3
+psycopg
