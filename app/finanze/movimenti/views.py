@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import Movement, Category, Subcategory
-from .forms import NewMovementForm
+from .forms import NewMovementForm, NewAssetsBalanceForm
 import logging
 from urllib.parse import unquote
 
@@ -97,3 +97,11 @@ def summary(request):
         'totals': totals
     }
     return render(request, 'movimenti/summary.html', context)
+
+@login_required
+def assets(request):
+    if request.method == 'POST':
+        form = NewAssetsBalanceForm(request.POST)
+    else:
+        form = NewAssetsBalanceForm()
+        return render(request, 'movimenti/newassetbalance.html', {'form': form})

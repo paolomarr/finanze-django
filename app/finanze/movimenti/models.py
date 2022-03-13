@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
-from datetime import date
+from django.utils import timezone
 
 
 class Subcategory(models.Model):
@@ -72,3 +72,14 @@ class Movement(models.Model):
     @property
     def amount(self):
         return self.category.direction * self.abs_amount
+
+
+class AssetBalance(models.Model):
+    """
+    each instance of this model represents
+    a snapshot of own's total assets' value
+    """
+    date = models.DateTimeField(default=timezone.now)    
+    balance = models.FloatField()
+    notes = models.TextField()
+

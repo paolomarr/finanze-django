@@ -1,6 +1,6 @@
 from django.forms import ModelForm
-from django.forms.widgets import Input
-from .models import Movement
+from django.forms.widgets import Input, HiddenInput
+from .models import Movement, AssetBalance
 
 
 class MyDateTimeInputWidget(Input):
@@ -14,4 +14,13 @@ class NewMovementForm(ModelForm):
         fields = '__all__'
         widgets = {
             'date': MyDateTimeInputWidget()
+        }
+
+class NewAssetsBalanceForm(ModelForm):
+    class Meta:
+        model = AssetBalance
+        fields = '__all__'
+        widgets = {
+            'date': MyDateTimeInputWidget(),
+            'balance': HiddenInput()
         }
