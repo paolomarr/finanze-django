@@ -4,7 +4,7 @@ var balanceItemFactory = function(index){
 }
 var balanceListItemFactory = function(index) {
 	var removebtn = $(`<button type="button" onClick="removeButtonClick(this)" />`)
-		.addClass(['col', 'btn', 'btn-secondary', 'remove-button'])
+		.addClass(['col', 'btn', 'btn-light', 'btn-sm', 'remove-button'])
 		.attr("data-index", index)
 		.html("Remove");
 	var inputitem = balanceItemFactory(index).addClass('form-control');
@@ -35,7 +35,7 @@ $(function(){
 	var widgetLabel = $('<label for="items">Partials</label>');
 	var sumwidget = $('<label for="sum">Total</label><div id="sum" />');
 	var addbutton = $('<button type="button" id="addbutton">Add entry</button>')
-		.addClass(['btn', 'btn-secondary', 'btn-sm']);
+		.addClass(['btn', 'btn-info', 'btn-sm']);
 	var insertItemslist = $('<div id="itemslist">')
 		.append(balanceListItemFactory(itemscounter++));
 	var insertItemsWidget = $('<div>')
@@ -47,4 +47,8 @@ $(function(){
 	$('#addbutton').click(function(){
 		$('#itemslist').append(balanceListItemFactory(itemscounter++));
 	});
+
+	var now = new Date().toISOString();
+	now = now.replace(/\.\d+Z?$/, '');
+	$('[name="date"]').val(now);
 })
