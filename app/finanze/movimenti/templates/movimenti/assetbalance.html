@@ -28,8 +28,7 @@ Registra bilancio corrente
 					<th>Date</th>
 					<th>Notes</th>
 					<th>Total</th>
-					<th>Accounted</th>
-					<th>True</th>
+					<th>True - Accounted</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -38,8 +37,7 @@ Registra bilancio corrente
 					<td>{{asset.date | date:'d/m/Y H:i'}}</td>
 					<td>{{asset.notes}}</td>
 					<td>{{asset.balance | floatformat:2}}</td>
-					<td>{{asset.accounted | floatformat:2}}</td>
-					<td>{{asset.truebalance | floatformat:2}}</td>
+					<td>{{asset.error | floatformat:2 }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>

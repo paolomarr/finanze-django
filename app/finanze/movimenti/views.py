@@ -65,7 +65,6 @@ def newmovement(request):
         if form.is_valid():
             form.save()
             # redirect to a new URL:
-            logging.debug(str(request.POST))
             redirect = '/movimenti/list'
             if needmore == '1':
                 redirect = '/movimenti/new'
@@ -114,14 +113,15 @@ def assets(request):
             return HttpResponseRedirect('/movimenti/assets')
     else:
         form = NewAssetsBalanceForm()
-        allrecords = AssetBalance.objects.all().order_by('date')
+        allrecords = AssetBalance.objects.all().order_by('-date')
         for idx in range(0, len(allrecords) - 1):
-            rec_from = allrecords[idx]
-            rec_to = allrecords[idx+1]
+            rec_to = allrecords[idx]
+            rec_from = allrecords[idx+1]
             truebalance = rec_to.balance - rec_from.balance
             period = Movement.objects.netAmountInPeriod(rec_from.date, rec_to.date)
             setattr(allrecords[idx], 'accounted', period)
             setattr(allrecords[idx], 'truebalance', truebalance)
+            setattr(allrecords[idx], 'error', truebalance - period)
 
         return render(request, 'movimenti/assetbalance.html',
             {'form': form, 'assets': allrecords})

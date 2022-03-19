@@ -25,7 +25,8 @@ var removeButtonClick = function(element){
 var computeSum = function(){
 	var sum = 0;
 	$('#itemslist input[type="number"]').each(function(id, el){
-		sum += parseFloat($(el).val());
+		val = parseFloat($(el).val())
+		if(! isNaN(val)) sum += val;
 	});
 	$('#sum').html(sum.toFixed(2));
 	$('#id_balance').val(sum);
@@ -45,7 +46,9 @@ $(function(){
 
 	// Callbacks
 	$('#addbutton').click(function(){
-		$('#itemslist').append(balanceListItemFactory(itemscounter++));
+		newlistitem = balanceListItemFactory(itemscounter++);
+		$('#itemslist').append(newlistitem);
+		newlistitem.find('input').last().focus();
 	});
 
 	var now = new Date().toISOString();
