@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from .models import Movement, Category, Subcategory
+from django.db.models import Sum, F
+from .models import Movement, Category, Subcategory, AssetBalance
 from .forms import NewMovementForm, NewAssetsBalanceForm
 import logging
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse, parse_qs
+from django.views.generic import CreateView
 
 
 @login_required
@@ -57,12 +59,17 @@ def list(request):
 @login_required
 def newmovement(request):
     if request.method == 'POST':
+        needmore = request.POST.get('another', False)
         # parse the form and add new item
         form = NewMovementForm(request.POST)
         if form.is_valid():
             form.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('/movimenti/list')
+            logging.debug(str(request.POST))
+            redirect = '/movimenti/list'
+            if needmore == '1':
+                redirect = '/movimenti/new'
+            return HttpResponseRedirect(redirect)
         return
 
     emptySubcat = Subcategory.objects.get(subcategory="")
@@ -102,6 +109,19 @@ def summary(request):
 def assets(request):
     if request.method == 'POST':
         form = NewAssetsBalanceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/movimenti/assets')
     else:
         form = NewAssetsBalanceForm()
-        return render(request, 'movimenti/newassetbalance.html', {'form': form})
+        allrecords = AssetBalance.objects.all().order_by('date')
+        for idx in range(0, len(allrecords) - 1):
+            rec_from = allrecords[idx]
+            rec_to = allrecords[idx+1]
+            truebalance = rec_to.balance - rec_from.balance
+            period = Movement.objects.netAmountInPeriod(rec_from.date, rec_to.date)
+            setattr(allrecords[idx], 'accounted', period)
+            setattr(allrecords[idx], 'truebalance', truebalance)
+
+        return render(request, 'movimenti/assetbalance.html',
+            {'form': form, 'assets': allrecords})

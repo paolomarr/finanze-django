@@ -4,16 +4,21 @@
 {% block title %}
 Registra nuova spesa/entrata
 {% endblock %}
+{% block extra_script %}
+<script type="text/javascript" src="{% static 'movimenti/new.js' %}" />
+{% endblock %}
 {% block content %}
 <div class="row">
 	<div class="col col-12 col-md-4">
 		<form action="/movimenti/new" method="post">
 	{% csrf_token %}
 	{% bootstrap_form form %}
-	
-	{% bootstrap_button button_type="submit" content="Submit" %}
+	<input type="hidden" name="another" value="0" />
+	{% bootstrap_button "Save & add more" button_type="button" button_class="btn-primary" data_more="1" name="add_text" %}
+	{% bootstrap_button button_type="button" button_class="btn-secondary" content="Save" %}
 	<!-- <button class="btn btn-primary" type="submit" value="Submit">Registra</button> -->
 		</form>
 	</div>
 </div>
 {% endblock %}
+

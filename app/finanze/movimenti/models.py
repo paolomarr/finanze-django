@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
+from datetime import date
 
 
 class Subcategory(models.Model):
@@ -50,7 +51,17 @@ class Category(models.Model):
         return (start, end, filtered)
 
 
+class MovementManager(models.Manager):
+    def netAmountInPeriod(self, fromDate, toDate):
+        amount = 0
+        for movement in self.filter(date__gte=fromDate, date__lt=toDate):
+            amount += movement.amount
+        return amount
+
+
 class Movement(models.Model):
+    objects = MovementManager()
+
     date = models.DateTimeField()
     description = models.CharField(max_length=1024)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -81,5 +92,5 @@ class AssetBalance(models.Model):
     """
     date = models.DateTimeField(default=timezone.now)    
     balance = models.FloatField()
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
 

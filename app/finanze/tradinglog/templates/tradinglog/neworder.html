@@ -7,7 +7,7 @@ Registra nuovo ordine
 {% block content %}
 <div class="row">
 	<div class="col col-12 col-md-4">
-		<form action="/tradinglog/new" method="post">
+		<form action="/tradinglog/orders/new" method="post">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	

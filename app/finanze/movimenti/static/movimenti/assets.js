@@ -1,5 +1,5 @@
 var balanceItemFactory = function(index){
-	input = $(`<input type="number" id="balance_item_${index}" onChange="computeSum()"/>`)
+	input = $(`<input type="number" step="0.01" id="balance_item_${index}" onChange="computeSum()"/>`)
 	return input;
 }
 var balanceListItemFactory = function(index) {
@@ -27,7 +27,7 @@ var computeSum = function(){
 	$('#itemslist input[type="number"]').each(function(id, el){
 		sum += parseFloat($(el).val());
 	});
-	$('#sum').html(sum);
+	$('#sum').html(sum.toFixed(2));
 	$('#id_balance').val(sum);
 }
 var itemscounter = 0;
@@ -50,5 +50,5 @@ $(function(){
 
 	var now = new Date().toISOString();
 	now = now.replace(/\.\d+Z?$/, '');
-	$('[name="date"]').val(now);
+	$('[name="date"]').attr('step', 1).val(now);
 })

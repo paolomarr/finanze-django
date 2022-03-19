@@ -21,4 +21,28 @@ Registra bilancio corrente
 		</form>
 	</div>
 </div>
+<div class="row">
+	<div class="col"><table>
+			<thead>
+				<tr>
+					<th>Date</th>
+					<th>Notes</th>
+					<th>Total</th>
+					<th>Accounted</th>
+					<th>True</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for asset in assets %}
+				<tr>
+					<td>{{asset.date | date:'d/m/Y H:i'}}</td>
+					<td>{{asset.notes}}</td>
+					<td>{{asset.balance | floatformat:2}}</td>
+					<td>{{asset.accounted | floatformat:2}}</td>
+					<td>{{asset.truebalance | floatformat:2}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table></div>
+</div>
 {% endblock %}
