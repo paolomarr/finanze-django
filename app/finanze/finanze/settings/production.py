@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 
 DEBUG = False
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = ['.herokuapp.com', '.localhost', '127.0.0.1']
 
 SECRET_KEY = os.environ['SECRET_KEY']

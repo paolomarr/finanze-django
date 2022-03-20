@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'tradinglog.apps.TradinglogConfig',
     'movimenti.apps.MovimentiConfig',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +113,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+SASS_PROCESSOR_ROOT = STATIC_ROOT
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
