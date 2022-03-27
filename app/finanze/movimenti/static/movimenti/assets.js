@@ -31,18 +31,18 @@ var computeSum = function(){
 	$('#sum').html(sum.toFixed(2));
 	$('#id_balance').val(sum);
 }
-var itemscounter = 0;
+var itemscounter = 1;
 $(function(){
-	var widgetLabel = $('<label for="items">Partials</label>');
-	var sumwidget = $('<label for="sum">Total</label><div id="sum" />');
-	var addbutton = $('<button type="button" id="addbutton">Add entry</button>')
-		.addClass(['btn', 'btn-info', 'btn-sm']);
-	var insertItemslist = $('<div id="itemslist">')
-		.append(balanceListItemFactory(itemscounter++));
-	var insertItemsWidget = $('<div>')
-		.addClass('mb-3')
-		.append(insertItemslist, addbutton);
-	$('button[type="submit"]').before(widgetLabel, insertItemsWidget, sumwidget);
+	// var widgetLabel = $('<label for="items">Partials</label>');
+	// var sumwidget = $('<label for="sum">Total</label><div id="sum" />');
+	// var addbutton = $('<button type="button" id="addbutton">Add entry</button>')
+	// 	.addClass(['btn', 'btn-info', 'btn-sm']);
+	// var insertItemslist = $('<div id="itemslist">')
+	// 	.append(balanceListItemFactory(itemscounter++));
+	// var insertItemsWidget = $('<div>')
+	// 	.addClass('mb-3')
+	// 	.append(insertItemslist, addbutton);
+	// $('button[type="submit"]').before(widgetLabel, insertItemsWidget, sumwidget);
 
 	// Callbacks
 	$('#addbutton').click(function(){

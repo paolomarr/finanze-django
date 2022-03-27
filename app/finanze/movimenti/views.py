@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Sum, F
 from .models import Movement, Category, Subcategory, AssetBalance
+from tradinglog.models import Order
 from .forms import NewMovementForm, NewAssetsBalanceForm
 import logging
 from urllib.parse import unquote, urlparse, parse_qs
@@ -123,5 +124,11 @@ def assets(request):
             setattr(allrecords[idx], 'truebalance', truebalance)
             setattr(allrecords[idx], 'error', truebalance - period)
 
+        # Insert finance assets total by default
+        financeassets = 0
+        for buy in Order.objects.filter(operation__operation='BUY'):
+            financeassets += buy.amount
+        for buy in Order.objects.filter(operation__operation='SELL'):
+            financeassets -= buy.amount
         return render(request, 'movimenti/assetbalance.html',
-            {'form': form, 'assets': allrecords})
+            {'form': form, 'assets': allrecords, 'financeassets': financeassets})
