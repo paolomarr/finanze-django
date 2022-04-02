@@ -20,5 +20,12 @@ Registra nuova spesa/entrata
 		</form>
 	</div>
 </div>
+<div class="row">
+	<div class="col col-12 col-md-4">
+	{% for error in errors %}
+		<div class="bg-alert">{{error}}</div>
+	{% endfor %}
+	</div>
+</div>
 {% endblock %}
 
