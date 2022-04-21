@@ -14,24 +14,13 @@ Registra bilancio corrente
 	<div class="col col-12 col-md-6">
 		<form action="/movimenti/assets" method="post">
 	{% csrf_token %}
-	{% bootstrap_form form %}
+	{% bootstrap_form form exclude='notes' %}
 	<div class="mb-3">
-		<div id="itemslist">
-			<div class="row" data-index="0">
-				<div class="col col-6">
-					<input type="number" step="0.01" id="balance_item_0" onchange="computeSum()" class="form-control"
-					value="{{financeassets | floatformat:2}}" />
-				</div>
-				<div class="col col-6">
-					<button type="button" onclick="removeButtonClick(this)" class="col btn btn-light btn-sm remove-button" data-index="0">Remove
-					</button>
-				</div>
-			</div>
-		</div>
+		<div id="itemslist"></div>
 		<button type="button" id="addbutton" class="btn btn-info btn-sm">Add entry</button>
-		<label for="sum">Total</label><div id="sum">{{financeassets | floatformat:2}}</div>
+		<div>TOTAL: <span id="sum">{{financeassets | floatformat:2}}</span></div>
 	</div>
-	{% bootstrap_button button_type="submit" content="Submit" %}
+	{% bootstrap_button button_type="button" content="Submit" name="submit" %}
 	<!-- <button class="btn btn-primary" type="submit" value="Submit">Registra</button> -->
 		</form>
 	</div>

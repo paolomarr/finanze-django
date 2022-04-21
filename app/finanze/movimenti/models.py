@@ -92,5 +92,5 @@ class AssetBalance(models.Model):
     """
     date = models.DateTimeField(default=timezone.now)    
     balance = models.FloatField()
-    notes = models.TextField(blank=True)
+    notes = models.CharField(blank=True, max_length=256)
 
