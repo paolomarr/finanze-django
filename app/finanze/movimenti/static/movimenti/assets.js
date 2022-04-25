@@ -58,17 +58,6 @@ var keyItemChange = function(element){
 }
 var itemscounter = 0;
 $(function(){
-	// var widgetLabel = $('<label for="items">Partials</label>');
-	// var sumwidget = $('<label for="sum">Total</label><div id="sum" />');
-	// var addbutton = $('<button type="button" id="addbutton">Add entry</button>')
-	// 	.addClass(['btn', 'btn-info', 'btn-sm']);
-	// var insertItemslist = $('<div id="itemslist">')
-	// 	.append(balanceListItemFactory(itemscounter++));
-	// var insertItemsWidget = $('<div>')
-	// 	.addClass('mb-3')
-	// 	.append(insertItemslist, addbutton);
-	// $('button[type="submit"]').before(widgetLabel, insertItemsWidget, sumwidget);
-
 	// Callbacks
 	$('#addbutton').click(function(){
 		newlistitem = balanceListItemFactory(itemscounter++);
@@ -82,18 +71,31 @@ $(function(){
 	$('[name="submit"]').click(function(){
 		url = $('form').attr('action');
 		date = $('[name="date"]').val();
-		data = [];
+		csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+		data = {"assetItems": []};
 		$('[name="balance_item"]').each( (id,el) => {
 			key = $('[name="balance_item_key"]').eq(id).val();
 			val = $(el).val();
-			data.push({"notes": key, "balance": val, "date": date});
+			data.assetItems.push({"notes": key, "balance": val, "date": date});
 		});
-		console.log(JSON.stringify(data));
-		// $.ajax({
-		// 	method: "POST",
-		// 	url: url,
-		// 	data: JSON.stringify(data),
-		// 	contentType: "application/json",
-		// });
+		// console.log(JSON.stringify(data));
+		$.ajax({
+			method: "POST",
+			url: url,
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			headers: {'X-CSRFToken': csrftoken},
+        	mode: 'same-origin' // Do not send CSRF token to another domain.
+        	success: function (data) {
+        		err = data.errors;
+        		if(err.length > 0){
+        			err.each((idx, el) =>{
+        				$('#messages').append(`<p class="bg-warning">${err}</p>`);
+        			})
+        		}else{
+    				$('#messages').append(`<p class="bg-primary text-white">${err}</p>`);
+        		}
+        	}
+		});
 	});
 })

@@ -9,6 +9,10 @@ from .forms import NewMovementForm, NewAssetsBalanceForm
 import logging
 from urllib.parse import unquote, urlparse, parse_qs
 from django.views.generic import CreateView
+from json import loads as jloads
+from django.http import JsonResponse
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -18,7 +22,7 @@ def index(request):
 
 def _filterMovements(filterParams):
     filterdict = {}
-    logging.debug("Filter parameters: {}".format(filterParams))
+    logger.debug("Filter parameters: {}".format(filterParams))
     for rawitem in filterParams:
         item = unquote(rawitem)
         col = item.split("=")[0]
@@ -32,7 +36,7 @@ def _filterMovements(filterParams):
         if col in ['category', 'subcategory']:
             filterdict = {"{}_id".format(col): val}
     if len(filterdict) > 0:
-        logging.debug("Filter dict: {}".format(filterdict))
+        logger.debug("Filter dict: {}".format(filterdict))
         retmovements = Movement.objects.filter(**filterdict)
     else:
         retmovements = Movement.objects.all()
@@ -59,6 +63,7 @@ def list(request):
 
 @login_required
 def newmovement(request):
+    errors = []
     if request.method == 'POST':
         needmore = request.POST.get('another', False)
         # parse the form and add new item
@@ -70,11 +75,13 @@ def newmovement(request):
             if needmore == '1':
                 redirect = '/movimenti/new'
             return HttpResponseRedirect(redirect)
-        return
+        else:
+            errors.append("Form not valid (tbd)")
+
 
     emptySubcat = Subcategory.objects.get(subcategory="")
     form = NewMovementForm(initial={'subcategory': emptySubcat.id})
-    return render(request, 'movimenti/newmovement.html', {'form': form})
+    return render(request, 'movimenti/newmovement.html', {'form': form, 'errors': errors})
 
 
 @login_required
@@ -108,15 +115,44 @@ def summary(request):
 @login_required
 def assets(request):
     if request.method == 'POST':
-        form = NewAssetsBalanceForm(request.POST)
-        if form.is_valid():
-            form.save()
+        if request.content_type == 'application/json':
+            jres = {'errors': []}
+            try:
+                deser = jloads(request.body)
+            except Exception as ex:
+                jres['errors'].append("Error parsing input data as JSON string: {}\
+".format(ex.message))
+            else:
+                logger.debug("asset data: {}".format(str(deser)))
+                items = deser.get('assetItems', [])
+                # todo: sanitise/check input
+                if len(items) == 0:
+                    jres['errors'].append("empty data")
+                else:
+                    logger.debug("Received {} asset items to record".format(len(items)))
+                    for item in items:
+                        ab = AssetBalance()
+                        ab.date = item['date']
+                        ab.balance = item['balance']
+                        ab.notes = item['notes']
+                        try:
+                            ab.save()
+                        except Exception as ex:
+                            jres['errors'].append("Error parsing input data as JSON string: {}\
+".format(ex.message))
+            response = JsonResponse(jres)
+            return response
+        else:
             return HttpResponseRedirect('/movimenti/assets')
     else:
         form = NewAssetsBalanceForm()
         allrecords = AssetBalance.objects.all().order_by('-date')
+        latestpostdate = allrecords[0].date
+        latests = []
         for idx in range(0, len(allrecords) - 1):
             rec_to = allrecords[idx]
+            if rec_to.date == latestpostdate:
+                latests.append(rec_to)
             rec_from = allrecords[idx+1]
             truebalance = rec_to.balance - rec_from.balance
             period = Movement.objects.netAmountInPeriod(rec_from.date, rec_to.date)
@@ -130,5 +166,7 @@ def assets(request):
             financeassets += buy.amount
         for buy in Order.objects.filter(operation__operation='SELL'):
             financeassets -= buy.amount
-        return render(request, 'movimenti/assetbalance.html',
-            {'form': form, 'assets': allrecords, 'financeassets': financeassets})
+        response = render(request, 'movimenti/assetbalance.html',
+            {'form': form, 'assets': allrecords, 'latests': latests, 'financeassets': financeassets})
+        response.set_cookie("user", request.user, path=request.path)
+        return response
