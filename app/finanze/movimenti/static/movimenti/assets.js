@@ -62,7 +62,7 @@ $(function(){
 	$('#addbutton').click(function(){
 		newlistitem = balanceListItemFactory(itemscounter++);
 		$('#itemslist').append(newlistitem);
-		newlistitem.find('input').last().focus();
+		newlistitem.find('input[name="balance_item_key"]').last().focus();
 	}).click();
 
 	var now = new Date().toISOString();
@@ -85,7 +85,7 @@ $(function(){
 			data: JSON.stringify(data),
 			contentType: "application/json",
 			headers: {'X-CSRFToken': csrftoken},
-        	mode: 'same-origin' // Do not send CSRF token to another domain.
+        	mode: 'same-origin', // Do not send CSRF token to another domain.
         	success: function (data) {
         		err = data.errors;
         		if(err.length > 0){
