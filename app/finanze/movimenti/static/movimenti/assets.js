@@ -29,6 +29,21 @@ var removeButtonClick = function(element){
 	}
 	computeSum();
 }
+var insertNewListItem = function(key, value){
+	newlistitem = balanceListItemFactory(itemscounter++);
+	if(!key || key == undefined) {
+		key = "";
+	}else{
+		newlistitem.find('input[name="balance_item_key"]').val(key);
+	}
+	if(!value || value == undefined) {
+		value = 0;
+	}else{
+		newlistitem.find('input[name="balance_item"]').val(value);
+	}
+	$('#itemslist').append(newlistitem);
+	computeSum();	
+}
 var computeSum = function(){
 	var sum = 0;
 	$('#itemslist input[type="number"]').each(function(id, el){

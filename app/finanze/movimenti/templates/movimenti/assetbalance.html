@@ -35,7 +35,6 @@ Registra bilancio corrente
 			<thead>
 				<tr>
 					<th>Date</th>
-					<th>Notes</th>
 					<th>Total</th>
 					<th class="lessimportant">Error</th>
 				</tr>
@@ -44,12 +43,19 @@ Registra bilancio corrente
 				{% for asset in assets %}
 				<tr>
 					<td>{{asset.date | date:'d/m/Y H:i'}}</td>
-					<td>{{asset.notes}}</td>
-					<td>{{asset.balance | floatformat:2}}</td>
+					<td>{{asset.totbalance | floatformat:2}}</td>
 					<td class="lessimportant">{{asset.error | floatformat:2 }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
 		</table></div>
 </div>
+{% endblock %}
+{% block end_scripts %}
+{{ block.super }}
+<script type="text/javascript">
+	{% for item in latests %}
+	insertNewListItem("{{item.notes}}", {{item.balance}});
+	{% endfor %}
+</script>
 {% endblock %}

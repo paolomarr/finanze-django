@@ -149,16 +149,20 @@ def assets(request):
         allrecords = AssetBalance.objects.all().order_by('-date')
         latestpostdate = allrecords[0].date
         latests = []
-        for idx in range(0, len(allrecords) - 1):
-            rec_to = allrecords[idx]
-            if rec_to.date == latestpostdate:
-                latests.append(rec_to)
-            rec_from = allrecords[idx+1]
-            truebalance = rec_to.balance - rec_from.balance
-            period = Movement.objects.netAmountInPeriod(rec_from.date, rec_to.date)
-            setattr(allrecords[idx], 'accounted', period)
-            setattr(allrecords[idx], 'truebalance', truebalance)
-            setattr(allrecords[idx], 'error', truebalance - period)
+        for rec in allrecords:
+            if rec.date == latestpostdate:
+                latests.append(rec)
+            else:
+                break
+        groupByDateAndTotalBalance = AssetBalance.objects.values('date').annotate(totbalance=Sum('balance')).order_by('-date')
+        for idx in range(0, len(groupByDateAndTotalBalance) - 1):
+            rec_to = groupByDateAndTotalBalance[idx]
+            rec_from = groupByDateAndTotalBalance[idx+1]
+            truebalance = rec_to['totbalance'] - rec_from['totbalance']
+            period = Movement.objects.netAmountInPeriod(rec_from['date'], rec_to['date'])
+            groupByDateAndTotalBalance[idx]['accounted'] = period
+            groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
+            groupByDateAndTotalBalance[idx]['error'] = truebalance - period
 
         # Insert finance assets total by default
         financeassets = 0
@@ -167,6 +171,6 @@ def assets(request):
         for buy in Order.objects.filter(operation__operation='SELL'):
             financeassets -= buy.amount
         response = render(request, 'movimenti/assetbalance.html',
-            {'form': form, 'assets': allrecords, 'latests': latests, 'financeassets': financeassets})
+            {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets})
         response.set_cookie("user", request.user, path=request.path)
         return response
