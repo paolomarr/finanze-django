@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect
 
 
 def index(request):
@@ -6,4 +6,4 @@ def index(request):
         return render(request,
                       'landing.html')
     else:
-        get_object_or_404(None)
+        return redirect('/accounts/login')
