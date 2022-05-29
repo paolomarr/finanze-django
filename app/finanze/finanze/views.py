@@ -6,4 +6,4 @@ def index(request):
         return render(request,
                       'landing.html')
     else:
-        return redirect('/accounts/login')
+        return redirect('/login/')

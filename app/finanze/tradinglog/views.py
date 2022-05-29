@@ -69,7 +69,7 @@ def updateCurrentPrice(request):
     results = []
     for sym in symbols:
         stock = Stock.objects.filter(symbol__exact=sym)
-        if stock.count() is 0:
+        if stock.count() == 0:
             logger.info("No stocks for symbol '%s'" % sym)
             results.append({"symbol": sym, "res": "not found"})
             continue
