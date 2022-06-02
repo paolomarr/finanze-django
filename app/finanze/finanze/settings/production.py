@@ -1,3 +1,4 @@
+import django_heroku
 from .default import *
 import os
 import re
@@ -27,3 +28,6 @@ DATABASES = {
         'PASSWORD': dbpass,
     }
 }
+
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
