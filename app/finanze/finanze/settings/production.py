@@ -9,9 +9,9 @@ DEBUG = False
 ALLOWED_HOSTS = ['.herokuapp.com', '.localhost', '127.0.0.1']
 
 SECRET_KEY = os.environ['SECRET_KEY']
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 dburl = urlparse(os.environ['DATABASE_URL'])
 dbhost = dburl.hostname
 dbport = dburl.port
@@ -29,12 +29,16 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE += [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+]
+
 # Configure Django App for Heroku.
-django_heroku.settings(locals(),
-                       databases=False,
-                       test_runner=False,
-                       staticfiles=True,
-                       allowed_hosts=False,
-                       logging=False,
-                       secret_key=False,
-                       )
+# django_heroku.settings(locals(),
+#                        databases=False,
+#                        test_runner=False,
+#                        staticfiles=True,
+#                        allowed_hosts=False,
+#                        logging=False,
+#                        secret_key=False,
+#                        )
