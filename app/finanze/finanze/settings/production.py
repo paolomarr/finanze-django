@@ -30,4 +30,11 @@ DATABASES = {
 }
 
 # Configure Django App for Heroku.
-django_heroku.settings(locals())
+django_heroku.settings(locals(),
+                       databases=False,
+                       test_runner=False,
+                       staticfiles=True,
+                       allowed_hosts=False,
+                       logging=False,
+                       secret_key=False,
+                       )
