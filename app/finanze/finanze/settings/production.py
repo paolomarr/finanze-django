@@ -1,4 +1,4 @@
-import django_heroku
+# import django_heroku
 from .default import *
 import os
 import re
