@@ -9,69 +9,71 @@ Lista movimenti
 {% endblock %}
 {% block content %}
 <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
+	<span class="step-links">
+		{% if page_obj.has_previous %}
+		<a href="?page=1">&laquo; first</a>
+		<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+		{% endif %}
 
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
+		<span class="current">
+			Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+		</span>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+		{% if page_obj.has_next %}
+		<a href="?page={{ page_obj.next_page_number }}">next</a>
+		<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+		{% endif %}
+	</span>
 </div>
 <div>
 	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">Clear filters</button>
 </div>
-<table>
-	<thead>
-		<tr>
-			<th colspan="1"></th>
-			<th>
-				<input type="text" id="filter-description" placeholder="Filter description..."
-				onchange="applyFilter()" />
-			</th>
-			<th colspan="1"></th>
-			<th>
-				<select id="filter-category" onchange="applyFilter()">
-					<option value="-1">Filter category...</option>
-				{% for cat in categories%}
-					<option value="{{cat.id}}">{{cat.category}}</option>
-				{% endfor %}
-				</select>
-			</th>
-			<th>
-				<select id="filter-subcategory" onchange="applyFilter()">
-					<option value="-1">Filter subcategory...</option>
-				{% for cat in subcategories%}
-					<option value="{{cat.id}}">{{cat.subcategory}}</option>
-				{% endfor %}
-				</select>
-			</th>
-		</tr>
-		<tr>
-			<th>Date</th>
-			<th>Description</th>
-			<th>Amount</th>
-			<th>Category</th>
-			<th>Subcategory</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for mov in page_obj %}
-		<tr>
-			<td>{{mov.date | date:'d/m/Y H:i'}}</td>
-			<td>{{mov.description}}</td>
-			<td class="currency">{{mov.amount | floatformat:2}}</td>
-			<td>{{mov.category}}</td>
-			<td>{{mov.subcategory}}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+<div class="table-container">
+	<table>
+		<thead>
+			<tr>
+				<th colspan="1"></th>
+				<th>
+					<input type="text" id="filter-description" placeholder="Filter description..."
+						onchange="applyFilter()" />
+				</th>
+				<th colspan="1"></th>
+				<th>
+					<select id="filter-category" onchange="applyFilter()">
+						<option value="-1">Filter category...</option>
+						{% for cat in categories%}
+						<option value="{{cat.id}}">{{cat.category}}</option>
+						{% endfor %}
+					</select>
+				</th>
+				<th>
+					<select id="filter-subcategory" onchange="applyFilter()">
+						<option value="-1">Filter subcategory...</option>
+						{% for cat in subcategories%}
+						<option value="{{cat.id}}">{{cat.subcategory}}</option>
+						{% endfor %}
+					</select>
+				</th>
+			</tr>
+			<tr>
+				<th>Date</th>
+				<th>Description</th>
+				<th>Amount</th>
+				<th>Category</th>
+				<th>Subcategory</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for mov in page_obj %}
+			<tr>
+				<td>{{mov.date | date:'d/m/Y H:i'}}</td>
+				<td>{{mov.description}}</td>
+				<td class="currency">{{mov.amount | floatformat:2}}</td>
+				<td>{{mov.category}}</td>
+				<td>{{mov.subcategory}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% endblock %}

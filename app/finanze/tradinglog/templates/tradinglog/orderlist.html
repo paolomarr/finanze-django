@@ -20,40 +20,43 @@ Orders
 </div>
 <h2>Orders history</h2>
 <div>{{orders.count}} orders</div>
-<table id="orderlist_table">
-	<thead>
-		<tr>
-			<th>date</th>
-			<th>code</th>
-			<th>account</th>
-			<th>operation</th>
-			<th>stock</th>
-			<th>quantity</th>
-			<th>price</th>
-			<th>amount</th>
-			<th>currentval</th>
-			<th>gross</th>
-			<th>net</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for order in orders %}
-		<tr>
-		 	<td tooltip="{{order.date | date:'d/m/Y'}}" data-name="date" data-val="{{order.date | date:'Y-m-d'}}">{{order.date | timesince}}</td>
-			<td>{{order.code}}</td>
-			<td>{{order.account }}</td>
-			<td>{{order.operation}}</td>
-			<td>{{order.stock.symbol}}</td>
-			<td class="currency" data-name="quantity">{{order.quantity}}</td>
-			<td class="currency" data-name="price">{{order.price | floatformat:2}}</td>
-			<td class="currency" data-name="amount">{{order.amount | floatformat:2}}</td>
-			<td class="currency" data-name="currentval">{{order.currentval | floatformat:2}}</td>
-			<td class="currency" data-name="gross_gain">{{order.gross_gain | floatformat:2}}</td>
-			<td class="currency" data-name="net_gain">{{order.net_gain | floatformat:2}}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+<div class="table-container">
+	<table id="orderlist_table">
+		<thead>
+			<tr>
+				<th>date</th>
+				<th>code</th>
+				<th>account</th>
+				<th>operation</th>
+				<th>stock</th>
+				<th>quantity</th>
+				<th>price</th>
+				<th>amount</th>
+				<th>currentval</th>
+				<th>gross</th>
+				<th>net</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in orders %}
+			<tr>
+				<td tooltip="{{order.date | date:'d/m/Y'}}" data-name="date" data-val="{{order.date | date:'Y-m-d'}}">
+					{{order.date | timesince}}</td>
+				<td>{{order.code}}</td>
+				<td>{{order.account }}</td>
+				<td>{{order.operation}}</td>
+				<td>{{order.stock.symbol}}</td>
+				<td class="currency" data-name="quantity">{{order.quantity}}</td>
+				<td class="currency" data-name="price">{{order.price | floatformat:2}}</td>
+				<td class="currency" data-name="amount">{{order.amount | floatformat:2}}</td>
+				<td class="currency" data-name="currentval">{{order.currentval | floatformat:2}}</td>
+				<td class="currency" data-name="gross_gain">{{order.gross_gain | floatformat:2}}</td>
+				<td class="currency" data-name="net_gain">{{order.net_gain | floatformat:2}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% else %}
 <p>No orders available</p>
 {% endif %}

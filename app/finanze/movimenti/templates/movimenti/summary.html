@@ -46,32 +46,34 @@ Movimenti dal {{ start }} al {{ end }}
 	</form>
 </div>
 <h2>Movimenti dal {{ start | date:'d/m/Y' }} al {{ end | date:'d/m/Y' }}</h2>
-<table>
-	<thead>
-		<th>Category</th>
-		<th>Incomes</th>
-		<th>Expenses</th>
-	</thead>
-	<tbody>
-		{% for res in results %}
-		{% if res.ins.amount > 0 or res.outs.amount > 0 %}
-		<tr>
-			<td><a href="#" data-category="{{res.cat.id}}">{{res.cat.category}}</a></td>
-			<td class="currency">{{res.ins.amount | floatformat:2}}</td>
-			<td class="currency">{{res.outs.amount | floatformat:2}}</td>
-		</tr>
-		{% endif %}
-		{% endfor %}
-		<tr class="table-total">
-			<td></td>
-			<td class="currency">{{ totals.ins |floatformat:2 }}</td>
-			<td class="currency">{{ totals.outs |floatformat:2 }}</td>
-		</tr>
-	</tbody>
-</table>
+<div class="table-container">
+	<table>
+		<thead>
+			<th>Category</th>
+			<th>Incomes</th>
+			<th>Expenses</th>
+		</thead>
+		<tbody>
+			{% for res in results %}
+			{% if res.ins.amount > 0 or res.outs.amount > 0 %}
+			<tr>
+				<td><a href="#" data-category="{{res.cat.id}}">{{res.cat.category}}</a></td>
+				<td class="currency">{{res.ins.amount | floatformat:2}}</td>
+				<td class="currency">{{res.outs.amount | floatformat:2}}</td>
+			</tr>
+			{% endif %}
+			{% endfor %}
+			<tr class="table-total">
+				<td></td>
+				<td class="currency">{{ totals.ins |floatformat:2 }}</td>
+				<td class="currency">{{ totals.outs |floatformat:2 }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 <script type="text/javascript">
 	// window.location.search = "?year={{start | date:'Y'}}&month={{start | date:'m'}}"
-	$('#select-month').val({{start | date:'m'}});
-	$('#select-year').val({{start | date:'Y'}});
+	$('#select-month').val({{ start | date: 'm'}});
+	$('#select-year').val({{ start | date: 'Y'}});
 </script>
 {% endblock %}

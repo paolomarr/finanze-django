@@ -3,4 +3,4 @@
 *.sql
 *.sqlite3
 __pycache__/*
-*/**/fixtures/*
+# */**/fixtures/*
