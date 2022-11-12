@@ -6,17 +6,18 @@ from urllib.parse import urlparse
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['paolomarchetti.tk', '.localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com', '.localhost', '127.0.0.1']
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-dbhost = 'localhost'
-dbport = 5432
-dbuser = django
-dbpass = os.environ['DJANGO_FINAZE_DB_PASSWORD']
-dbname = 'finanze'
+dburl = urlparse(os.environ['DATABASE_URL'])
+dbhost = dburl.hostname
+dbport = dburl.port
+dbuser = dburl.username
+dbpass = dburl.password
+dbname = re.sub(r'^\/', '', dburl.path)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
