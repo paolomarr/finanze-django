@@ -12,11 +12,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-dbhost = 'localhost'
+dbhost = 'db'
 dbport = 5432
-dbuser = django
-dbpass = os.environ['DJANGO_FINAZE_DB_PASSWORD']
-dbname = 'finanze'
+dbuser = 'postgres'
+dbpass = 'postgres'
+dbname = 'postgres'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -31,13 +31,3 @@ DATABASES = {
 MIDDLEWARE += [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
-
-# Configure Django App for Heroku.
-# django_heroku.settings(locals(),
-#                        databases=False,
-#                        test_runner=False,
-#                        staticfiles=True,
-#                        allowed_hosts=False,
-#                        logging=False,
-#                        secret_key=False,
-#                        )

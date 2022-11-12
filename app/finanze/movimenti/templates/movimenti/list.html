@@ -6,6 +6,27 @@ Lista movimenti
 {% block extra_script %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'movimenti/list.js' %}"></script>
+<link href="{% static 'responsive.tables.css' %}" rel="stylesheet" type="text/css" />
+<style>
+	 /*
+	Label the data
+	*/
+    td:nth-of-type(1):before {
+        content: "Date";
+    }
+    td:nth-of-type(2):before {
+        content: "Description";
+    }
+    td:nth-of-type(3):before {
+        content: "Amount";
+    }
+    td:nth-of-type(4):before {
+        content: "Category";
+    }
+    td:nth-of-type(5):before {
+        content: "Subcategory";
+    }
+</style>
 {% endblock %}
 {% block content %}
 <div class="pagination">
@@ -29,32 +50,21 @@ Lista movimenti
 	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">Clear filters</button>
 </div>
 <div class="table-container">
+	<div><input type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" /></div>
+	<div><select id="filter-category" onchange="applyFilter()">
+		<option value="-1">Filter category...</option>
+		{% for cat in categories%}
+		<option value="{{cat.id}}">{{cat.category}}</option>
+		{% endfor %}
+	</select></div>
+	<div><select id="filter-subcategory" onchange="applyFilter()">
+		<option value="-1">Filter subcategory...</option>
+		{% for cat in subcategories%}
+		<option value="{{cat.id}}">{{cat.subcategory}}</option>
+		{% endfor %}
+	</select></div>
 	<table>
 		<thead>
-			<tr>
-				<th colspan="1"></th>
-				<th>
-					<input type="text" id="filter-description" placeholder="Filter description..."
-						onchange="applyFilter()" />
-				</th>
-				<th colspan="1"></th>
-				<th>
-					<select id="filter-category" onchange="applyFilter()">
-						<option value="-1">Filter category...</option>
-						{% for cat in categories%}
-						<option value="{{cat.id}}">{{cat.category}}</option>
-						{% endfor %}
-					</select>
-				</th>
-				<th>
-					<select id="filter-subcategory" onchange="applyFilter()">
-						<option value="-1">Filter subcategory...</option>
-						{% for cat in subcategories%}
-						<option value="{{cat.id}}">{{cat.subcategory}}</option>
-						{% endfor %}
-					</select>
-				</th>
-			</tr>
 			<tr>
 				<th>Date</th>
 				<th>Description</th>
