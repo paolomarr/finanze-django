@@ -73,7 +73,8 @@ Movimenti dal {{ start }} al {{ end }}
 </div>
 <script type="text/javascript">
 	// window.location.search = "?year={{start | date:'Y'}}&month={{start | date:'m'}}"
-	$('#select-month').val({{ start | date: 'm'}});
-	$('#select-year').val({{ start | date: 'Y'}});
+	// issues with templating inside js
+	// $('#select-month').val("{{ start | date: 'm'}}");
+	// $('#select-year').val("{{ start | date: 'Y'}}");
 </script>
 {% endblock %}
