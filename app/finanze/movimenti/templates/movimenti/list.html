@@ -6,26 +6,6 @@ Lista movimenti
 {% block extra_script %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'movimenti/list.js' %}"></script>
-<style>
-	 /*
-	Label the data
-	*/
-    td:nth-of-type(1):before {
-        content: "Date";
-    }
-    td:nth-of-type(2):before {
-        content: "Description";
-    }
-    td:nth-of-type(3):before {
-        content: "Amount";
-    }
-    td:nth-of-type(4):before {
-        content: "Category";
-    }
-    td:nth-of-type(5):before {
-        content: "Subcategory";
-    }
-</style>
 {% endblock %}
 {% block content %}
 <div class="pagination">
