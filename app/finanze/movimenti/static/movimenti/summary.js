@@ -1,11 +1,17 @@
-var selectDate = function(){
-	year = $('#select-year').val();
-	month = $('#select-month').val();
-	basepath = window.location.href.replace(/\?.*$/, "");
-	outpath = `${basepath}?year=${year}&month=${month}`;
-	window.location.assign(outpath);
-}
+// var selectDate = function(){
+// 	year = $('#select-year').val();
+// 	month = $('#select-month').val();
+// 	basepath = window.location.href.replace(/\?.*$/, "");
+// 	outpath = `${basepath}?year=${year}&month=${month}`;
+// 	window.location.assign(outpath);
+// }
 
+var buildURLFromMonthYearSelects = function() {
+	var monthindex = $('#select-month').val();
+	var year = $('#select-year').val();
+	var searchstring = `?year=${year}&month=${monthindex}`;
+	window.location.search = searchstring;
+}
 $(function(){
 	$('[data-category]').click(function(event){
 		categoryid = $(this).attr('data-category');
@@ -16,5 +22,8 @@ $(function(){
 		datefrom = `${year}-${month}-01`;
 		dateto = `${toyear}-${tomonth}-01`;
 		window.location.assign(`/movimenti/list?filter=category%3D${categoryid}&filter=dateto%3D${dateto}&filter=datefrom%3D${datefrom}`);
+	});
+	$('#select-month').change(event => {
+		buildURLFromMonthYearSelects();
 	});
 });

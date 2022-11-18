@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlparse, parse_qs
 from django.views.generic import CreateView
 from json import loads as jloads
 from django.http import JsonResponse
+from datetime import date
 
 logger = logging.getLogger(__name__)
 
@@ -101,14 +102,22 @@ def summary(request):
         totals['ins'] += ins['amount']
         totals['outs'] += outs['amount']
 
-    # years = Movement.objects.distinct(Extract('date', 'year'))
     years = Movement.objects.dates('date', 'year', order='DESC')
+    # create a list of months, indicating the selected one
+    months = []
+    for midx in range(1,13):
+        # year is not important here
+        iterdate = date(start.year, midx, 1)
+        mname = iterdate.strftime("%B")
+        isCurrent = start.month == midx
+        months.append({"idx": midx, "name": mname, "isCurrent": isCurrent})
     context = {
         'availableYears': years,
         'results': results,
         'start': start,
         'end': end,
-        'totals': totals
+        'totals': totals,
+        'months': months
     }
     return render(request, 'movimenti/summary.html', context)
 

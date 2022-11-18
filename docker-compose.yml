@@ -1,25 +1,39 @@
 version: "3.9"
 
+x-web-template: &web-template
+  build: .
+  command: ./docker-entrypoint.sh
+  volumes:
+    - .:/code
+  ports:
+    - 8000:8000
+  environment:
+    - "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
+    - "RAPIDAPI_KEY=${RAPIDAPI_KEY}"
+
 services:
+  web-dev:
+    <<: *web-template
+    profiles:
+      - dev
+    
   web:
-    build: .
-    command: ./docker-entrypoint.sh
-    volumes:
-      - .:/code
-    ports:
-      - 8000:8000
+    <<: *web-template
+    profiles:
+      - prod
     depends_on:
       - db
     environment:
-      - "RAPIDAPI_KEY=${RAPIDAPI_KEY}"
-      - "SECRET_KEY=${SECRET_KEY}"
-      - "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
+      - "SECRET_KEY=${SECRET_KEY}" # to be put in .env file
+      
   db:
     image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+    profiles:
+      - prod
 
 volumes:
   postgres_data:

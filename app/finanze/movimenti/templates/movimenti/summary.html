@@ -14,18 +14,9 @@ Movimenti dal {{ start }} al {{ end }}
 		<div class="col-12">
 			<div class="form-floating">
 				<select class="form-select" name="month" id="select-month">
-					<option value="1">January</option>
-					<option value="2">February</option>
-					<option value="3">March</option>
-					<option value="4">April</option>
-					<option value="5">May</option>
-					<option value="6">June</option>
-					<option value="7">July</option>
-					<option value="8">August</option>
-					<option value="9">September</option>
-					<option value="10">October</option>
-					<option value="11">November</option>
-					<option value="12">December</option>
+					{% for monthobj in months %}
+					<option value="{{monthobj.idx}}" {% if monthobj.isCurrent %}selected{% endif %}>{{monthobj.name}}</option>
+					{% endfor %}
 				</select>
 				<label for="select-month">Month</label>
 			</div>
@@ -40,9 +31,9 @@ Movimenti dal {{ start }} al {{ end }}
 				<label for="select-year">Year</label>
 			</div>
 		</div>
-		<div class="col-12">
+		<!-- <div class="col-12">
 			<button type="button" class="btn btn-primary" onclick="selectDate()">Select</button>
-		</div>
+		</div> -->
 	</form>
 </div>
 <h2>Movimenti dal {{ start | date:'d/m/Y' }} al {{ end | date:'d/m/Y' }}</h2>
@@ -71,10 +62,4 @@ Movimenti dal {{ start }} al {{ end }}
 		</tbody>
 	</table>
 </div>
-<script type="text/javascript">
-	// window.location.search = "?year={{start | date:'Y'}}&month={{start | date:'m'}}"
-	// issues with templating inside js
-	// $('#select-month').val("{{ start | date: 'm'}}");
-	// $('#select-year').val("{{ start | date: 'Y'}}");
-</script>
 {% endblock %}
