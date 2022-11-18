@@ -10,6 +10,7 @@ x-web-template: &web-template
   environment:
     - "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
     - "RAPIDAPI_KEY=${RAPIDAPI_KEY}"
+    - "SECRET_KEY=${SECRET_KEY}" # to be put in .env file
 
 services:
   web-dev:
@@ -24,7 +25,6 @@ services:
     depends_on:
       - db
     environment:
-      - "SECRET_KEY=${SECRET_KEY}" # to be put in .env file
       
   db:
     image: postgres:13
