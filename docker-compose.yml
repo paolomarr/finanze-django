@@ -24,7 +24,6 @@ services:
       - prod
     depends_on:
       - db
-    environment:
       
   db:
     image: postgres:13
