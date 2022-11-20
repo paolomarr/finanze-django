@@ -42,27 +42,43 @@ Lista movimenti
 		<option value="{{cat.id}}">{{cat.subcategory}}</option>
 		{% endfor %}
 	</select></div>
-	<table>
-		<thead>
-			<tr>
-				<th>Date</th>
-				<th>Description</th>
-				<th>Amount</th>
-				<th>Category</th>
-				<th>Subcategory</th>
-			</tr>
-		</thead>
-		<tbody>
+	<div class="container">
+		<div class="d-none d-lg-block">
+			<div class="row border-bottom">
+				<div class="table-header col-lg-1">Date</div>
+				<div class="table-header col-lg-4">Description</div>
+				<div class="table-header col-lg-1">Amount</div>
+				<div class="table-header col-lg-3">Category</div>
+				<div class="table-header col-lg-3">Subcategory</div>
+			</div>
+		</div>
 			{% for mov in page_obj %}
-			<tr>
-				<td>{{mov.date | date:'d/m/Y H:i'}}</td>
-				<td>{{mov.description}}</td>
-				<td class="currency">{{mov.amount | floatformat:2}}</td>
-				<td>{{mov.category}}</td>
-				<td>{{mov.subcategory}}</td>
-			</tr>
+		<div class="row border-bottom">
+			<div class="col-12 col-lg-1">
+				<span class="d-lg-none"><i class="bi bi-calendar-check"></i></span>
+				{{mov.date | date:'d/m/Y H:i'}}
+			</div>
+			<div class="col-12 col-lg-4">
+				<span class="d-lg-none">
+					<i class="bi bi-info-square"></i>
+				</span>
+				{{mov.description}}</div>
+			<div class="col-12 col-lg-1 currency">
+				<span class="d-lg-none"><i class="bi bi-piggy-bank"></i></span>
+				{{mov.amount | floatformat:2}}
+			</div>
+			<div class="col-12 col-lg-3">
+				<span class="d-lg-none"><i class="bi bi-tag"></i></span>
+				{{mov.category}}
+			</div>
+			<div class="col-12 col-lg-3">
+				{% with subcat=mov.subcategory %}
+					<span class="d-lg-none"><i class="bi bi-tags"></i></span>
+				{{subcat}}
+				{% endwith %}
+			</div>
+		</div>
 			{% endfor %}
-		</tbody>
-	</table>
+	</div>
 </div>
 {% endblock %}
