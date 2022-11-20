@@ -3,7 +3,7 @@ var balanceItemFactory = function(index){
 	return input;
 };
 var balanceLabelItemFactory = function(index){
-	input = $(`<input type="text" placeholder="optional label" name="balance_item_key" \
+	input = $(`<input type="text" placeholder="description" name="balance_item_key" \
 class="form-control balance_item_key" id="balance_item_key_${index}" onChange="keyItemChange(this)"/>`)
 	return input;	
 };
@@ -11,10 +11,10 @@ var balanceListItemFactory = function(index) {
 	var removebtn = $(`<button type="button" onClick="removeButtonClick(this)" />`)
 		.addClass(['col', 'btn', 'btn-light', 'btn-sm', 'remove-button'])
 		.attr("data-index", index)
-		.html("Remove");
+		.html('<span class="d-none d-lg-block">Remove</span><span class="d-lg-none"><i class="bi bi-trash"></i></span>');
 	var labelitem = balanceLabelItemFactory(index).addClass('form-control');
 	var inputitem = balanceItemFactory(index).addClass('form-control');
-	var inputrow = $('<div class="row">')
+	var inputrow = $('<div class="row gx-3">')
 		.attr('data-index', index)
 		.append($('<div class="col col-6" />').append(labelitem))
 		.append($('<div class="col col-4" />').append(inputitem))
