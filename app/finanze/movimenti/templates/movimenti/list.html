@@ -29,19 +29,27 @@ Lista movimenti
 	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">Clear filters</button>
 </div>
 <div class="table-container">
-	<div><input type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" /></div>
-	<div><select id="filter-category" onchange="applyFilter()">
-		<option value="-1">Filter category...</option>
-		{% for cat in categories%}
-		<option value="{{cat.id}}">{{cat.category}}</option>
-		{% endfor %}
-	</select></div>
-	<div><select id="filter-subcategory" onchange="applyFilter()">
-		<option value="-1">Filter subcategory...</option>
-		{% for cat in subcategories%}
-		<option value="{{cat.id}}">{{cat.subcategory}}</option>
-		{% endfor %}
-	</select></div>
+	<div class="row">
+		<div class="col-12 offset-lg-1 col-lg-4">
+			<input class="form-control" type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" />
+		</div>
+		<div class="col-12 offset-lg-1 col-lg-3">
+			<select class="form-select" id="filter-category" onchange="applyFilter()">
+				<option value="-1">Filter category...</option>
+			{% for cat in categories%}
+				<option value="{{cat.id}}">{{cat.category}}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="col-12 col-lg-3">
+			<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
+				<option value="-1">Filter subcategory...</option>
+			{% for cat in subcategories%}
+				<option value="{{cat.id}}">{{cat.subcategory}}</option>
+			{% endfor %}
+			</select>
+		</div>
+	</div>
 	<div class="container">
 		<div class="d-none d-lg-block">
 			<div class="row border-bottom">
