@@ -50,7 +50,7 @@
 						class="d-inline-block align-text-top" />
 					My Finanze
 				</a>{% with pathcomps=request.path|split:"/" %}
-					{% if pathcomps|length > 1 %}- {{pathcomps|slice:"1:"|first}}{% endif %}
+					{% if pathcomps|length > 2 %}- {{pathcomps|slice:"1:"|first}}{% endif %}
 					{% endwith %}
 				{% if user.is_authenticated %}
 				<a class="nav-link ms-auto" href="/logout"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></a>
