@@ -4,12 +4,24 @@
 My beautiful personal finance app!
 {% endblock %}
 {% block content %}
-<div class="list-group">
-  <a href="tradinglog/" class="list-group-item list-group-item-action">
-    Trading Log
-  </a>
-  <a href="movimenti/" class="list-group-item list-group-item-action" aria-current="true">
-    Expenses log
-  </a>
+<div class="row">
+  <div class="col-8 offset-sm-4 col-sm-4 offset-sm-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Trading log</h5>
+        <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+        <a href="tradinglog/" class="btn btn-primary">Go! <i class="bi bi-box-arrow-in-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="col-8 offset-sm-4 col-sm-4 offset-sm-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Expenses log</h5>
+        <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
+        <a href="movimenti/" class="btn btn-primary">Go!<i class="bi bi-box-arrow-in-right"></i></a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
