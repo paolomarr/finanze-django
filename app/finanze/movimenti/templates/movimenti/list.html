@@ -30,10 +30,10 @@ Lista movimenti
 </div>
 <div class="table-container">
 	<div class="row">
-		<div class="col-12 offset-lg-1 col-lg-4">
+		<div class="col-12 offset-xl-1 col-xl-4">
 			<input class="form-control" type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" />
 		</div>
-		<div class="col-12 offset-lg-1 col-lg-3">
+		<div class="col-12 offset-xl-1 col-xl-3">
 			<select class="form-select" id="filter-category" onchange="applyFilter()">
 				<option value="-1">Filter category...</option>
 			{% for cat in categories%}
@@ -41,7 +41,7 @@ Lista movimenti
 			{% endfor %}
 			</select>
 		</div>
-		<div class="col-12 col-lg-3">
+		<div class="col-12 col-xl-3">
 			<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
 				<option value="-1">Filter subcategory...</option>
 			{% for cat in subcategories%}
@@ -51,37 +51,37 @@ Lista movimenti
 		</div>
 	</div>
 	<div class="container">
-		<div class="d-none d-lg-block">
+		<div class="d-none d-xl-block">
 			<div class="row border-bottom">
-				<div class="table-header col-lg-1">Date</div>
-				<div class="table-header col-lg-4">Description</div>
-				<div class="table-header col-lg-1">Amount</div>
-				<div class="table-header col-lg-3">Category</div>
-				<div class="table-header col-lg-3">Subcategory</div>
+				<div class="table-header col-xl-1">Date</div>
+				<div class="table-header col-xl-4">Description</div>
+				<div class="table-header col-xl-1">Amount</div>
+				<div class="table-header col-xl-3">Category</div>
+				<div class="table-header col-xl-3">Subcategory</div>
 			</div>
 		</div>
 			{% for mov in page_obj %}
 		<div class="row border-bottom">
-			<div class="col-12 col-lg-1">
-				<span class="d-lg-none"><i class="bi bi-calendar-check"></i></span>
+			<div class="col-12 col-xl-1">
+				<span class="d-xl-none"><i class="bi bi-calendar-check"></i></span>
 				{{mov.date | date:'d/m/Y H:i'}}
 			</div>
-			<div class="col-12 col-lg-4">
-				<span class="d-lg-none">
+			<div class="col-12 col-xl-4">
+				<span class="d-xl-none">
 					<i class="bi bi-info-square"></i>
 				</span>
 				{{mov.description}}</div>
-			<div class="col-12 col-lg-1 currency">
-				<span class="d-lg-none"><i class="bi bi-piggy-bank"></i></span>
+			<div class="col-12 col-xl-1 currency">
+				<span class="d-xl-none"><i class="bi bi-piggy-bank"></i></span>
 				{{mov.amount | floatformat:2}}
 			</div>
-			<div class="col-12 col-lg-3">
-				<span class="d-lg-none"><i class="bi bi-tag"></i></span>
+			<div class="col-12 col-xl-3">
+				<span class="d-xl-none"><i class="bi bi-tag"></i></span>
 				{{mov.category}}
 			</div>
-			<div class="col-12 col-lg-3">
+			<div class="col-12 col-xl-3">
 				{% with subcat=mov.subcategory %}
-					<span class="d-lg-none"><i class="bi bi-tags"></i></span>
+					<span class="d-xl-none"><i class="bi bi-tags"></i></span>
 				{{subcat}}
 				{% endwith %}
 			</div>
