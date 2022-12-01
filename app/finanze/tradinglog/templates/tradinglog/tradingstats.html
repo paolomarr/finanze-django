@@ -52,7 +52,7 @@ Trading stats
 		{% for stock in tradedStocks %}
 		<tr>
 			<td><a href="#" data-stock="{{stock.id}}">{{stock.symbol}}</a></td>
-			<td class="currency">{{stock.quantity}}</td>
+			<td>{{stock.quantity}}</td>
 			<td class="currency">{{stock.amountOrdered | floatformat:2}}</td>
 			<td class="currency">{{stock.currentAsset | floatformat:2}}</td>
 			<td>{{stock.last_price_update | timesince }}</td>
