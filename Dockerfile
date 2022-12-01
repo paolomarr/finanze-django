@@ -12,6 +12,7 @@ WORKDIR /code
 # Install dependencies
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
+RUN apt-get update && apt-get install -y gettext
 
 # Copy project
 # COPY . .

@@ -1,5 +1,6 @@
 {% extends 'movimenti/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block title %}
 Lista movimenti
 {% endblock %}
@@ -11,8 +12,8 @@ Lista movimenti
 <div class="pagination">
 	<span class="step-links">
 		{% if page_obj.has_previous %}
-		<a href="?page=1">&laquo; first</a>
-		<a href="?page={{ page_obj.previous_page_number }}">previous</a>
+		<a href="?page=1">&laquo; {% translate "first" %}</a>
+		<a href="?page={{ page_obj.previous_page_number }}">{% translate "previous" %}</a>
 		{% endif %}
 
 		<span class="current">
@@ -20,13 +21,13 @@ Lista movimenti
 		</span>
 
 		{% if page_obj.has_next %}
-		<a href="?page={{ page_obj.next_page_number }}">next</a>
-		<a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+		<a href="?page={{ page_obj.next_page_number }}">{% translate "next" %}</a>
+		<a href="?page={{ page_obj.paginator.num_pages }}">{% translate "last" %} &raquo;</a>
 		{% endif %}
 	</span>
 </div>
 <div>
-	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">Clear filters</button>
+	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">{% translate "Clear filters" %}</button>
 </div>
 <div class="table-container">
 	<div class="row">
@@ -35,7 +36,7 @@ Lista movimenti
 		</div>
 		<div class="col-12 offset-xl-1 col-xl-3">
 			<select class="form-select" id="filter-category" onchange="applyFilter()">
-				<option value="-1">Filter category...</option>
+				<option value="-1">{% translate "Filter category" %}...</option>
 			{% for cat in categories%}
 				<option value="{{cat.id}}">{{cat.category}}</option>
 			{% endfor %}
@@ -43,7 +44,7 @@ Lista movimenti
 		</div>
 		<div class="col-12 col-xl-3">
 			<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
-				<option value="-1">Filter subcategory...</option>
+				<option value="-1">{% translate "Filter subcategory" %}...</option>
 			{% for cat in subcategories%}
 				<option value="{{cat.id}}">{{cat.subcategory}}</option>
 			{% endfor %}
@@ -53,11 +54,11 @@ Lista movimenti
 	<div class="container">
 		<div class="d-none d-xl-block">
 			<div class="row border-bottom">
-				<div class="table-header col-xl-1">Date</div>
-				<div class="table-header col-xl-4">Description</div>
-				<div class="table-header col-xl-1">Amount</div>
-				<div class="table-header col-xl-3">Category</div>
-				<div class="table-header col-xl-3">Subcategory</div>
+				<div class="table-header col-xl-1">{% translate "Date" %}</div>
+				<div class="table-header col-xl-4">{% translate "Description" %}</div>
+				<div class="table-header col-xl-1">{% translate "Amount" %}</div>
+				<div class="table-header col-xl-3">{% translate "Category" %}</div>
+				<div class="table-header col-xl-3">{% translate "Subcategory" %}</div>
 			</div>
 		</div>
 			{% for mov in page_obj %}

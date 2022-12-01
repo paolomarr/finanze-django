@@ -15,7 +15,6 @@ from datetime import date
 
 logger = logging.getLogger(__name__)
 
-
 @login_required
 def index(request):
     return HttpResponseRedirect('/movimenti/list')
