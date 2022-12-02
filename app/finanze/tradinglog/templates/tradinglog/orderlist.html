@@ -20,6 +20,45 @@ Orders
 </div>
 <h2>Orders history</h2>
 <div>{{orders.count}} orders</div>
+<div class="container">
+	<div class="d-none d-xl-block">
+		<div class="row border-bottom">
+			<div class="table-header col-xl-4">date</div>
+			<!-- <div class="table-header col-xl-1">code</div>
+			<div class="table-header col-xl-1">account</div> -->
+			<div class="table-header col-xl-1">operation</div>
+			<div class="table-header col-xl-1">stock</div>
+			<div class="table-header col-xl-1">quantity</div>
+			<div class="table-header col-xl-1">price</div>
+			<div class="table-header col-xl-1">amount</div>
+			<div class="table-header col-xl-1">currentval</div>
+			<div class="table-header col-xl-1">gross</div>
+			<div class="table-header col-xl-1">net</div>
+		</div>
+	</div>
+	{% for order in orders %}
+	<div class="row border-bottom">
+		<div class="col-12 col-xl-4 order-xl-first" tooltip="{{order.date | date:'d/m/Y'}}" data-name="date" data-val="{{order.date | date:'Y-m-d'}}">
+			<i class="bi bi-stopwatch d-xl-none"></i> {{order.date | timesince}}
+		</div>
+		<!-- <div class="col-12 col-xl-1">{{order.code}}</div>
+		<div class="col-12 col-xl-1">{{order.account }}</div> -->
+		<div class="col-12 d-xl-none text-secondary"><i class="bi bi-info-circle"></i> {{order.code}}</div>
+		<div class="col-6 order-xl-2 col-xl-1"><i class="d-xl-none bi bi-shop"></i> {{order.stock.symbol}}</div>
+		<div class="col-6 order-xl-1 col-xl-1"><i class="d-xl-none bi bi-arrow-down-up"></i> {{order.operation}}</div>
+		<div class="col-4 order-xl-5 col-xl-1 currency"><i class="d-xl-none bi bi-cash-coin"></i> {{order.amount | floatformat:2}}</div>
+		<div class="offset-1 col-4 order-xl-4 offset-xl-0 col-xl-1 currency"><i class="d-xl-none bi bi-tag"></i> {{order.price | floatformat:2}}</div>
+		<div class="col-3 order-xl-3 col-xl-1"><i class="d-xl-none bi bi-x"></i> {{order.quantity}}</div>
+		<div class="col-4 col-xl-1 order-xl-last currency"><i class="d-xl-none bi bi-graph-up-arrow"></i> {{order.currentval | floatformat:2}}</div>
+		<div class="col-8 d-xl-none currency"><i class="d-xl-none bi bi-plus-slash-minus"></i> gr/nt&nbsp;&nbsp;{{order.gross_gain | floatformat:2}}/<b>{{order.net_gain | floatformat:2}}</b></div>
+		<div class="d-none d-xl-block order-xl-last col-xl-1 currency">{{order.gross_gain | floatformat:2}}</div>
+		<div class="d-none d-xl-block order-xl-last col-xl-1 currency">{{order.net_gain | floatformat:2}}</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+
 <div class="table-container">
 	<table id="orderlist_table">
 		<thead>
