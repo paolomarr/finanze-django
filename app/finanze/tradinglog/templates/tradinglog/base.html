@@ -4,7 +4,7 @@
 <script type="text/javascript" src="{% static 'tradinglog/scripts.js' %}"></script>
 {% endblock %}
 {% block nav %}
-<nav class="nav nav-pills flex-column flex-sm-row bg-light">
+<nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
   <a class="nav-link" href="{% url 'tradinglog:orders' %}">Storico ordini</a>
   <a class="nav-link" href="{% url 'tradinglog:tradingStats' %}">Statistiche</a>
   <a class="nav-link" href="{% url 'tradinglog:neworder' %}">Nuovo ordine</a>

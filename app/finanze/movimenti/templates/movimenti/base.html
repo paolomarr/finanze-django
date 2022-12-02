@@ -5,7 +5,7 @@
 <script type="text/javascript" src="{% static 'movimenti/scripts.js' %}"></script>
 {% endblock %}
 {% block nav %}
-<nav class="nav nav-pills flex-column flex-sm-row bg-light">
+<nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
   <a class="nav-link" href="{% url 'movimenti:list' %}">Movimenti</a>
   <a class="nav-link" href="{% url 'movimenti:summary' %}">Riepilogo</a>
   <a class="nav-link" href="{% url 'movimenti:newmovement' %}">Registra nuovo</a>
