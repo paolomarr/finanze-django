@@ -41,16 +41,22 @@ class Category(models.Model):
                 end = date(year + 1, 1, 1)
             else:
                 end = date(year, month + 1, 1)
-        else:
+        else: # if no month give, take the whole year
             start = date(year, 1, 1)
             end = date(year, 12, 1)
-        filtered = allmovements.filter(
-            date__range=(start, end),
-            category__direction=direction).aggregate(
+        return self.movementsInDatesRange(direction, start, end)
+        
+    def movementsInDatesRange(self, direction: float, dateFrom: date, dateTo: date=date.today()):
+        if not dateTo > dateFrom:
+            return (dateFrom, dateTo, [])
+        else:
+            allmovements = self.movement_set.all()
+            filtered = allmovements.filter(
+                date__range=(dateFrom, dateTo),
+                category__direction=direction).aggregate(
                 amount=Coalesce(Sum('abs_amount', default=0.0), 0.0))
-        return (start, end, filtered)
-
-
+            return (dateFrom, dateTo, filtered)
+        
 class MovementManager(models.Manager):
     def netAmountInPeriod(self, fromDate, toDate):
         amount = 0
