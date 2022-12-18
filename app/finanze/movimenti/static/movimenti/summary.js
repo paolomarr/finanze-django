@@ -1,29 +1,100 @@
-// var selectDate = function(){
-// 	year = $('#select-year').val();
-// 	month = $('#select-month').val();
-// 	basepath = window.location.href.replace(/\?.*$/, "");
-// 	outpath = `${basepath}?year=${year}&month=${month}`;
-// 	window.location.assign(outpath);
-// }
+/*
+{
+	"results":[
+		{"cat":"Affitto (in)","outs":{"amount":0},"ins":{"amount":0}},
+		{"cat":"Altro","outs":{"amount":0},"ins":{"amount":0}},
+		{"cat":"Altro (in)","outs":{"amount":0},"ins":{"amount":0}},
+		{"cat":"Casa / Elettrodomestici","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Donazioni / Beneficienza","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Fabri (in)","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Internet / TV / Telefono / Musica","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Luce / Gas / Acqua / Spese cond","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Mutuo","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Online Shopping","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Palestra / Sport","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Ristoranti / Bar","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Sanità","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Spese Supermercato","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Stipendio","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Tasse","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Trasporti","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Vestiti","outs":{"amount":0},"ins":{"amount":0}},{"cat":"Viaggi","outs":{"amount":0},"ins":{"amount":0}}
+	],
+	"totals":{"ins":0,"outs":0},
+	"start":"2022-12-02",
+	"end":"2022-12-17"
+}
+*/
 
+var _myDateFormat = function(date){
+	year = date.getFullYear();
+	month = String(date.getMonth() + 1).padStart(2, '0');
+	day = String(date.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`
+}
+
+var tableheaderColumnFactory = function(header, xsWidth=12, xlWidth=1) {
+	return `<div class="table-header col-${xsWidth} col-sm-${xlWidth}">${header}</div>`
+}
+var tableRowFieldFactory = function (field, iconclass, xsWidth = 12, xlWidth = 1) {
+	return `<div class="col-${xsWidth} col-sm-${xlWidth}">
+		<span class="d-sm-none"><i class="bi bi-${iconclass}"></i></span>
+		${field}
+	</div>
+	`
+}
+var tableRowFactory = function(rowobj, datefrom, dateto) {
+	rows = "";
+	catobj = rowobj['cat']
+	filterqueryobj = new URLSearchParams({ filter: encodeURIComponent(`category=${catobj.id}`)});
+	if(dateto !== undefined){
+		filterqueryobj.append("filter", encodeURIComponent(`dateto=${dateto}`));
+	}
+	if(datefrom !== undefined){
+		filterqueryobj.append("filter", encodeURIComponent(`datefrom=${datefrom}`));
+	}
+	filterstr = filterqueryobj.toString();
+	catlinkuri = `/movimenti/list?${filterstr}`;
+	catlink = `<a href="${catlinkuri}" data-category=${catobj.id}>${catobj.cat}</a>`
+	rows += tableRowFieldFactory(catlink, "tag", 12, 6);
+	rows += tableRowFieldFactory(rowobj['ins']['amount'].toFixed(2),  "piggy-bank", 12, 3);
+	rows += tableRowFieldFactory(rowobj['outs']['amount'].toFixed(2),  "wallet", 12, 3);
+	return `<div class="row border-bottom">
+		${rows}
+	</div>`
+}
+var renderSummaryTable = function (tabledata) {
+	start = (new Date(tabledata.start)).toLocaleDateString();
+	end = (new Date(tabledata.end)).toLocaleDateString();
+	$("#tableTitle").html(`You're viewing movements from ${start} to ${end}`);
+	$("#tableHeader").empty();
+	$("#tableBody").empty();
+	$("#tableHeader").append(tableheaderColumnFactory("Category", 12, 6));
+	$("#tableHeader").append(tableheaderColumnFactory("Incomes", 12, 3));
+	$("#tableHeader").append(tableheaderColumnFactory("Expenses", 12, 3));
+	tabledata.results.forEach(element => {
+		$("#tableBody").append(tableRowFactory(element, tabledata.start, tabledata.end));
+	});
+}
+
+var fetchSummaryAjax = function(dateFrom, dateTo) {
+	// string dates
+	dfString = _myDateFormat(dateFrom);
+	dtString = _myDateFormat(dateTo);
+	$.ajax("/movimenti/summary/json", {
+		method: "GET",
+		data: {dateFrom: dfString, dateTo: dtString},
+		success: function(data) {
+			renderSummaryTable(data)
+		},
+		error: function(xhr, status, errorstr) {
+			console.log(`${status}: ${errorstr}`);	
+		}
+	});
+}
 var buildURLFromMonthYearSelects = function() {
-	var monthindex = $('#select-month').val();
+	var monthindex = $('#select-month').val() - 1; // they come 1-based
 	var year = $('#select-year').val();
-	var searchstring = `?year=${year}&month=${monthindex}`;
-	window.location.search = searchstring;
+	var dateFrom = new Date(year, monthindex, 1);
+	var dateTo = new Date(year, monthindex + 1, 1);
+	fetchSummaryAjax(dateFrom, dateTo);
 }
 $(function(){
-	$('[data-category]').click(function(event){
-		categoryid = $(this).attr('data-category');
-		month = parseInt($('#select-month').val());
-		year = parseInt($('#select-year').val());
-		tomonth = month == 12 ? 1 : month + 1;
-		toyear = month == 12 ? year + 1 : year;
-		datefrom = `${year}-${month}-01`;
-		dateto = `${toyear}-${tomonth}-01`;
-		window.location.assign(`/movimenti/list?filter=category%3D${categoryid}&filter=dateto%3D${dateto}&filter=datefrom%3D${datefrom}`);
-	});
-	$('#select-month').change(event => {
+	$('#select-month, #select-year').change(event => {
 		buildURLFromMonthYearSelects();
+	});
+	$('#dateFrom, #dateTo').change(event => {
+		from = $('#dateFrom').val();
+		to = $('#dateTo').val();
+		if(from !== undefined && from.length > 0 && 
+			to !== undefined && to.length > 0){
+			fetchSummaryAjax(new Date(from), new Date(to));
+		}
 	});
 });

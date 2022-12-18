@@ -14,3 +14,5 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+LOGGING['loggers']['tradinglog']['level'] = 'DEBUG'
+LOGGING['loggers']['movimenti']['level'] = 'DEBUG'

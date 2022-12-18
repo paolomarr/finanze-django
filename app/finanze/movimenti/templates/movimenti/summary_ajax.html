@@ -1,0 +1,68 @@
+{% extends 'movimenti/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'movimenti/summary.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+{% translate "Movements' summary" %}
+{% endblock %}
+{% block content %}
+<div id="select-range-period">
+    <h3>{% translate "Filter by range" %}</h3>
+    <form class="row row-cols-lg-auto align-items-center">
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="date" class="form-control" name="dateFrom" id="dateFrom"/>
+                <label for="dateFrom">{% translate "From" %}</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-floating">
+                <input type="date" class="form-control" name="dateTo" id="dateTo" />
+                <label for="dateTo">{% translate "To" %}</label>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="select-month-period">
+    <h3>{% translate "Filter by month" %}</h3>
+	<form class="row row-cols-lg-auto align-items-center">
+		<div class="col-12">
+			<div class="form-floating">
+				<select class="form-select" name="month" id="select-month">
+					{% for monthobj in months %}
+					<option value="{{monthobj.idx}}" {% if monthobj.isCurrent %}selected{% endif %}>{{monthobj.name}}</option>
+					{% endfor %}
+				</select>
+				<label for="select-month">Month</label>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-floating">
+				<select class="form-select" name="year" id="select-year">
+					{% for year in availableYears %}
+					<option value="{{year|date:'Y'}}">{{year |date:'Y'}}</option>
+					{% endfor %}
+				</select>
+				<label for="select-year">Year</label>
+			</div>
+		</div>
+		<!-- <div class="col-12">
+			<button type="button" class="btn btn-primary" onclick="selectDate()">Select</button>
+		</div> -->
+	</form>
+</div>
+<div class="container" id="summaryTableContainer">
+    <div class="h2" id="tableTitle"></div>
+    <div class="d-none d-sm-block">
+        <div class="row border-bottom" id="tableHeader">
+        </div>
+    </div>
+    <div id="tableBody">
+
+    </div>
+</div>
+{% endblock %}

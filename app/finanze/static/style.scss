@@ -23,6 +23,9 @@ div {
 .table-container {
 	overflow-x: auto;
 }
+#summaryTableContainer {
+	max-width: 768px;
+}
 table {
 	thead {
 		font-weight: bold;

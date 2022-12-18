@@ -87,39 +87,46 @@ def newmovement(request):
 
 @login_required
 def summary(request):
-    params = request.GET
-    year = params.get('year', None)
-    month = params.get('month', None)
+    years = Movement.objects.dates('date', 'year', order='DESC')
+    # create a list of months, indicating the selected one
+    months = []
+    today = date.today()
+    for midx in range(1, 13):
+        # year is not important here
+        iterdate = date(today.year, midx, 1)
+        mname = iterdate.strftime("%B")
+        isCurrent = today.month == midx
+        months.append({"idx": midx, "name": mname, "isCurrent": isCurrent})
+    context = {
+        'availableYears': years,
+        'months': months
+    }
+    return render(request, 'movimenti/summary_ajax.html', context)
 
+
+@login_required
+def summaryXHR(request):
+    params = request.GET
+    dateFrom = params['dateFrom']
+    dateTo = params['dateTo']
     results = []
     totals = {'ins': 0, 'outs': 0}
     start = None
     end = None
     for cat in Category.objects.all():
-        start, end, outs = cat.movementsInPeriod(Category.OUTCOME, year, month)
-        start, end, ins = cat.movementsInPeriod(Category.INCOME, year, month)
-        results.append({"cat": cat, "outs": outs, "ins": ins})
+        start, end, outs = cat.movementsInDatesRange(Category.OUTCOME, dateFrom, dateTo)
+        start, end, ins = cat.movementsInDatesRange(Category.INCOME, dateFrom, dateTo)
+        results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins})
         totals['ins'] += ins['amount']
         totals['outs'] += outs['amount']
-
-    years = Movement.objects.dates('date', 'year', order='DESC')
-    # create a list of months, indicating the selected one
-    months = []
-    for midx in range(1,13):
-        # year is not important here
-        iterdate = date(start.year, midx, 1)
-        mname = iterdate.strftime("%B")
-        isCurrent = start.month == midx
-        months.append({"idx": midx, "name": mname, "isCurrent": isCurrent})
-    context = {
-        'availableYears': years,
+    outdata = {
         'results': results,
-        'start': start,
-        'end': end,
         'totals': totals,
-        'months': months
+        'start': start,
+        'end': end
     }
-    return render(request, 'movimenti/summary.html', context)
+    return JsonResponse(outdata)
+
 
 @login_required
 def assets(request):
