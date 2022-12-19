@@ -110,15 +110,15 @@ def summaryXHR(request):
     dateFrom = params['dateFrom']
     dateTo = params['dateTo']
     results = []
-    totals = {'ins': 0, 'outs': 0}
+    totals = {'ins': {'amount': 0}, 'outs': {'amount': 0}}
     start = None
     end = None
     for cat in Category.objects.all():
         start, end, outs = cat.movementsInDatesRange(Category.OUTCOME, dateFrom, dateTo)
         start, end, ins = cat.movementsInDatesRange(Category.INCOME, dateFrom, dateTo)
         results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins})
-        totals['ins'] += ins['amount']
-        totals['outs'] += outs['amount']
+        totals['ins']['amount'] += ins['amount']
+        totals['outs']['amount'] += outs['amount']
     outdata = {
         'results': results,
         'totals': totals,

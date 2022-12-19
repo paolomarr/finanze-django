@@ -19,11 +19,13 @@ var _myDateFormat = function(date){
 	return `${year}-${month}-${day}`
 }
 
-var tableheaderColumnFactory = function(header, xsWidth=12, xlWidth=1) {
-	return `<div class="table-header col-${xsWidth} col-sm-${xlWidth}">${header}</div>`
+var tableheaderColumnFactory = function(header, smWidth, extraClasses = []) {
+	clss = extraClasses.join(' ');
+	return `<div class="table-header col-12 col-sm-${smWidth} ${clss}">${header}</div>`
 }
-var tableRowFieldFactory = function (field, iconclass, xsWidth = 12, xlWidth = 1) {
-	return `<div class="col-${xsWidth} col-sm-${xlWidth}">
+var tableRowFieldFactory = function (field, iconclass, smWidth = 1, extraClasses = []) {
+	clss = extraClasses.join(' ');
+	return `<div class="col-12 col-sm-${smWidth} ${clss}">
 		<span class="d-sm-none"><i class="bi bi-${iconclass}"></i></span>
 		${field}
 	</div>
@@ -42,12 +44,21 @@ var tableRowFactory = function(rowobj, datefrom, dateto) {
 	filterstr = filterqueryobj.toString();
 	catlinkuri = `/movimenti/list?${filterstr}`;
 	catlink = `<a href="${catlinkuri}" data-category=${catobj.id}>${catobj.cat}</a>`
-	rows += tableRowFieldFactory(catlink, "tag", 12, 6);
-	rows += tableRowFieldFactory(rowobj['ins']['amount'].toFixed(2),  "piggy-bank", 12, 3);
-	rows += tableRowFieldFactory(rowobj['outs']['amount'].toFixed(2),  "wallet", 12, 3);
+	rows += tableRowFieldFactory(catlink, "tag", 6, []);
+	rows += tableRowFieldFactory(rowobj['ins']['amount'].toFixed(2),  "piggy-bank", 3, ["currency", "text-sm-end"]);
+	rows += tableRowFieldFactory(rowobj['outs']['amount'].toFixed(2),  "wallet", 3, ["currency", "text-sm-end"]);
 	return `<div class="row border-bottom">
 		${rows}
-	</div>`
+	</div>`;
+}
+var tableTotalsRowFactory = function(totIn, totOut){
+	rows = "";
+	rows += tableRowFieldFactory("TOTALS", "", 6);
+	rows += tableRowFieldFactory(totIn.toFixed(2), "", 3, ["currency", "text-sm-end"]);
+	rows += tableRowFieldFactory(totOut.toFixed(2), "", 3, ["currency", "text-sm-end"]);
+	return `<div class="d-none d-sm-flex row border-bottom table-total">
+		${rows}
+	</div>`;
 }
 var renderSummaryTable = function (tabledata) {
 	start = (new Date(tabledata.start)).toLocaleDateString();
@@ -55,12 +66,14 @@ var renderSummaryTable = function (tabledata) {
 	$("#tableTitle").html(`You're viewing movements from ${start} to ${end}`);
 	$("#tableHeader").empty();
 	$("#tableBody").empty();
-	$("#tableHeader").append(tableheaderColumnFactory("Category", 12, 6));
-	$("#tableHeader").append(tableheaderColumnFactory("Incomes", 12, 3));
-	$("#tableHeader").append(tableheaderColumnFactory("Expenses", 12, 3));
+	$("#tableHeader").append(tableheaderColumnFactory("Category", 6));
+	$("#tableHeader").append(tableheaderColumnFactory("Incomes", 3, ["text-sm-end"]));
+	$("#tableHeader").append(tableheaderColumnFactory("Expenses", 3, ["text-sm-end"]));
 	tabledata.results.forEach(element => {
 		$("#tableBody").append(tableRowFactory(element, tabledata.start, tabledata.end));
 	});
+	$("#tableBody")
+		.append(tableTotalsRowFactory(tabledata.totals.ins.amount, tabledata.totals.outs.amount));
 }
 
 var fetchSummaryAjax = function(dateFrom, dateTo) {
