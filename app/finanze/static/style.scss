@@ -23,6 +23,11 @@ div {
 .table-container {
 	overflow-x: auto;
 }
+.navbar {
+	.nav-item i {
+		font-size: 2rem;
+	}
+}
 #summaryTableContainer {
 	max-width: 768px;
 }
