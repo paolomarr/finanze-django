@@ -67,9 +67,23 @@
 							{% endfor %}
 						</ul>
 					</li>
+					
 					{% if user.is_authenticated %}
-					<li class="nav-item">
-						<a class="nav-link" href="/logout"><i class="bi bi-box-arrow-right" style="font-size: 2rem;"></i></a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+							<i class="bi bi-person-circle"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<h6 class="dropdown-header">{{user.get_full_name|default:user.username}}</h6>
+							</li>
+							<li>
+								<a class="nav-link" href="#">Profile</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="/logout">Logout</a>
+							</li>
+						</ul>
 					</li>
 					{% endif %}
 				</ul>

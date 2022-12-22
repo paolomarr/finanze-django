@@ -20,8 +20,8 @@ def index(request):
     return HttpResponseRedirect('/movimenti/list')
 
 
-def _filterMovements(filterParams):
-    filterdict = {}
+def _filterMovements(user, filterParams):
+    filterdict = {"user": user}
     logger.debug("Filter parameters: {}".format(filterParams))
     for rawitem in filterParams:
         item = unquote(rawitem)
@@ -35,19 +35,16 @@ def _filterMovements(filterParams):
             filterdict['date__lt'] = val
         if col in ['category', 'subcategory']:
             filterdict = {"{}_id".format(col): val}
-    if len(filterdict) > 0:
-        logger.debug("Filter dict: {}".format(filterdict))
-        retmovements = Movement.objects.filter(**filterdict)
-    else:
-        retmovements = Movement.objects.all()
-
+    logger.debug("Filter dict: {}".format(filterdict))
+    retmovements = Movement.objects.filter(**filterdict)
+    
     return retmovements.order_by('-date')
 
 
 @login_required
 def list(request):
     params = request.GET
-    movement_list = _filterMovements(params.getlist('filter'))
+    movement_list = _filterMovements(request.user, params.getlist('filter'))
     cats = Category.objects.all()
     subcats = Subcategory.objects.all()
     page = request.GET.get('page', 1)
@@ -86,7 +83,7 @@ def newmovement(request):
 
 @login_required
 def summary(request):
-    years = Movement.objects.dates('date', 'year', order='DESC')
+    years = Movement.objects.filter(user=request.user).dates('date', 'year', order='DESC')
     # create a list of months, indicating the selected one
     months = []
     today = date.today()
@@ -113,8 +110,8 @@ def summaryXHR(request):
     start = None
     end = None
     for cat in Category.objects.all():
-        start, end, outs = cat.movementsInDatesRange(Category.OUTCOME, dateFrom, dateTo)
-        start, end, ins = cat.movementsInDatesRange(Category.INCOME, dateFrom, dateTo)
+        start, end, outs = cat.movementsInDatesRange(request.user, Category.OUTCOME, dateFrom, dateTo)
+        start, end, ins = cat.movementsInDatesRange(request.user, Category.INCOME, dateFrom, dateTo)
         results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins})
         totals['ins']['amount'] += ins['amount']
         totals['outs']['amount'] += outs['amount']
@@ -174,7 +171,7 @@ def assets(request):
             rec_to = groupByDateAndTotalBalance[idx]
             rec_from = groupByDateAndTotalBalance[idx+1]
             truebalance = rec_to['totbalance'] - rec_from['totbalance']
-            period = Movement.objects.netAmountInPeriod(rec_from['date'], rec_to['date'])
+            period = Movement.objects.netAmountInPeriodrequest.user, (rec_from['date'], rec_to['date'])
             groupByDateAndTotalBalance[idx]['accounted'] = period
             groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
             groupByDateAndTotalBalance[idx]['error'] = truebalance - period
