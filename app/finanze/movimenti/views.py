@@ -1,19 +1,19 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Sum, F
 from .models import Movement, Category, Subcategory, AssetBalance
+from django.contrib.auth.models import User
 from tradinglog.models import Order
 from .forms import NewMovementForm, NewAssetsBalanceForm
-import logging
 from urllib.parse import unquote, urlparse, parse_qs
-from django.views.generic import CreateView
 from json import loads as jloads
 from django.http import JsonResponse
 from datetime import date
-
-logger = logging.getLogger(__name__)
+from django.utils.translation import gettext as _
+from . import logger
+import re
 
 @login_required
 def index(request):
@@ -78,6 +78,8 @@ def newmovement(request):
 
     emptySubcat = Subcategory.objects.get(subcategory="")
     form = NewMovementForm(initial={'subcategory': emptySubcat.id})
+    form.fields["category"].empty_label = _("Select category")
+    form.fields["category"].queryset = User.objects.get(username=request.user.username).category_set.all()
     return render(request, 'movimenti/newmovement.html', {'form': form, 'errors': errors})
 
 
@@ -186,3 +188,56 @@ def assets(request):
             {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets})
         response.set_cookie("user", request.user, path=request.path)
         return response
+
+@login_required
+def newcategory(request):
+    errors = []
+    if request.method != 'POST':
+        errors.append("invalid request")
+    else:
+        params = request.POST
+        catname = params.get('category', '')
+        catdir = params.get('direction')
+        if int(catdir) not in [Category.INCOME, Category.OUTCOME]:
+            errors.append("invalid direction value")
+        elif len(catname) == 0:
+            errors.append("category name cannot be empty")
+        else:
+            newcat = Category.objects.create(category=catname, direction=int(catdir))
+            newcat.save()
+            newcat.user.add(request.user)
+            newcat.save()
+    return JsonResponse({"errors": errors})
+    
+@login_required
+def categories(request):
+    if request.method == 'POST':
+        params = request.POST
+        cats = params.getlist('category', [])
+        vals = params.getlist('checked', [])
+        errors = []
+        if len(cats) == 0 or len(cats) != len(vals):
+            errors.append("Input arrays error")
+        else:
+            logger.debug("Categories %s" % str(cats))
+        for cat, checked in zip(cats,vals):
+            category = Category.objects.get(id=cat)
+            if checked == "true":
+                logger.debug("Adding user %s to category %s" % (str(request.user), category.category))
+                category.user.add(request.user)
+            else:
+                logger.debug("Removing user %s from category %s" %
+                             (str(request.user), category.category))
+                category.user.remove(request.user)
+            category.save()
+        return JsonResponse({"result": "ok", "errors": errors})
+    else:
+        cats = Category.objects.all()
+        context = {'cats': []}
+        for cat in cats:
+            if cat.user.filter(username=request.user.username).first() is not None:
+                cat.__setattr__("has_user", True)
+            else:
+                cat.__setattr__("has_user", False)
+            context['cats'].append(cat)
+        return render(request, 'movimenti/categories.html', context)

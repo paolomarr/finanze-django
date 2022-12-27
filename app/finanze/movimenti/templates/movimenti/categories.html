@@ -1,0 +1,60 @@
+{% extends 'movimenti/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+Categorie
+{% endblock %}
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'movimenti/categories.js' %}"></script>
+{% endblock %}
+{% block content%}
+
+<form>
+    {% csrf_token %}
+    <div class="container">
+        <div class="row border-bottom">
+            <div class="table-header col-2 col-xl-1">{% translate "Use" %}</div>
+            <div class="table-header col-6 col-xl-4">{% translate "Name" %}</div>
+            <div class="table-header col-4 col-xl-1">{% translate "Direction" %}</div>
+        </div>
+
+            {% for cat in cats %}
+        <div class="row border-bottom">
+            <div class="col-2 col-xl-1">
+                <input class="form-check-input category-select" type="checkbox" value="{{cat.id}}" {% if cat.has_user %}checked{% endif %} />
+            </div>
+            <div class="col-6 col-xl-4">
+                {{cat.category}}
+            </div>
+            <div class="col-4 col-xl-1">
+                {% if cat.direction|stringformat:"d" == "1" %}<i class="bi bi-box-arrow-in-right"></i>
+                {% else %}<i class="bi bi-box-arrow-right"></i>
+                {% endif %}
+            </div>
+        </div>
+            {% endfor %}
+    </div>
+    <div class="row">
+        <h4>{% translate "Create a new category" %}</h4>
+        <div class="col">
+            <input class="form-control" type="text" placeholder="{% translate 'Category name' %}" name="category"/>
+        </div>
+        <div class="col">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="categoryDirectionSwitch" value="1" name="direction">
+                <label class="form-check-label text-black-50" for="categoryDirectionSwitch">{% translate "Incoming" %}</label>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-secondary disabled" type="button" id="createCategoryButton">
+                <span class="d-none spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="d-none visually-hidden">Loading...</span>
+            {% translate "Create" %}</button>
+        </div>
+    </div>
+    <div class="row" id="errors">
+
+    </div>
+</form>
+{% endblock %}

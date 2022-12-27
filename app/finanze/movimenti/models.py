@@ -8,6 +8,7 @@ from datetime import date
 
 class Subcategory(models.Model):
     subcategory = models.CharField(max_length=50)
+    user = models.ManyToManyField(User)
 
     def __str__(self):
         return self.subcategory
@@ -22,6 +23,12 @@ class Category(models.Model):
     ]
     category = models.CharField(max_length=50)
     direction = models.FloatField(choices=DIRECTIONS)
+    user = models.ManyToManyField(User)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name='category_unique_idx', fields=['category', 'direction'])
+        ]
 
     def __str__(self):
         return self.category
