@@ -25,6 +25,7 @@
 	<!-- JQUERY -->
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	
+	<script type="text/javascript" src="{% static 'jquery.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'scripts.js' %}"></script>
 	{% block extra_script %}{% endblock %}
 	
@@ -55,12 +56,12 @@
 					{% endwith %}
 				<ul class="nav ms-auto mb-2 mb-lg-0 align-items-center">
 					<li class="nav-item dropdown">
+						{% get_current_language as LANGUAGE_CODE %}
+						{% get_available_languages as LANGUAGES %}
+						{% get_language_info_list for LANGUAGES as languages %}
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-							aria-expanded="false"><i class="bi bi-translate"></i></a>
+							aria-expanded="false">{{ LANGUAGE_CODE|language_name_local }} <i class="bi bi-translate"></i></a>
 						<ul class="dropdown-menu">
-							{% get_current_language as LANGUAGE_CODE %}
-							{% get_available_languages as LANGUAGES %}
-							{% get_language_info_list for LANGUAGES as languages %}
 							{% for language in languages %}
 							<li><a class="dropdown-item {% if language.code == LANGUAGE_CODE %}active{% endif %}"
 									href="{% url 'set_language' %}?language={{language.code}}">{{ language.name_local }}</a></li>
@@ -71,12 +72,9 @@
 					{% if user.is_authenticated %}
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-							<i class="bi bi-person-circle"></i>
+							{{user.get_full_name|default:user.username}}<i class="bi bi-person-circle"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li>
-								<h6 class="dropdown-header">{{user.get_full_name|default:user.username}}</h6>
-							</li>
 							<li>
 								<a class="nav-link" href="#">Profile</a>
 							</li>
