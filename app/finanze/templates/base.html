@@ -47,24 +47,31 @@
 	<div class="container">
 		<nav class="navbar">
 			<div class="container-fluid">
-				<a href="/" class="navbar-brand">
-					<img src="{% static 'brand-logo.png' %}" alt="Logo" width="30" height="24"
-						class="d-inline-block align-text-top" />
-					My Finanze
-				</a>{% with pathcomps=request.path|split:"/" %}
-					{% if pathcomps|length > 2 %}- {{pathcomps|slice:"1:"|first}}{% endif %}
-					{% endwith %}
+				<div class="navbar-brand">
+					<a href="/">
+						<img src="{% static 'brand-logo.png' %}" alt="Logo" width="30" height="24"
+							class="d-inline-block align-text-top" />
+					</a>
+					<a href="{{base_app_path}}">{{request.current_app}}</a>
+				</div>
 				<ul class="nav ms-auto mb-2 mb-lg-0 align-items-center">
 					<li class="nav-item dropdown">
 						{% get_current_language as LANGUAGE_CODE %}
 						{% get_available_languages as LANGUAGES %}
 						{% get_language_info_list for LANGUAGES as languages %}
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-							aria-expanded="false">{{ LANGUAGE_CODE|language_name_local }} <i class="bi bi-translate"></i></a>
-						<ul class="dropdown-menu">
+							aria-expanded="false">
+							<span class="d-none d-xl-inline">{{ LANGUAGE_CODE|language_name_local }}</span> <i class="bi bi-translate"></i>
+						</a>
+						<ul class="dropdown-menu" id="langSelectionMenu">
 							{% for language in languages %}
-							<li><a class="dropdown-item {% if language.code == LANGUAGE_CODE %}active{% endif %}"
-									href="{% url 'set_language' %}?language={{language.code}}">{{ language.name_local }}</a></li>
+							<li>
+								{% if language.code == LANGUAGE_CODE %}
+								<a class="dropdown-item active" href="#">{{ language.name_local }}</a>
+								{% else %}
+								<a class="dropdown-item" href="#" data-langurl="{% url 'set_language' %}?language={{language.code}}&next={{ request.path }}">{{ language.name_local }}</a>	
+								{% endif %}
+							</li>
 							{% endfor %}
 						</ul>
 					</li>
@@ -72,7 +79,7 @@
 					{% if user.is_authenticated %}
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-							{{user.get_full_name|default:user.username}}<i class="bi bi-person-circle"></i>
+							<span class="d-none d-xl-inline">{{user.get_full_name|default:user.username}}</span> <i class="bi bi-person-circle"></i>
 						</a>
 						<ul class="dropdown-menu">
 							<li>

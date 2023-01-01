@@ -8,7 +8,7 @@ Trading stats
 <script>
 	function updateAll() {
 		// var url = "/tradinglog/updatecurrentprice?";
-		var url = "{% url 'tradinglog:updatePrice' %}";
+		var url = "{% url 'updatePrice' %}";
 		var symbols = [];
 		{% for stock in tradedStocks %}symbols.push("symbol={{stock.symbol}}");
 		{% endfor %}

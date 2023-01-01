@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render as srender
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -13,7 +13,16 @@ from django.http import JsonResponse
 from datetime import date
 from django.utils.translation import gettext as _
 from . import logger
+from django.apps import apps
+from . import app_name
+from django.urls import reverse
 import re
+
+def render(request, path, context):
+    request.current_app = apps.get_app_config(app_name).verbose_name
+    context['base_app_path'] = reverse("index", current_app=app_name)
+    return srender(request, path, context)
+
 
 @login_required
 def index(request):
@@ -173,7 +182,7 @@ def assets(request):
             rec_to = groupByDateAndTotalBalance[idx]
             rec_from = groupByDateAndTotalBalance[idx+1]
             truebalance = rec_to['totbalance'] - rec_from['totbalance']
-            period = Movement.objects.netAmountInPeriodrequest.user, (rec_from['date'], rec_to['date'])
+            period = Movement.objects.netAmountInPeriod(request.user, rec_from['date'], rec_to['date'])
             groupByDateAndTotalBalance[idx]['accounted'] = period
             groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
             groupByDateAndTotalBalance[idx]['error'] = truebalance - period

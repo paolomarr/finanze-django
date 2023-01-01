@@ -11,4 +11,8 @@ var setNavActiveItem = function(){
 }
 $(document).ready(function(){
 	setNavActiveItem();
+	$("#langSelectionMenu li").click(event => {
+		var langurl = $(event.target).prop('data-langurl');
+		$.post(langurl);
+	});
 });

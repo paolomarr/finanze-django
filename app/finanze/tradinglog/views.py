@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render as srender
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.db.models import Sum, F, FloatField, ExpressionWrapper
@@ -10,8 +10,18 @@ import re
 from datetime import datetime
 from .forms import NewOrderForm
 from urllib.parse import unquote
+from django.apps import apps
+from . import app_name
+from django.urls import reverse
+
 
 logger = logging.getLogger(__name__)
+
+
+def render(request, path, context):
+    request.current_app = apps.get_app_config(app_name).verbose_name
+    context['base_app_path'] = reverse("index", current_app=app_name)
+    return srender(request, path, context)
 
 
 def index(request):
