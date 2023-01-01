@@ -110,4 +110,5 @@ $(function(){
 			fetchSummaryAjax(new Date(from), new Date(to));
 		}
 	});
+	buildURLFromMonthYearSelects();
 });
