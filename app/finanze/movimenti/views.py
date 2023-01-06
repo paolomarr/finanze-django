@@ -75,6 +75,7 @@ def newmovement(request):
         # parse the form and add new item
         form = NewMovementForm(request.POST)
         if form.is_valid():
+            form.user = request.user
             form.save()
             # redirect to a new URL:
             redirect = '/movimenti/list'

@@ -11,8 +11,14 @@ class NewMovementForm(ModelForm):
     
     class Meta:
         model = Movement
-        fields = '__all__'
-        localized_fields = '__all__'
+        fields = [
+            'date',
+            'description',
+            'category',
+            'abs_amount',
+            'subcategory'
+        ]
+        localized_fields = fields
         widgets = {
             'date': MyDateTimeInputWidget(),
         }

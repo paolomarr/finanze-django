@@ -64,15 +64,19 @@
 							<span class="d-none d-xl-inline">{{ LANGUAGE_CODE|language_name_local }}</span> <i class="bi bi-translate"></i>
 						</a>
 						<ul class="dropdown-menu" id="langSelectionMenu">
+							<form id="langSelectionForm">
+							{% csrf_token %}
+								<input type="hidden" name="next" value="{{request.path}}" />
 							{% for language in languages %}
-							<li>
+									<li>
 								{% if language.code == LANGUAGE_CODE %}
-								<a class="dropdown-item active" href="#">{{ language.name_local }}</a>
+										<a class="dropdown-item active" href="#">{{ language.name_local }}</a>
 								{% else %}
-								<a class="dropdown-item" href="#" data-langurl="{% url 'set_language' %}?language={{language.code}}&next={{ request.path }}">{{ language.name_local }}</a>	
+										<a class="dropdown-item" href="#" data-language-code="{{language.code}}">{{ language.name_local }}</a>	
 								{% endif %}
-							</li>
+									</li>
 							{% endfor %}
+							</form>
 						</ul>
 					</li>
 					
