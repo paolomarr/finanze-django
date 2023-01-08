@@ -135,7 +135,10 @@ def summaryXHR(request):
         'start': start,
         'end': end
     }
-    return JsonResponse(outdata)
+    if request.path.find("/fetch") > 0:
+        return render(request, 'movimenti/summary/table.html', outdata)
+    else:
+        return JsonResponse(outdata)
 
 
 @login_required

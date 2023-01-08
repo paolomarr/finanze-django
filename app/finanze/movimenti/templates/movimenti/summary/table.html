@@ -1,0 +1,43 @@
+{% load i18n %}
+<div class="h2" id="tableTitle">{{tableTitle}}</div>
+<div class="d-none d-sm-block">
+    <div class="row border-bottom" id="tableHeader">
+        <div class="table-header col-12 col-sm-6 ">{% translate "Category" %}</div>
+        <div class="table-header col-12 col-sm-3 text-sm-end">{% translate "Incomes" %}</div>
+        <div class="table-header col-12 col-sm-3 text-sm-end">{% translate "Expenses" %}</div>
+    </div>
+</div>
+<div id="tableBody">
+    {% for row in results %}
+    <div class="row border-bottom">
+        <div class="col-12 col-sm-6 ">
+            <span class="d-sm-none"><i class="bi bi-tag"></i></span>
+            <a href="/movimenti/list?filter=category%253D{{row.cat.id}}&amp;filter=dateto%253D{{end}}&amp;filter=datefrom%253D{{start}}"
+                data-category="1">{{row.cat.cat}}</a>
+        </div>
+        <div class="col-12 col-sm-3 currency text-sm-end">
+            <span class="d-sm-none"><i class="bi bi-piggy-bank"></i></span>
+            {{row.ins.amount | floatformat:2}}
+        </div>
+        <div class="col-12 col-sm-3 currency text-sm-end">
+            <span class="d-sm-none"><i class="bi bi-wallet"></i></span>
+            {{row.outs.amount | floatformat:2}}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="d-none d-sm-flex row border-bottom table-total">
+        <div class="col-12 col-sm-6 ">
+            <span class="d-sm-none"><i class="bi bi-"></i></span>
+            TOTALS
+        </div>
+        <div class="col-12 col-sm-3 currency text-sm-end">
+            <span class="d-sm-none"><i class="bi bi-"></i></span>
+            {{totals.ins.amount | floatformat:2}}
+        </div>
+        <div class="col-12 col-sm-3 currency text-sm-end">
+            <span class="d-sm-none"><i class="bi bi-"></i></span>
+            {{totals.outs.amount | floatformat:2}}
+        </div>
+    
+    </div>
+</div>

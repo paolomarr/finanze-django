@@ -10,5 +10,6 @@ urlpatterns = [
     path('assets', views.assets, name='assets'),
     path('categories', views.categories, name='categories'),
     path('categories/new', views.newcategory, name='categories.new'),
-    path('summary/json', views.summaryXHR, name='summaryxhr'),
+    path('summary/json', views.summaryXHR, name='summaryxhjson'),
+    path('summary/fetch', views.summaryXHR, name='summaryxhr'),
 ]
