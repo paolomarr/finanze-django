@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 19:05+0000\n"
+"POT-Creation-Date: 2023-01-08 22:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,12 +124,23 @@ msgid "Amount"
 msgstr "Importo"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:60
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:5
 msgid "Category"
 msgstr "Categoria"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:61
 msgid "Subcategory"
 msgstr "Sottocategoria"
+
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:6
+#, fuzzy
+#| msgid "Incoming"
+msgid "Incomes"
+msgstr "Entrate"
+
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:7
+msgid "Expenses"
+msgstr "Uscite"
 
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:10
 msgid "Movements' summary"

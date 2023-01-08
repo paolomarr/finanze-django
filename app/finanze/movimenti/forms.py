@@ -2,6 +2,7 @@ from django.forms import ModelForm, ModelChoiceField
 from django.forms.widgets import Input, HiddenInput, Select
 from .models import Movement, AssetBalance, Category
 from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 
 
 class MyDateTimeInputWidget(Input):
@@ -13,12 +14,13 @@ class NewMovementForm(ModelForm):
         model = Movement
         fields = [
             'date',
+            'abs_amount',
             'description',
             'category',
-            'abs_amount',
             'subcategory'
         ]
         localized_fields = fields
+        labels = {f:_(f.replace("_", " ").title()) for f in fields}
         widgets = {
             'date': MyDateTimeInputWidget(),
         }
