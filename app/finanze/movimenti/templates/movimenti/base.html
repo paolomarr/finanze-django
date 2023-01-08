@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block extra_script %}
 {{ block.super }}
 <script type="text/javascript" src="{% static 'movimenti/scripts.js' %}"></script>
 {% endblock %}
 {% block nav %}
-<nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
-  <a class="nav-link" href="{% url 'list' %}">Movimenti</a>
-  <a class="nav-link" href="{% url 'summary' %}">Riepilogo</a>
-  <a class="nav-link" href="{% url 'newmovement' %}">Registra nuovo</a>
-  <a class="nav-link" href="{% url 'assets' %}">Assets</a>
+<nav id="navigationBar" class="nav nav-pills flex-column flex-sm-row bg-light p-2">
+  <a class="nav-link" href="{% url 'list' %}">{% translate "Movement list" %}</a>
+  <a class="nav-link" href="{% url 'summary' %}">{% translate "Summary" %}</a>
+  <a class="nav-link" href="{% url 'newmovement' %}">{% translate "Insert new" %}</a>
+  <a class="nav-link" href="{% url 'assets' %}">{% translate "Assets" %}</a>
 </nav>
 {% endblock %}
