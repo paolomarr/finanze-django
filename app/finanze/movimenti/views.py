@@ -104,7 +104,7 @@ def summary(request):
     for midx in range(1, 13):
         # year is not important here
         iterdate = date(today.year, midx, 1)
-        mname = iterdate.strftime("%B")
+        mname = _(iterdate.strftime("%B"))
         isCurrent = today.month == midx
         months.append({"idx": midx, "name": mname, "isCurrent": isCurrent})
     context = {

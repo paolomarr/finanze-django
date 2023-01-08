@@ -44,7 +44,6 @@ msgid "Error"
 msgstr "Scarto"
 
 #: app/finanze/movimenti/templates/movimenti/base.html:10
-#, fuzzy
 msgid "Movement list"
 msgstr "Movimenti"
 
@@ -69,20 +68,14 @@ msgid "Name"
 msgstr "Nome"
 
 #: app/finanze/movimenti/templates/movimenti/categories.html:19
-#, fuzzy
-#| msgid "Description"
 msgid "Direction"
 msgstr "Direzione"
 
 #: app/finanze/movimenti/templates/movimenti/categories.html:39
-#, fuzzy
-#| msgid "Filter category"
 msgid "Create a new category"
 msgstr "Crea nuova categoria"
 
 #: app/finanze/movimenti/templates/movimenti/categories.html:41
-#, fuzzy
-#| msgid "Category"
 msgid "Category name"
 msgstr "Categoria"
 
@@ -159,8 +152,6 @@ msgid "Filter by month"
 msgstr "Filtra su mese"
 
 #: app/finanze/movimenti/views.py:93
-#, fuzzy
-#| msgid "Filter category"
 msgid "Select category"
 msgstr "Filtra categoria"
 
