@@ -88,9 +88,12 @@ class Movement(models.Model):
         subcatstr = ""
         if len(self.subcategory.subcategory) > 0:
             subcatstr = " | (%s)" % self.subcategory.subcategory
+        username = "-"
+        if self.user is not None:
+            username = self.user.get_username()
         return "[{}] {} | {} ({}) | {}€{}\
 ".format(
-            self.user.get_username(),
+            username,
             self.date,
             self.description,
             self.category,
