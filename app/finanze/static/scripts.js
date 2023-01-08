@@ -1,18 +1,13 @@
 var setNavActiveItem = function(){
 	path = window.location.pathname;
-	const navlinks = Array.from(document.getElementsByClassName('nav-link'));
+	const navlinks = document.getElementById("navigationBar").getElementsByClassName('nav-link');
 	for(let i = 0; i < navlinks.length; i++){
 		let el = navlinks[i];
 		let href = el.getAttribute('href');
-		try {
-			let url = new URL(href);
-			if (path.search(url.pathname) >= 0) {
-				el.classList.add('active');
-			} else {
-				el.classList.remove('active');
-			}
-		} catch (error) {
-			
+		if (window.location.href.search(href) >= 0) {
+			el.classList.add('active');
+		} else {
+			el.classList.remove('active');
 		}
 	}
 }
