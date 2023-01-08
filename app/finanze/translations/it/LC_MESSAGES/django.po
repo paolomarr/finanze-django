@@ -45,7 +45,6 @@ msgstr "Scarto"
 
 #: app/finanze/movimenti/templates/movimenti/base.html:10
 #, fuzzy
-#| msgid "Movements"
 msgid "Movement list"
 msgstr "Movimenti"
 

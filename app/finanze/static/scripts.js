@@ -26,8 +26,8 @@ window.addEventListener("load", () =>{
 				var url = "/i18n/setlang/";
 				const XHR = new XMLHttpRequest();
 				// Define what happens on successful data submission
-				XHR.addEventListener('load', (event) => {
-					alert('Yeah! Data sent and response loaded.');
+				XHR.addEventListener('load', function() {
+					window.location.assign(XHR.responseURL);
 				});
 
 				// Define what happens in case of an error
