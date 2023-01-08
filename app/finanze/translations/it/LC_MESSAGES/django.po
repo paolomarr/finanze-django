@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 18:31+0000\n"
+"POT-Creation-Date: 2023-01-08 19:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,21 +43,21 @@ msgstr "Totale"
 msgid "Error"
 msgstr "Scarto"
 
-#: app/finanze/movimenti/templates/movimenti/base.html:9
+#: app/finanze/movimenti/templates/movimenti/base.html:10
 #, fuzzy
 #| msgid "Movements"
-msgid "Movimenti"
+msgid "Movement list"
 msgstr "Movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/base.html:10
-msgid "Riepilogo"
-msgstr ""
-
 #: app/finanze/movimenti/templates/movimenti/base.html:11
-msgid "Registra nuovo"
-msgstr ""
+msgid "Summary"
+msgstr "Riepilogo"
 
 #: app/finanze/movimenti/templates/movimenti/base.html:12
+msgid "Insert new"
+msgstr "Registra nuovo"
+
+#: app/finanze/movimenti/templates/movimenti/base.html:13
 msgid "Assets"
 msgstr "Assets"
 
@@ -167,10 +167,9 @@ msgstr "Filtra categoria"
 
 #: app/finanze/tradinglog/apps.py:8
 msgid "Trading log"
-msgstr ""
+msgstr "Operazioni trading"
 
-#~ msgid "Insert new"
-#~ msgstr "Registra nuovo"
-
-#~ msgid "Summary"
-#~ msgstr "Riepilogo"
+#, fuzzy
+#~| msgid "Movements"
+#~ msgid "Movimenti"
+#~ msgstr "Movimenti"
