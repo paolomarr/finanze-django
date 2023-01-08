@@ -1,0 +1,176 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-08 18:31+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app/finanze/movimenti/apps.py:8
+msgid "Movements"
+msgstr "Movimenti"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:21
+msgid "Add entry"
+msgstr "Aggiungi elemento"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:24
+msgid "Submit"
+msgstr "Invia"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:38
+#: app/finanze/movimenti/templates/movimenti/list.html:57
+msgid "Date"
+msgstr "Data"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:39
+msgid "Total"
+msgstr "Totale"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:40
+msgid "Error"
+msgstr "Scarto"
+
+#: app/finanze/movimenti/templates/movimenti/base.html:9
+#, fuzzy
+#| msgid "Movements"
+msgid "Movimenti"
+msgstr "Movimenti"
+
+#: app/finanze/movimenti/templates/movimenti/base.html:10
+msgid "Riepilogo"
+msgstr ""
+
+#: app/finanze/movimenti/templates/movimenti/base.html:11
+msgid "Registra nuovo"
+msgstr ""
+
+#: app/finanze/movimenti/templates/movimenti/base.html:12
+msgid "Assets"
+msgstr "Assets"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:17
+msgid "Use"
+msgstr "In uso"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:18
+msgid "Name"
+msgstr "Nome"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:19
+#, fuzzy
+#| msgid "Description"
+msgid "Direction"
+msgstr "Direzione"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:39
+#, fuzzy
+#| msgid "Filter category"
+msgid "Create a new category"
+msgstr "Crea nuova categoria"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:41
+#, fuzzy
+#| msgid "Category"
+msgid "Category name"
+msgstr "Categoria"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:46
+msgid "Incoming"
+msgstr "Entrante"
+
+#: app/finanze/movimenti/templates/movimenti/categories.html:53
+msgid "Create"
+msgstr "Crea"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:15
+msgid "first"
+msgstr "primo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:16
+msgid "previous"
+msgstr "precedente"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:24
+msgid "next"
+msgstr "successivo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:25
+msgid "last"
+msgstr "ultimo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:30
+msgid "Clear filters"
+msgstr "Azzera filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:39
+msgid "Filter category"
+msgstr "Filtra categoria"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:47
+msgid "Filter subcategory"
+msgstr "Filtra sottocategoria"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:58
+msgid "Description"
+msgstr "Descrizione"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:59
+msgid "Amount"
+msgstr "Importo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:60
+msgid "Category"
+msgstr "Categoria"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:61
+msgid "Subcategory"
+msgstr "Sottocategoria"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:10
+msgid "Movements' summary"
+msgstr "Riepilogo movimenti"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:14
+msgid "Filter by range"
+msgstr "Filtra per intervallo date"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:19
+msgid "From"
+msgstr "Dal"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:25
+msgid "To"
+msgstr "Al"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:31
+msgid "Filter by month"
+msgstr "Filtra su mese"
+
+#: app/finanze/movimenti/views.py:93
+#, fuzzy
+#| msgid "Filter category"
+msgid "Select category"
+msgstr "Filtra categoria"
+
+#: app/finanze/tradinglog/apps.py:8
+msgid "Trading log"
+msgstr ""
+
+#~ msgid "Insert new"
+#~ msgstr "Registra nuovo"
+
+#~ msgid "Summary"
+#~ msgstr "Riepilogo"
