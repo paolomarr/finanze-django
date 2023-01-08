@@ -27,20 +27,20 @@ var cleanFilters = function(){
 	window.location.search = "";
 };
 
-$(function(){
+window.addEventListener("load", function(){
 	var searchParams = new URLSearchParams(window.location.search);
 	for(var pair of searchParams.entries()) {
-	   if(pair[0] === 'filter'){
-	   		innerpair = pair[1].split('=')
-	   		if(innerpair[0] === 'category'){
-	   			$('#filter-category').val(innerpair[1]);	
-	   		}
-	   		if(innerpair[0] === 'subcategory'){
-	   			$('#filter-subcategory').val(innerpair[1]);	
-	   		}
-	   		if(innerpair[0] === 'description'){
-	   			$('#filter-description').val(innerpair[1]);	
-	   		}
-	   }
+		if(pair[0] === 'filter'){
+				innerpair = pair[1].split('=')
+				if(innerpair[0] === 'category'){
+					document.getElementById('#filter-category').value = innerpair[1];	
+				}
+				if(innerpair[0] === 'subcategory'){
+					document.getElementById('#filter-subcategory').value = innerpair[1];	
+				}
+				if(innerpair[0] === 'description'){
+					document.getElementById('#filter-description').value = innerpair[1];	
+				}
+		}
 	}
 });

@@ -10,13 +10,12 @@ Registra nuova spesa/entrata
 {% block content %}
 <div class="row">
 	<div class="col col-12 col-lg-6 col-xl-4">
-		<form action="/movimenti/new" method="post">
+		<form action="/movimenti/new" method="post" id="newMovementForm">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	<input type="hidden" name="another" value="0" />
 	{% bootstrap_button "Save & add more" button_type="button" button_class="btn-primary" data_more="1" name="add_text" %}
 	{% bootstrap_button button_type="button" button_class="btn-secondary" content="Save" %}
-	<!-- <button class="btn btn-primary" type="submit" value="Submit">Registra</button> -->
 		</form>
 	</div>
 </div>
