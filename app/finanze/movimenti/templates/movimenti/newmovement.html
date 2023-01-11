@@ -10,7 +10,7 @@ Registra nuova spesa/entrata
 {% block content %}
 <div class="row">
 	<div class="col col-12 col-lg-6 col-xl-4">
-		<form action="/movimenti/new" method="post" id="newMovementForm">
+		<form method="post" id="newMovementForm">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 	<input type="hidden" name="another" value="0" />

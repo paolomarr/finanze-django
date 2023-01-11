@@ -15,7 +15,7 @@ window.addEventListener("load", () =>{
 	setNavActiveItem();
 	var csrfmiddlewaretoken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
 	const form = document.getElementById('langSelectionForm');
-	const menuitems = document.getElementById("langSelectionMenu").getElementsByTagName("li")
+	const menuitems = form.getElementsByTagName("li");
 	for(let i = 0; i < menuitems.length; i++){
 		let item = menuitems[i];
 		item.addEventListener("click", event =>{

@@ -1,8 +1,9 @@
 window.addEventListener("load", () => {
-	const buttons = document.getElementsByTagName("button");
-	for (let i = 0; i < buttons.length; i++) {
-		element = buttons[i];
+	const formButtons = document.getElementById('newMovementForm').getElementsByTagName("button");
+	for (let i = 0; i < formButtons.length; i++) {
+		element = formButtons[i];
 		element.addEventListener("click", event => {
+			event.preventDefault();
 			isMore = event.target.attributes['data_more'];
 			if (isMore && isMore != undefined) {
 				document.getElementsByName("another")[0].value = "1";
