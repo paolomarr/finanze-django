@@ -54,7 +54,8 @@
 					</a>
 					<a href="{{base_app_path}}">{{request.current_app}}</a>
 				</div>
-				<ul class="nav ms-auto mb-2 mb-lg-0 align-items-center">
+				<!-- more-than-xs screens only -->
+				<ul class="d-none d-sm-flex nav ms-auto mb-2 mb-lg-0 align-items-center">
 					<li class="nav-item dropdown">
 						{% get_current_language as LANGUAGE_CODE %}
 						{% get_available_languages as LANGUAGES %}
@@ -86,7 +87,7 @@
 							<span class="d-none d-xl-inline">{{user.get_full_name|default:user.username}}</span> <i class="bi bi-person-circle"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li>
+							<li class="nav-item">
 								<a class="nav-link" href="#">Profile</a>
 							</li>
 							<li class="nav-item">
@@ -96,6 +97,48 @@
 					</li>
 					{% endif %}
 				</ul>
+				<!-- xs screens only -->
+				<nav class="navbar d-sm-none">
+					<div class="container-fluid justify-content-end">
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#smallscreentogglemenu"
+							aria-controls="smallscreentogglemenu" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="smallscreentogglemenu">
+							<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+								{% get_current_language as LANGUAGE_CODE %}
+								{% get_available_languages as LANGUAGES %}
+								{% get_language_info_list for LANGUAGES as languages %}
+								<form id="langSelectionForm">
+									{% csrf_token %}
+									<input type="hidden" name="next" value="{{request.path}}" />
+									{% for language in languages %}
+									<li class="nav-item">
+										{% if language.code == LANGUAGE_CODE %}
+										<a class="dropdown-item active" href="#">{{ language.name_local }}</a>
+										{% else %}
+										<a class="dropdown-item" href="#" data-language-code="{{language.code}}">{{ language.name_local }}</a>
+										{% endif %}
+									</li>
+									{% endfor %}
+								</form>
+								<!-- lang items -->
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<!-- user management -->
+								{% if user.is_authenticated %}
+								<li class="nav-item">
+									<a class="nav-link" href="#">Profile</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="/logout">Logout</a>
+								</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</nav>
 			</div>
 		</nav>
 	{% block nav%}
