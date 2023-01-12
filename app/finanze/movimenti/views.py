@@ -10,7 +10,7 @@ from .forms import NewMovementForm, NewAssetsBalanceForm
 from urllib.parse import unquote, urlparse, parse_qs
 from json import loads as jloads
 from django.http import JsonResponse
-from datetime import date
+from datetime import date, datetime
 from django.utils.translation import gettext as _
 from . import logger
 from django.apps import apps
@@ -117,8 +117,10 @@ def summary(request):
 @login_required
 def summaryXHR(request):
     params = request.GET
-    dateFrom = params['dateFrom']
-    dateTo = params['dateTo']
+    logger.debug("[summaryXHR] Raw params: %s" % str(params))
+    dateFrom = datetime.fromisoformat(params['dateFrom'])
+    dateTo = datetime.fromisoformat(params['dateTo'])
+    logger.debug("Requested summary from %s to %s" % (dateFrom, dateTo))
     results = []
     totals = {'ins': {'amount': 0}, 'outs': {'amount': 0}}
     start = None

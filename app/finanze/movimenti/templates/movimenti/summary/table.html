@@ -1,5 +1,6 @@
 {% load i18n %}
-<div class="h2" id="tableTitle">{% translate "Viewing movements from" %} {{start}} {% translate "to" %} {{end}}</div>
+{% load l10n %}
+<div class="h2" id="tableTitle">{% translate "Viewing movements from" %} {{start|date}} {% translate "to" %} {{end|date}}</div>
 <div class="d-none d-sm-block">
     <div class="row border-bottom" id="tableHeader">
         <div class="table-header col-12 col-sm-6 ">{% translate "Category" %}</div>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 22:08+0000\n"
+"POT-Creation-Date: 2023-01-12 11:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,7 +124,7 @@ msgid "Amount"
 msgstr "Importo"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:60
-#: app/finanze/movimenti/templates/movimenti/summary/table.html:5
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:6
 msgid "Category"
 msgstr "Categoria"
 
@@ -132,13 +132,21 @@ msgstr "Categoria"
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/summary/table.html:6
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:3
+msgid "Viewing movements from"
+msgstr "Movimenti dal"
+
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:3
+msgid "to"
+msgstr "al"
+
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:7
 #, fuzzy
 #| msgid "Incoming"
 msgid "Incomes"
 msgstr "Entrate"
 
-#: app/finanze/movimenti/templates/movimenti/summary/table.html:7
+#: app/finanze/movimenti/templates/movimenti/summary/table.html:8
 msgid "Expenses"
 msgstr "Uscite"
 
@@ -146,25 +154,33 @@ msgstr "Uscite"
 msgid "Movements' summary"
 msgstr "Riepilogo movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:14
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:17
 msgid "Filter by range"
 msgstr "Filtra per intervallo date"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:19
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:26
 msgid "From"
 msgstr "Dal"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:25
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:32
 msgid "To"
 msgstr "Al"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:31
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:42
 msgid "Filter by month"
 msgstr "Filtra su mese"
 
 #: app/finanze/movimenti/views.py:93
 msgid "Select category"
 msgstr "Filtra categoria"
+
+#: app/finanze/templates/base.html:111
+msgid "Languages"
+msgstr "Lingua"
+
+#: app/finanze/templates/base.html:133
+msgid "User"
+msgstr "Utente"
 
 #: app/finanze/tradinglog/apps.py:8
 msgid "Trading log"

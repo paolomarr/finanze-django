@@ -18,7 +18,7 @@ var fetchSummaryAjax = function(dateFrom, dateTo) {
 		console.log(XHR.statusText);
 	});
 	var url = "/movimenti/summary/fetch";
-	var params = { dateFrom: dfString, dateTo: dtString };
+	var params = { dateFrom: dateFrom.toISOString(), dateTo: dateTo.toISOString() };
 	var search = new URLSearchParams(params);
 	XHR.open('GET', url + "?" + search.toString());
 	XHR.send();

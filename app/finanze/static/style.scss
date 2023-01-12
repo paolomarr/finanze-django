@@ -5,6 +5,9 @@ body {
 div {
 	margin-top: 10px;
 	margin-bottom: 10px;
+	&.accordion-item {
+		margin: 0;
+	}
 }
 .currency {
 	&::after {
