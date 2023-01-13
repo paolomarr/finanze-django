@@ -45,7 +45,9 @@ Registra bilancio corrente
 			<div>{% translate "TOTAL" %}: <span id="sum">{{totalassets | floatformat:2}}</span></div>
 			<div class="d-flex justify-content-center"><button type="button" id="addbutton" class="btn btn-info btn-sm">{% translate "Add entry" %}</button></div>
 		</div>
-		{% bootstrap_button button_type="button" content=_("Submit") name="submit" %}
+		<div class="d-flex justify-content-center">
+			{% bootstrap_button button_type="button" content=_("Submit") name="submit" %}
+		</div>
 		<!-- <button class="btn btn-primary" type="submit" value="Submit">Registra</button> -->
 			</form>
 		</div>
@@ -55,25 +57,20 @@ Registra bilancio corrente
 			<div id="messages"></div>
 		</div>
 	</div>
-	<div class="row justify-content-center">
-		<div class="col"><table>
-				<thead>
-					<tr>
-						<th>{% translate "Date" %}</th>
-						<th>{% translate "Total" %}</th>
-						<th class="lessimportant">{% translate "Error" %}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for asset in assets %}
-					<tr>
-						<td>{{asset.date | date:'d/m/Y H:i'}}</td>
-						<td>{{asset.totbalance | floatformat:2}}</td>
-						<td class="lessimportant">{{asset.error | floatformat:2 }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table></div>
+	<div class="container" style="max-width: 768px;">
+		<div class="row h2 mb-3">{% translate "Assets log" %}</div>
+		<div class="row justify-content-center border-bottom">
+			<div class="table-header col-4">{% translate "Date" %}</div>
+			<div class="table-header col-4">{% translate "Total" %}</div>
+			<div class="table-header col-4">{% translate "Error" %}</div>
+		</div>
+		{% for asset in assets %}
+		<div class="row justify-content-center border-bottom">
+			<div class="col-4">{{asset.date | date:'d/m/Y H:i'}}</div>
+			<div class="col-4">{{asset.totbalance | floatformat:2}}</div>
+			<div class="col-4">{{asset.error | floatformat:2}}</div>
+		</div>
+		{% endfor %}
 	</div>
 </div>
 {% endblock %}
