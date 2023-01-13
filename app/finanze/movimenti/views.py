@@ -180,9 +180,11 @@ def assets(request):
         allrecords = AssetBalance.objects.all().order_by('-date')
         latestpostdate = allrecords[0].date
         latests = []
+        latsum = 0
         for rec in allrecords:
             if rec.date == latestpostdate:
                 latests.append(rec)
+                latsum += rec.balance
             else:
                 break
         groupByDateAndTotalBalance = AssetBalance.objects.values('date').annotate(totbalance=Sum('balance')).order_by('-date')
@@ -202,7 +204,7 @@ def assets(request):
         for buy in Order.objects.filter(operation__operation='SELL'):
             financeassets -= buy.amount
         response = render(request, 'movimenti/assetbalance.html',
-            {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets})
+            {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets, 'totalassets': latsum})
         response.set_cookie("user", request.user, path=request.path)
         return response
 

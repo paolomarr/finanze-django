@@ -13,13 +13,36 @@ Registra bilancio corrente
 {% block content %}
 <div class="row">
 	<div class="col col-12 col-md-6">
-		<form action="/movimenti/assets" method="post">
+		<form action="/movimenti/assets" method="post" id="assetsForm">
 	{% csrf_token %}
 	{% bootstrap_form form exclude='notes' %}
 	<div class="mb-3">
-		<div id="itemslist"></div>
-		<button type="button" id="addbutton" class="btn btn-info btn-sm">{% translate "Add entry" %}</button>
-		<div>TOTAL: <span id="sum">{{financeassets | floatformat:2}}</span></div>
+		<div id="itemsList">
+			<div class="row gx-3 d-none" id="balanceListItemTemplate">
+				<div class="col col-4"><input class="form-control" type="number" step="0.01" name="balance_item_val" onChange="computeSum()"/></div>
+				<div class="col col-6"><input class="form-control" type="text" placeholder="{% translate 'description' %}" name="balance_item_key" onChange="keyItemChange(this)" /></div>
+				<div class="col col-2">
+					<button type="button" onClick="removeButtonClick(this)" class="col btn btn-light btn-sm remove-button">
+						<span class="d-none d-lg-block">Remove</span><span class="d-lg-none"><i class="bi bi-trash"></i></span>
+					</button>
+				</div>
+			</div>
+			{% for item in latests %}
+			<div class="row gx-3" id="balance_item_{{forloop.counter0}}">
+				<div class="col col-4"><input class="form-control" type="number" step="0.01" name="balance_item_val" id="balance_item_val_{{forloop.counter0}}"
+						onChange="computeSum()" value="{{item.balance|floatformat:'2u'}}"/></div>
+				<div class="col col-6"><input class="form-control" type="text" placeholder="description" name="balance_item_key" id="balance_item_key_{{forloop.counter0}}"
+						onChange="keyItemChange(this)" value="{{item.notes}}"/></div>
+				<div class="col col-2">
+					<button type="button" onClick="removeButtonClick(this)" class="col btn btn-light btn-sm remove-button" data-index="{{forloop.counter0}}">
+						<span class="d-none d-lg-block">{% translate "Remove" %}</span><span class="d-lg-none"><i class="bi bi-trash"></i></span>
+					</button>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<div>{% translate "TOTAL" %}: <span id="sum">{{totalassets | floatformat:2}}</span></div>
+		<div class="d-flex justify-content-center"><button type="button" id="addbutton" class="btn btn-info btn-sm">{% translate "Add entry" %}</button></div>
 	</div>
 	{% bootstrap_button button_type="button" content=_("Submit") name="submit" %}
 	<!-- <button class="btn btn-primary" type="submit" value="Submit">Registra</button> -->
@@ -55,8 +78,8 @@ Registra bilancio corrente
 {% block end_scripts %}
 {{ block.super }}
 <script type="text/javascript">
-	{% for item in latests %}
-	insertNewListItem("{{item.notes}}", {{item.balance}});
-	{% endfor %}
+	// {% for item in latests %}
+	// insertNewListItem("{{item.notes}}", {{item.balance}});
+	// {% endfor %}
 </script>
 {% endblock %}

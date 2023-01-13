@@ -6,10 +6,16 @@
 <script type="text/javascript" src="{% static 'movimenti/scripts.js' %}"></script>
 {% endblock %}
 {% block nav %}
-<nav id="navigationBar" class="nav nav-pills flex-column flex-sm-row bg-light p-2">
+<nav id="navigationBar" class="nav nav-pills flex-column d-none d-sm-block bg-light p-2">
   <a class="nav-link" href="{% url 'list' %}">{% translate "Movement list" %}</a>
   <a class="nav-link" href="{% url 'summary' %}">{% translate "Summary" %}</a>
   <a class="nav-link" href="{% url 'newmovement' %}">{% translate "Insert new" %}</a>
   <a class="nav-link" href="{% url 'assets' %}">{% translate "Assets" %}</a>
+</nav>
+<nav id="navigationBar" class="nav nav-fill d-flex d-sm-none bg-light p-2">
+  <a class="nav-link" href="{% url 'list' %}"><i class="bi bi-list"></i></a>
+  <a class="nav-link" href="{% url 'summary' %}"><i class="bi bi-pie-chart-fill"></i></a>
+  <a class="nav-link" href="{% url 'newmovement' %}"><i class="bi bi-plus-square-fill"></i></a>
+  <a class="nav-link" href="{% url 'assets' %}"><i class="bi bi-wallet2"></i></a>
 </nav>
 {% endblock %}
