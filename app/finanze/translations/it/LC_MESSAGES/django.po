@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-13 15:18+0100\n"
+"POT-Creation-Date: 2023-01-13 23:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,38 +22,42 @@ msgstr ""
 msgid "Movements"
 msgstr "Movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:23
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:24
 #, fuzzy
 #| msgid "Description"
 msgid "description"
 msgstr "Descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:38
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:39
 msgid "Remove"
 msgstr ""
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:44
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
 msgid "TOTAL"
 msgstr ""
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:46
 msgid "Add entry"
 msgstr "Aggiungi elemento"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:47
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:49
 msgid "Submit"
 msgstr "Invia"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:61
+msgid "Assets log"
+msgstr "Storico assets"
+
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:63
 #: app/finanze/movimenti/templates/movimenti/list.html:57
 msgid "Date"
 msgstr "Data"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:62
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:64
 msgid "Total"
 msgstr "Totale"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:63
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:65
 msgid "Error"
 msgstr "Scarto"
 
