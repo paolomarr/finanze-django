@@ -15,7 +15,7 @@ Registra bilancio corrente
 	<div class="col col-12 col-md-6">
 		<form action="/movimenti/assets" method="post" id="assetsForm">
 	{% csrf_token %}
-	{% bootstrap_form form exclude='notes' %}
+	{% bootstrap_form form exclude='notes,user' %}
 	<div class="mb-3">
 		<div id="itemsList">
 			<div class="row gx-3 d-none" id="balanceListItemTemplate">
@@ -77,9 +77,4 @@ Registra bilancio corrente
 {% endblock %}
 {% block end_scripts %}
 {{ block.super }}
-<script type="text/javascript">
-	// {% for item in latests %}
-	// insertNewListItem("{{item.notes}}", {{item.balance}});
-	// {% endfor %}
-</script>
 {% endblock %}

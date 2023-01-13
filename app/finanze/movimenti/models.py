@@ -113,4 +113,4 @@ class AssetBalance(models.Model):
     date = models.DateTimeField(default=timezone.now)    
     balance = models.FloatField()
     notes = models.CharField(blank=True, max_length=256)
-
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)

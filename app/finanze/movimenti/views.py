@@ -166,6 +166,7 @@ def assets(request):
                         ab.date = item['date']
                         ab.balance = item['balance']
                         ab.notes = item['notes']
+                        ab.user = request.user
                         try:
                             ab.save()
                         except Exception as ex:
@@ -177,26 +178,29 @@ def assets(request):
             return HttpResponseRedirect('/movimenti/assets')
     else:
         form = NewAssetsBalanceForm()
-        allrecords = AssetBalance.objects.all().order_by('-date')
-        latestpostdate = allrecords[0].date
+        allrecords = AssetBalance.objects.filter(user__id=request.user.id).order_by('-date')
+        groupByDateAndTotalBalance = AssetBalance.objects.filter(user__id=request.user.id).values(
+            'date').annotate(totbalance=Sum('balance')).order_by('-date')
         latests = []
         latsum = 0
-        for rec in allrecords:
-            if rec.date == latestpostdate:
-                latests.append(rec)
-                latsum += rec.balance
-            else:
-                break
-        groupByDateAndTotalBalance = AssetBalance.objects.values('date').annotate(totbalance=Sum('balance')).order_by('-date')
-        for idx in range(0, len(groupByDateAndTotalBalance) - 1):
-            rec_to = groupByDateAndTotalBalance[idx]
-            rec_from = groupByDateAndTotalBalance[idx+1]
-            truebalance = rec_to['totbalance'] - rec_from['totbalance']
-            period = Movement.objects.netAmountInPeriod(request.user, rec_from['date'], rec_to['date'])
-            groupByDateAndTotalBalance[idx]['accounted'] = period
-            groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
-            groupByDateAndTotalBalance[idx]['error'] = truebalance - period
-
+        if len(allrecords) > 0:
+            latestpostdate = allrecords[0].date
+            for rec in allrecords:
+                if rec.date == latestpostdate:
+                    latests.append(rec)
+                    latsum += rec.balance
+                else:
+                    break
+            for idx in range(0, len(groupByDateAndTotalBalance) - 1):
+                rec_to = groupByDateAndTotalBalance[idx]
+                rec_from = groupByDateAndTotalBalance[idx+1]
+                truebalance = rec_to['totbalance'] - rec_from['totbalance']
+                period = Movement.objects.netAmountInPeriod(request.user, rec_from['date'], rec_to['date'])
+                groupByDateAndTotalBalance[idx]['accounted'] = period
+                groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
+                groupByDateAndTotalBalance[idx]['error'] = truebalance - period
+        else:
+            logger.debug("[assets] no records found for user %s" % str(request.user))
         # Insert finance assets total by default
         financeassets = 0
         for buy in Order.objects.filter(operation__operation='BUY'):
