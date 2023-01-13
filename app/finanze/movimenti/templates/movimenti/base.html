@@ -6,7 +6,7 @@
 <script type="text/javascript" src="{% static 'movimenti/scripts.js' %}"></script>
 {% endblock %}
 {% block nav %}
-<nav id="navigationBar" class="nav nav-pills flex-column d-none d-sm-block bg-light p-2">
+<nav id="navigationBar" class="nav nav-pills nav-fill d-none d-sm-flex bg-light p-2">
   <a class="nav-link" href="{% url 'list' %}">{% translate "Movement list" %}</a>
   <a class="nav-link" href="{% url 'summary' %}">{% translate "Summary" %}</a>
   <a class="nav-link" href="{% url 'newmovement' %}">{% translate "Insert new" %}</a>
