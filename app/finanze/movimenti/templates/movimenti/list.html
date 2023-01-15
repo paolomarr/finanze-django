@@ -62,7 +62,7 @@ Lista movimenti
 			</div>
 		</div>
 			{% for mov in page_obj %}
-		<div class="row border-bottom">
+		<div class="row border-bottom {% if mov.is_future %}text-muted{% endif %}">
 			<div class="col-12 col-xl-1">
 				<span class="d-xl-none"><i class="bi bi-calendar-check"></i></span>
 				{{mov.date | date:'d/m/Y H:i'}}

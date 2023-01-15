@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime
 
 
 class Subcategory(models.Model):
@@ -103,6 +103,10 @@ class Movement(models.Model):
     @property
     def amount(self):
         return self.category.direction * self.abs_amount
+    
+    @property
+    def is_future(self):
+        return self.date > timezone.now()
 
 
 class AssetBalance(models.Model):

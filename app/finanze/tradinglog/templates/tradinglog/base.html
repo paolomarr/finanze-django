@@ -3,6 +3,9 @@
 {% block extra_script %}
 <script type="text/javascript" src="{% static 'tradinglog/scripts.js' %}"></script>
 {% endblock %}
+{% block brand_img %}
+<img src="{% static 'Finance-Budget-PNG.png' %}" alt="Logo" width="45" class="d-inline-block align-text-top" />
+{% endblock %}
 {% block nav %}
 <nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
   <a class="nav-link" href="{% url 'orders' %}">Storico ordini</a>

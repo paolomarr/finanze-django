@@ -138,10 +138,9 @@ window.addEventListener("load", function(event) {
 			// }
 		});
 		var serialized = new URLSearchParams(data);
-		var FD = new FormData(serialized);
 		// Set up our request
 		XHR.open('POST', url);
-		XHR.send(FD);
+		XHR.send(serialized);
 
 		// console.log(JSON.stringify(data));
 		// $.ajax({
