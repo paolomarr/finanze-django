@@ -1,6 +1,9 @@
 var setNavActiveItem = function(){
 	path = window.location.pathname;
-	const navlinks = document.getElementById("navigationBar").getElementsByClassName('nav-link');
+	const navbar = document.getElementById("navigationBar");
+	if(!navbar || navbar == undefined)
+		return;
+	const navlinks = navbar.getElementsByClassName('nav-link');
 	for(let i = 0; i < navlinks.length; i++){
 		let el = navlinks[i];
 		let href = el.getAttribute('href');

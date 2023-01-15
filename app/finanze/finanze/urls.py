@@ -22,6 +22,8 @@ urlpatterns = [
     path('tradinglog/', include('tradinglog.urls')),
     path('movimenti/', include('movimenti.urls')),
     path('admin/', admin.site.urls),
+    path('profile/', views.profile, name='profile'),
+    path('profile/password-change', views.profile, name='password_change'),
     # path('accounts/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

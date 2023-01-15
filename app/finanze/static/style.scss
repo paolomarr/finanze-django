@@ -9,6 +9,9 @@ div {
 		margin: 0;
 	}
 }
+.container-768 {
+	max-width: 768px;
+}
 .currency {
 	&::after {
 		content: "€";

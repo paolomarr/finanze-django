@@ -49,8 +49,10 @@
 			<div class="container-fluid">
 				<div class="navbar-brand">
 					<a href="/">
-						<img src="{% static 'brand-logo.png' %}" alt="Logo" width="45" height="36"
+						{% block brand_img %}
+						<img src="{% static 'brand-logo.png' %}" alt="Logo" width="45"
 							class="d-inline-block align-text-top" />
+						{% endblock %}
 					</a>
 					<!-- <a href="{{base_app_path}}">{{request.current_app}}</a> -->
 				</div>
@@ -87,10 +89,10 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li class="nav-item">
-									<a class="nav-link" href="#">Profile</a>
+									<a class="nav-link" href="/profile">{% translate "Profile" %}</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" href="/logout">Logout</a>
+									<a class="nav-link" href="/logout">{% translate "Logout" %}</a>
 								</li>
 							</ul>
 						</li>
@@ -133,10 +135,10 @@
 								<h6 class="dropdown-header">{% translate "User" %}</h6>
 							</li>
 							<li class="dropdown-item">
-								<a class="dropdown-item" href="#">Profile</a>
+								<a class="dropdown-item" href="/profile">{% translate "Profile" %}</a>
 							</li>
 							<li class="dropdown-item">
-								<a class="dropdown-item" href="/logout">Logout</a>
+								<a class="dropdown-item" href="/logout">{% translate "Logout" %}</a>
 							</li>
 							{% endif %}
 						</ul>

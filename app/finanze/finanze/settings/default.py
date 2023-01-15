@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'tradinglog.apps.TradinglogConfig',
     'movimenti.apps.MovimentiConfig',
+    'finanze.apps.FinanzeConfig',
     'sass_processor',
 ]
 
@@ -156,6 +157,11 @@ LOGGING = {
             'propagate': False,
         },
         'movimenti': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'finanze': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,

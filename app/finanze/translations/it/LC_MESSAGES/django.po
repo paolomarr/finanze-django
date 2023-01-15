@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-13 23:48+0100\n"
+"POT-Creation-Date: 2023-01-15 19:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app/finanze/finanze/apps.py:7
+msgid "Finances"
+msgstr ""
 
 #: app/finanze/movimenti/apps.py:8
 msgid "Movements"
@@ -30,11 +34,11 @@ msgstr "Descrizione"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:39
 msgid "Remove"
-msgstr ""
+msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
 msgid "TOTAL"
-msgstr ""
+msgstr "TOTALE"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:46
 msgid "Add entry"
@@ -192,13 +196,97 @@ msgstr "Filtra su mese"
 msgid "Select category"
 msgstr "Filtra categoria"
 
-#: app/finanze/templates/base.html:111
+#: app/finanze/templates/base.html:92 app/finanze/templates/base.html:138
+#, fuzzy
+#| msgid "User profile"
+msgid "Profile"
+msgstr "Profilo utente"
+
+#: app/finanze/templates/base.html:95 app/finanze/templates/base.html:141
+msgid "Logout"
+msgstr ""
+
+#: app/finanze/templates/base.html:113
 msgid "Languages"
 msgstr "Lingua"
 
-#: app/finanze/templates/base.html:133
+#: app/finanze/templates/base.html:135
 msgid "User"
 msgstr "Utente"
+
+#: app/finanze/templates/profile.html:13
+msgid "User profile"
+msgstr "Profilo utente"
+
+#: app/finanze/templates/profile.html:18
+msgid "Username"
+msgstr "Nome utente"
+
+#: app/finanze/templates/profile.html:21 app/finanze/templates/profile.html:31
+#, fuzzy
+#| msgid "Save"
+msgid "Saved"
+msgstr "Salva"
+
+#: app/finanze/templates/profile.html:23
+msgid "Invalid username format"
+msgstr "Formato username non valido"
+
+#: app/finanze/templates/profile.html:28
+msgid "Email"
+msgstr "Email"
+
+#: app/finanze/templates/profile.html:33
+msgid "Invalid email format"
+msgstr "Formato email non valido"
+
+#: app/finanze/templates/profile.html:38
+msgid "Password change"
+msgstr "Cambio password"
+
+#: app/finanze/templates/profile.html:42
+msgid "Old password"
+msgstr "Vecchia password"
+
+#: app/finanze/templates/profile.html:43
+msgid "Incorrect old password"
+msgstr "Vecchia password errata"
+
+#: app/finanze/templates/profile.html:49
+msgid "Your password must contain at least 8 characters."
+msgstr "La nuova password deve essere lunga almeno 8 caratteri"
+
+#: app/finanze/templates/profile.html:50
+msgid ""
+"Your password must contain at least one digit, one lowercase and one "
+"uppercase letters."
+msgstr ""
+"La nuova password deve contenere almeno un numero, una lettera maiuscola e "
+"una minuscola"
+
+#: app/finanze/templates/profile.html:51
+msgid "Your password must contain at least one special character in"
+msgstr "La nuova password deve contenere almeno un carattere speciale tra"
+
+#: app/finanze/templates/profile.html:59 app/finanze/templates/profile.html:69
+msgid "New password"
+msgstr "Nuova password"
+
+#: app/finanze/templates/profile.html:60 app/finanze/templates/profile.html:70
+msgid "New password does not meet the requirements"
+msgstr "La nuova password non rispetta tutti i requisiti"
+
+#: app/finanze/templates/profile.html:62 app/finanze/templates/profile.html:74
+msgid "Repeat password"
+msgstr "Ripeti nuova password"
+
+#: app/finanze/templates/profile.html:63 app/finanze/templates/profile.html:75
+msgid "Passwords don't match"
+msgstr "Le password non coincidono"
+
+#: app/finanze/templates/profile.html:64 app/finanze/templates/profile.html:79
+msgid "Save"
+msgstr "Salva"
 
 #: app/finanze/tradinglog/apps.py:8
 msgid "Trading log"

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'finanze/scripts.js' %}"></script>
+{% endblock %}
+{% block content %}
+{% csrf_token %}
+<div class="container container-768">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+            <div class="h2">{% translate "User profile" %}</div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            <label class="form-label" for="username">{% translate "Username" %}</label>
+            <input type="text" class="form-control" name="username" id="username" value="{{request.user.username}}" />
+            <div class="valid-feedback">
+                {% translate "Saved" %}!
+            </div>
+            <div class="invalid-feedback" data-name="username">{% translate "Invalid username format" %}</div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            <label class="form-label" for="email">{% translate "Email" %}</label>
+            <input type="text" class="form-control" name="email" id="email" value="{{request.user.email}}" />
+            <div class="valid-feedback">
+                {% translate "Saved" %}!
+            </div>
+            <div class="invalid-feedback" data-name="email">{% translate "Invalid email format" %}</div>
+        </div>
+    </div>
+    <div class="row justify-content-center p-2">
+        <div class="col">
+            <label for="passwordblock">{% translate "Password change" %}</label>
+            <div class="p-2 border rounded-2" id="passwordblock">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <input type="password" placeholder="{% translate 'Old password' %}" class="form-control" name="old_password" id="old_password" value="{{request.user.old_password}}" />
+                        <div class="invalid-feedback" data-name="old_password">{% translate "Incorrect old password" %}</div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-0">
+                    <div class="col-12 help" id="id_new_password1_helptext">
+                        <ul>
+                            <li>{% translate "Your password must contain at least 8 characters." %}</li>
+                            <li>{% translate "Your password must contain at least one digit, one lowercase and one uppercase letters." %}</li>
+                            <li>{% translate "Your password must contain at least one special character in" %} [!_$%^&@#?/\]</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-12 d-none d-lg-flex">
+                        <div class="input-group mb-3">
+                            <input type="password" class="form-control" name="new_password1" onkeyup="updateNewPassword1(0)"
+                                placeholder="{% translate 'New password' %}" />
+                            <div class="invalid-feedback" data-name="new_password1">{% translate "New password does not meet the requirements" %}</div>
+                            <input type="password" class="form-control" name="new_password2" onkeyup="updateNewPassword2(0)"
+                                placeholder="{% translate 'Repeat password' %}" />
+                            <div class="invalid-feedback" data-name="new_password2">{% translate "Passwords don't match" %}</div>
+                            <button onclick="userPasswordChange(0)" type="button" class="btn btn-secondary">{% translate "Save" %}</button>
+                        </div>
+                    </div>
+                    <div class="col-12 d-block d-lg-none">
+                        <input type="password" class="form-control" name="new_password1" onkeyup="updateNewPassword1(1)"
+                            placeholder="{% translate 'New password' %}" />
+                        <div class="invalid-feedback" data-name="new_password1">{% translate "New password does not meet the requirements" %}</div>
+                    </div>
+                    <div class="col-12 d-block d-lg-none">
+                        <input type="password" class="form-control" name="new_password2" onkeyup="updateNewPassword2(1)"
+                            placeholder="{% translate 'Repeat password' %}" />
+                        <div class="invalid-feedback" data-name="new_password2">{% translate "Passwords don't match" %}</div>
+                        <div class="valid-feedback">Password changed</div>
+                    </div>
+                    <div class="col-3 d-block d-lg-none mb-0">
+                        <button onclick="userPasswordChange(1)" type="button" class="btn btn-secondary">{% translate "Save" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
