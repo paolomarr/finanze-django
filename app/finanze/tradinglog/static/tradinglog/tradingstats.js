@@ -1,14 +1,18 @@
-$(document).ready(function(){
-	$('.diff').each((id,el) => {
-		gain = parseFloat($(el).html());
+window.addEventListener("load", function(event) {
+	var diffElements = document.getElementsByClassName('diff');
+	for(var i = 0; i<diffElements.length;i++){
+		el = diffElements[i];
+		gain = parseFloat(el.innerText);
 		if(gain < 0){
-			$(el).addClass('loss');
+			el.classList.add('loss');
 		}else{
-			$(el).addClass('gain');
+			el.classList.add('gain');
 		}
-	});
-	$('[data-stock]').click(function(event){
-		categoryid = $(this).attr('data-stock');
-		window.location.assign(`/tradinglog/orders?filter=stock%3D${categoryid}`);
+	};
+	document.querySelectorAll('[data-stock]').forEach(element => {
+		element.addEventListener("click", function() {
+			categoryid = element.getAttribute('data-stock');
+			window.location.assign(`/tradinglog/orders?filter=stock%3D${categoryid}`);
+		});
 	});
 });

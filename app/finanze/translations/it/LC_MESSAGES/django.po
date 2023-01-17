@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-15 19:17+0100\n"
+"POT-Creation-Date: 2023-01-17 17:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,23 +20,22 @@ msgstr ""
 
 #: app/finanze/finanze/apps.py:7
 msgid "Finances"
-msgstr ""
+msgstr "Finanze"
 
 #: app/finanze/movimenti/apps.py:8
 msgid "Movements"
 msgstr "Movimenti"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:24
-#, fuzzy
-#| msgid "Description"
 msgid "description"
-msgstr "Descrizione"
+msgstr "descrizione"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:39
 msgid "Remove"
 msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:51
 msgid "TOTAL"
 msgstr "TOTALE"
 
@@ -176,19 +175,19 @@ msgstr "Uscite"
 msgid "Movements' summary"
 msgstr "Riepilogo movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:17
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:18
 msgid "Filter by range"
 msgstr "Filtra per intervallo date"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:26
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:27
 msgid "From"
 msgstr "Dal"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:32
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:33
 msgid "To"
 msgstr "Al"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:42
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:43
 msgid "Filter by month"
 msgstr "Filtra su mese"
 
@@ -197,14 +196,12 @@ msgid "Select category"
 msgstr "Filtra categoria"
 
 #: app/finanze/templates/base.html:92 app/finanze/templates/base.html:138
-#, fuzzy
-#| msgid "User profile"
 msgid "Profile"
 msgstr "Profilo utente"
 
 #: app/finanze/templates/base.html:95 app/finanze/templates/base.html:141
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
 #: app/finanze/templates/base.html:113
 msgid "Languages"
@@ -223,10 +220,8 @@ msgid "Username"
 msgstr "Nome utente"
 
 #: app/finanze/templates/profile.html:21 app/finanze/templates/profile.html:31
-#, fuzzy
-#| msgid "Save"
 msgid "Saved"
-msgstr "Salva"
+msgstr "Salvato"
 
 #: app/finanze/templates/profile.html:23
 msgid "Invalid username format"
@@ -291,6 +286,34 @@ msgstr "Salva"
 #: app/finanze/tradinglog/apps.py:8
 msgid "Trading log"
 msgstr "Operazioni trading"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:16
+msgid "Stock"
+msgstr "Simbolo"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:17
+msgid "Quantity"
+msgstr "Quantità"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:18
+msgid "Invested"
+msgstr "Investimenti"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
+msgid "Current val."
+msgstr "Val. attuale"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
+msgid "Updated"
+msgstr "Aggiornato il"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
+msgid "Gross"
+msgstr "Lordo"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
+msgid "Net"
+msgstr "Netto"
 
 #, fuzzy
 #~| msgid "Movements"

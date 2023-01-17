@@ -1,18 +1,3 @@
-// base js support file
-
-// DEPRECATED
-var orderlistDerivedValues = function(){
-	// body...
-	table = $('#orderlist_table');
-	table.find('thead').append("<th>Amount</th>");
-	orderlist.forEach((item, index) => {
-		qty = item.fields['quantity'];
-		price = item.fields['price'];
-		amount = parseFloat(qty * price).toFixed(2);
-		table.find('tbody tr').eq(index).append(`<td>${amount}</td>`);
-	});	
-}
-
 var computeNetGains = function(){
 	$('table tbody tr').each((id, el) => {
 		date = new Date($(el).find('td[data-name="date"]').attr('data-val'));
@@ -40,6 +25,4 @@ var computeNetGains = function(){
 
 var orderlist = [];
 // onload
-$(document).ready(function() {
-	// computeNetGains();
-});
+// window.addEventListener("load", function() {computeNetGains();});

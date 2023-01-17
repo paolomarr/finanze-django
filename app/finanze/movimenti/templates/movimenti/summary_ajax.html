@@ -10,74 +10,76 @@
 {% translate "Movements' summary" %}
 {% endblock %}
 {% block content %}
-<div class="accordion" id="summaryFilterAccordion">
-    <div class="accordion-item">
-        <h3 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#select-range-period" aria-expanded="true" aria-controls="select-range-period">
-                {% translate "Filter by range" %}
-            </button>
-        </h3>
-        <div id="select-range-period" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#summaryFilterAccordion">
-            <div class="accordion-body">
-                <form class="row row-cols-lg-auto align-items-center">
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <input type="date" class="form-control" name="dateFrom" id="dateFrom"/>
-                            <label for="dateFrom">{% translate "From" %}</label>
+<div class="container container-768">
+    <div class="accordion" id="summaryFilterAccordion">
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#select-range-period" aria-expanded="true" aria-controls="select-range-period">
+                    {% translate "Filter by range" %}
+                </button>
+            </h3>
+            <div id="select-range-period" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#summaryFilterAccordion">
+                <div class="accordion-body">
+                    <form class="row row-cols-lg-auto align-items-center">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" name="dateFrom" id="dateFrom"/>
+                                <label for="dateFrom">{% translate "From" %}</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <input type="date" class="form-control" name="dateTo" id="dateTo" />
-                            <label for="dateTo">{% translate "To" %}</label>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" name="dateTo" id="dateTo" />
+                                <label for="dateTo">{% translate "To" %}</label>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingTwo">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#select-month-period" aria-expanded="true" aria-controls="select-month-period">
+                    {% translate "Filter by month" %}
+                </button>
+            </h3>
+            <div id="select-month-period" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#summaryFilterAccordion">
+                <div class="accordion-body">
+                    <form class="row row-cols-lg-auto align-items-center">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select class="form-select" name="month" id="select-month">
+                                    {% for monthobj in months %}
+                                    <option value="{{monthobj.idx}}" {% if monthobj.isCurrent %}selected{% endif %}>{{monthobj.name}}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="select-month">Month</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <select class="form-select" name="year" id="select-year">
+                                    {% for year in availableYears %}
+                                    <option value="{{year|date:'Y'}}">{{year |date:'Y'}}</option>
+                                    {% endfor %}
+                                </select>
+                                <label for="select-year">Year</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <div class="accordion-item">
-        <h3 class="accordion-header" id="headingTwo">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#select-month-period" aria-expanded="true" aria-controls="select-month-period">
-                {% translate "Filter by month" %}
-            </button>
-        </h3>
-        <div id="select-month-period" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#summaryFilterAccordion">
-            <div class="accordion-body">
-                <form class="row row-cols-lg-auto align-items-center">
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <select class="form-select" name="month" id="select-month">
-                                {% for monthobj in months %}
-                                <option value="{{monthobj.idx}}" {% if monthobj.isCurrent %}selected{% endif %}>{{monthobj.name}}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="select-month">Month</label>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <select class="form-select" name="year" id="select-year">
-                                {% for year in availableYears %}
-                                <option value="{{year|date:'Y'}}">{{year |date:'Y'}}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="select-year">Year</label>
-                        </div>
-                    </div>
-                </form>
+    <div class="container" id="summaryTableContainer">
+        <div class="h2" id="tableTitle"></div>
+        <div class="d-none d-sm-block">
+            <div class="row border-bottom" id="tableHeader">
             </div>
         </div>
-    </div>
-</div>
-<div class="container" id="summaryTableContainer">
-    <div class="h2" id="tableTitle"></div>
-    <div class="d-none d-sm-block">
-        <div class="row border-bottom" id="tableHeader">
+        <div id="tableBody">
+    
         </div>
-    </div>
-    <div id="tableBody">
-
     </div>
 </div>
 {% endblock %}
