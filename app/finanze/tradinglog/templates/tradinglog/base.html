@@ -8,8 +8,8 @@
 {% endblock %}
 {% block nav %}
 <nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
-  <a class="nav-link" href="{% url 'orders' %}">Storico ordini</a>
-  <a class="nav-link" href="{% url 'tradingStats' %}">Statistiche</a>
-  <a class="nav-link" href="{% url 'neworder' %}">Nuovo ordine</a>
+  <a class="nav-link" href="{% url 'orders' %}">{% translate "Past orders" %}</a>
+  <a class="nav-link" href="{% url 'tradingStats' %}">{% translate "Stats" %}</a>
+  <a class="nav-link" href="{% url 'neworder' %}">{% translate "New order" %}</a>
 </nav>
 {% endblock %}
