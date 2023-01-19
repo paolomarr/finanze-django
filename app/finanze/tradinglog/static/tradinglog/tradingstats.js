@@ -1,3 +1,6 @@
+var updateAll = function(params) {
+	
+}
 window.addEventListener("load", function(event) {
 	var diffElements = document.getElementsByClassName('diff');
 	for(var i = 0; i<diffElements.length;i++){

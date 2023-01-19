@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 {% block extra_script %}
 <script type="text/javascript" src="{% static 'tradinglog/scripts.js' %}"></script>
@@ -7,9 +8,14 @@
 <img src="{% static 'Finance-Budget-PNG.png' %}" alt="Logo" width="45" class="d-inline-block align-text-top" />
 {% endblock %}
 {% block nav %}
-<nav class="nav nav-pills flex-column flex-sm-row bg-light p-2">
+<nav id="navigationBar" class="nav nav-pills nav-fill d-none d-sm-flex bg-light p-2">
   <a class="nav-link" href="{% url 'orders' %}">{% translate "Past orders" %}</a>
   <a class="nav-link" href="{% url 'tradingStats' %}">{% translate "Stats" %}</a>
   <a class="nav-link" href="{% url 'neworder' %}">{% translate "New order" %}</a>
+</nav>
+<nav id="navigationBar" class="nav nav-fill d-flex d-sm-none bg-light p-2">
+  <a class="nav-link" href="{% url 'orders' %}"><i class="bi bi-list"></i></a>
+  <a class="nav-link" href="{% url 'tradingStats' %}"><i class="bi bi-pie-chart-fill"></i></a>
+  <a class="nav-link" href="{% url 'neworder' %}"><i class="bi bi-plus-square-fill"></i></a>
 </nav>
 {% endblock %}

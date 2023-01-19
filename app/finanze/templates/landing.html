@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block title %}
 My beautiful personal finance app!
 {% endblock %}
@@ -8,18 +9,18 @@ My beautiful personal finance app!
   <div class="col-8 col-sm-2">
     <div class="card text-center">
       <div class="card-body">
-        <h5 class="card-title">Trading log</h5>
+        <h5 class="card-title">{% translate "Trading log" %}</h5>
         <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-        <a href="tradinglog/" class="btn btn-primary">Go! <i class="bi bi-box-arrow-in-right"></i></a>
+        <a href="tradinglog/" class="btn btn-primary">{% translate "Go!" %} <i class="bi bi-box-arrow-in-right"></i></a>
       </div>
     </div>
   </div>
   <div class="col-8 col-sm-2">
     <div class="card text-center">
       <div class="card-body">
-        <h5 class="card-title">Expenses log</h5>
+        <h5 class="card-title">{% translate "Expenses log" %}</h5>
         <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-        <a href="movimenti/" class="btn btn-primary">Go! <i class="bi bi-box-arrow-in-right"></i></a>
+        <a href="movimenti/" class="btn btn-primary">{% translate "Go!" %} <i class="bi bi-box-arrow-in-right"></i></a>
       </div>
     </div>
   </div>
@@ -27,9 +28,9 @@ My beautiful personal finance app!
   <div class="col-8 col-sm-4">
     <div class="card text-center text-bg-dark">
       <div class="card-body">
-        <h5 class="card-title">Admin aerea</h5>
+        <h5 class="card-title">{% translate "Admin area" %}</h5>
         <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-        <a href="admin/" class="btn btn-secondary">Go! <i class="bi bi-person-fill-lock"></i></a>
+        <a href="admin/" class="btn btn-secondary">{% translate "Go!" %} <i class="bi bi-person-fill-lock"></i></a>
       </div>
     </div>
   </div>

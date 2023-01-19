@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 17:37+0100\n"
+"POT-Creation-Date: 2023-01-19 08:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Remove"
 msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:51
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:57
 msgid "TOTAL"
 msgstr "TOTALE"
 
@@ -162,8 +162,6 @@ msgid "to"
 msgstr "al"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:7
-#, fuzzy
-#| msgid "Incoming"
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -210,6 +208,23 @@ msgstr "Lingua"
 #: app/finanze/templates/base.html:135
 msgid "User"
 msgstr "Utente"
+
+#: app/finanze/templates/landing.html:12 app/finanze/tradinglog/apps.py:8
+msgid "Trading log"
+msgstr "Operazioni trading"
+
+#: app/finanze/templates/landing.html:14 app/finanze/templates/landing.html:23
+#: app/finanze/templates/landing.html:33
+msgid "Go!"
+msgstr "Entra"
+
+#: app/finanze/templates/landing.html:21
+msgid "Expenses log"
+msgstr "Gestione spese"
+
+#: app/finanze/templates/landing.html:31
+msgid "Admin area"
+msgstr "Area riservata"
 
 #: app/finanze/templates/profile.html:13
 msgid "User profile"
@@ -283,37 +298,53 @@ msgstr "Le password non coincidono"
 msgid "Save"
 msgstr "Salva"
 
-#: app/finanze/tradinglog/apps.py:8
-msgid "Trading log"
-msgstr "Operazioni trading"
+#: app/finanze/tradinglog/templates/tradinglog/base.html:12
+msgid "Past orders"
+msgstr "Storico ordini"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:16
+#: app/finanze/tradinglog/templates/tradinglog/base.html:13
+msgid "Stats"
+msgstr "Statistiche"
+
+#: app/finanze/tradinglog/templates/tradinglog/base.html:14
+msgid "New order"
+msgstr "Nuovo ordine"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:14
+msgid "Trading assets"
+msgstr "Portfolio titoli"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:17
 msgid "Stock"
 msgstr "Simbolo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:17
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:18
 msgid "Quantity"
 msgstr "Quantità"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:18
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
 msgid "Invested"
 msgstr "Investimenti"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
 msgid "Current val."
 msgstr "Val. attuale"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
 msgid "Updated"
 msgstr "Aggiornato il"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
 msgid "Gross"
 msgstr "Lordo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:23
 msgid "Net"
 msgstr "Netto"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:28
+msgid "Refresh stats"
+msgstr "Aggiorna"
 
 #, fuzzy
 #~| msgid "Movements"
