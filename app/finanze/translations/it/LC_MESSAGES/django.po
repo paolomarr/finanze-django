@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-19 08:51+0100\n"
+"POT-Creation-Date: 2023-01-20 10:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Remove"
 msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:57
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:59
 msgid "TOTAL"
 msgstr "TOTALE"
 
@@ -310,39 +310,39 @@ msgstr "Statistiche"
 msgid "New order"
 msgstr "Nuovo ordine"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:14
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:15
 msgid "Trading assets"
 msgstr "Portfolio titoli"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:17
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
 msgid "Stock"
 msgstr "Simbolo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:18
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
 msgid "Quantity"
 msgstr "Quantità"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
 msgid "Invested"
 msgstr "Investimenti"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
 msgid "Current val."
 msgstr "Val. attuale"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:23
 msgid "Updated"
-msgstr "Aggiornato il"
+msgstr "Aggiornato"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:24
 msgid "Gross"
 msgstr "Lordo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:23
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:25
 msgid "Net"
 msgstr "Netto"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:28
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:30
 msgid "Refresh stats"
 msgstr "Aggiorna"
 

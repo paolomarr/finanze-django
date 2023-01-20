@@ -11,21 +11,23 @@ Trading stats
 {% endblock %}
 {% block content %}
 <div class="container">
-	<div class="row justify-content-center text-center mt-4"><div class="col-12 col-xl-6 h2">{% translate "Trading assets" %}</div></div>
+	<div class="row justify-content-center text-center mt-4">
+		<div class="col-12 col-xl-6 h2">{% translate "Trading assets" %}</div>
+	</div>
 	<div class="d-none d-xl-block">
 		<div class="row border-bottom">
 			<div class="table-header col-xl-1">{% translate "Stock" %}</div>
 			<div class="table-header col-xl-1">{% translate "Quantity" %}</div>
 			<div class="text-end table-header col-xl-2">{% translate "Invested" %}</div>
-			<div class="text-end table-header col-xl-2">{% translate "Current val." %} <a href="#" onclick="updateAll()"><i class="bi bi-arrow-clockwise"></i></a></div>
+			<div class="text-end table-header col-xl-2">{% translate "Current val." %} <a href="#" onclick="refreshRequested()"><i class="bi bi-arrow-clockwise"></i></a></div>
 			<div class="table-header col-xl-2">{% translate "Updated" %}</div>
 			<div class="text-end table-header col-xl-2">{% translate "Gross" %}</div>
 			<div class="text-end table-header col-xl-2">{% translate "Net" %}</div>
 		</div>
 	</div>
 	<div class="d-grid gap-2 d-flex d-xl-none justify-content-center mt-2">
-		<button class="btn btn-outline-secondary" type="button" onclick="updateAll()">
-			<i class="bi bi-arrow-clockwise"></i> {% translate "Refresh stats" %}
+		<button class="btn btn-outline-secondary" type="button" onclick="refreshRequested()">
+			<span id="refresh-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span> {% translate "Refresh stats" %}
 		</button>
 	</div>
 	{% for stock in tradedStocks %}
@@ -76,44 +78,4 @@ Trading stats
 		</div>
 	</div>
 </div>
-<table class="d-none">
-	<thead>
-		<tr>
-			<th>Stock</th>
-			<th>Quantity</th>
-			<th>Invested</th>
-			<th>Current val.</th>
-			<th>Updated</th>
-			<th colspan="2">GAIN/LOSS</th>
-		</tr>
-		<tr>
-			<th colspan="3"></th>
-			<th style="text-align: center;"><a href="#" onclick="updateAll()"><i class="fas fa-sync-alt" id="refresh-spinner"></i></a></th>
-			<th></th>
-			<th>gross</th>
-			<th>net</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for stock in tradedStocks %}
-		<tr>
-			<td><a href="#" data-stock="{{stock.id}}">{{stock.symbol}}</a></td>
-			<td>{{stock.quantity}}</td>
-			<td class="currency">{{stock.amountOrdered | floatformat:2}}</td>
-			<td class="currency">{{stock.currentAsset | floatformat:2}}</td>
-			<td>{{stock.last_price_update | timesince }}</td>
-			<td class="currency">{{stock.currentGrossGain | floatformat:2}}</td>
-			<td class="currency">{{stock.currentNetGain | floatformat:2}}</td>
-		</tr>
-		{% endfor %}
-		<tr class="table-total">
-			<td colspan="2"></td>
-			<td class="currency">{{totalone | floatformat:2 }}</td>
-			<td class="currency">{{totaltwo | floatformat:2 }}</td>
-			<td></td>
-			<td><span id="grossgain" class="diff">{{ totalthree | floatformat:2 }}</span></td>
-			<td><span id="netgain" class="diff">{{ totalfour | floatformat:2 }}</span></td>
-		</tr>
-	</tbody>
-</table>
 {% endblock %}

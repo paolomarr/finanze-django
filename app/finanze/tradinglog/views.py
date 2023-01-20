@@ -2,6 +2,7 @@ from django.shortcuts import render as srender
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.db.models import Sum, F, FloatField, ExpressionWrapper
+from django.http import JsonResponse
 
 from .models import Order, Stock, StockQuote
 from .lib import yahoo_finance
@@ -77,28 +78,28 @@ def neworder(request):
 def updateCurrentPrice(request):
     symbols = request.GET.getlist('symbol')
     results = []
-    for sym in symbols:
-        stock = Stock.objects.filter(symbol__exact=sym)
-        if stock.count() == 0:
-            logger.info("No stocks for symbol '%s'" % sym)
-            results.append({"symbol": sym, "res": "not found"})
+    for symid in symbols:
+        stock = Stock.objects.get(id=symid)
+        if stock is None:
+            logger.info("No stocks for symbol ID '%s'" % symid)
+            results.append({"symbol": symid, "error": "not found"})
             continue
-
+        sym = stock.symbol
         symdata = yahoo_finance.getLatestQuoteForSymbol(sym)
         # check for errors
         if symdata.get('error', None) is not None:
             # return error
-            results.append({"symbol": sym, "res": symdata['error']})
+            results.append({"id": symid, "symbol": sym, "error": symdata['error']})
 
         # update current price
         rmp = symdata['regular_market_price']
         rmt = datetime.fromtimestamp(symdata['regular_market_time'])
         logger.info("[VIEWS][updateCurrentPrice] updating stock {}:\
 price {} at {}".format(sym, rmp, rmt))
-        stock.update(
-            regular_market_price=rmp,
-            regular_market_time=rmt,
-            last_price_update=datetime.now())
+        stock.regular_market_price = rmp
+        stock.regular_market_time = rmt
+        stock.last_price_update = datetime.now()
+        stock.save()
         existing_quotes = StockQuote.objects.filter(
             stock__symbol=sym,
             close_timestamp__exact=datetime.fromtimestamp(
@@ -113,19 +114,22 @@ closeval {} at {}".format(sym, cval, ctime))
             existing_quotes.update(
                 close_val=cval,
                 close_timestamp=ctime)
-            results.append({"symbol": sym, "res": "updated existing"})
+            results.append({"id": symid, "symbol": sym, "res": "updated existing"})
         else:
             # insert anew
             logger.info("[VIEWS][updateCurrentPrice] Inserting new quote {}: \
 closeval {} at {}".format(sym, cval, ctime))
             newqoute = StockQuote(
-                stock=stock[0],
+                stock=stock,
                 close_val=cval,
                 close_timestamp=ctime)
             newqoute.save()
-            results.append({"symbol": sym, "res": "inserted new"})
-
-    return HttpResponse("updated")
+            results.append({"id": symid, "symbol": sym, "res": "inserted new"})
+        
+        ### temp
+        break
+    logger.debug("[updateCurrentPrice] Results: %s" % str(results))
+    return JsonResponse({"results": results})
 
 
 def tradingStats(request):
