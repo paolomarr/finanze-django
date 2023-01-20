@@ -106,23 +106,45 @@ window.addEventListener("load", function(event) {
 	dateInput.setAttribute('step', 1);
 	dateInput.value = now;
 	submitInput.addEventListener("click", function(){
+		document.getElementById('messages').innerHTML = "";
 		var assetsForm = document.getElementById('assetsForm');
 		url = assetsForm.getAttribute('action');
 		date = dateInput.value;
 		csrftoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-		data = {"assetItems": []};
-		var balance_items = document.getElementsByName('balance_item');
-		var balance_items_keys = document.getElementsByName('balance_item');
+		var serialized = new URLSearchParams();
+		serialized.append("csrfmiddlewaretoken", csrftoken);
+		serialized.append("date", date);
+		var balance_items = document.getElementsByName('balance_item_val');
+		var balance_items_keys = document.getElementsByName('balance_item_key');
 		for(let i = 0; i<balance_items.length; i++){
-			el = balance_items[i];	
 			key = balance_items_keys[i].value;
+			el = balance_items[i];	
 			val = el.value;
-			data.assetItems.push({"notes": key, "balance": val, "date": date});
+			if(val.length == 0) 	continue;
+			serialized.append("balance_item_val", val);
+			serialized.append("balance_item_key", key);
 		}
 		const XHR = new XMLHttpRequest();
 		// Define what happens on successful data submission
 		XHR.addEventListener('load', function () {
-			window.location.assign(XHR.responseURL);
+			var response = JSON.parse(XHR.responseText);
+			// warnings first
+			if (response.warnings.length > 0) {
+				response.warnings.forEach(element => {
+					var warningline = document.createElement('p');
+					warningline.classList.add('alert-warning')
+					document.getElementById('messages').append(warningline);
+				});
+			}
+			if(response.errors.length > 0){
+				response.errors.forEach(element => {
+					var errorline = document.createElement('p');
+					errorline.classList.add('alert-danger')
+					document.getElementById('messages').append(errorline);
+				});
+			}else{
+				window.location.reload();
+			}
 		});
 
 		// Define what happens in case of an error
@@ -137,7 +159,6 @@ window.addEventListener("load", function(event) {
 			// 	$('#messages').append(`<p class="bg-primary text-white">${err}</p>`);
 			// }
 		});
-		var serialized = new URLSearchParams(data);
 		// Set up our request
 		XHR.open('POST', url);
 		XHR.send(serialized);

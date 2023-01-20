@@ -125,9 +125,6 @@ closeval {} at {}".format(sym, cval, ctime))
                 close_timestamp=ctime)
             newqoute.save()
             results.append({"id": symid, "symbol": sym, "res": "inserted new"})
-        
-        ### temp
-        break
     logger.debug("[updateCurrentPrice] Results: %s" % str(results))
     return JsonResponse({"results": results})
 

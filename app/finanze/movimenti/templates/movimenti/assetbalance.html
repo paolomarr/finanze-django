@@ -19,7 +19,7 @@ Registra bilancio corrente
 		{% bootstrap_form form exclude='notes,user' %}
 		<div class="mb-3">
 			<div id="itemsList">
-				<div class="row gx-3 d-none" id="balanceListItemTemplate">
+				<div class="row mb-2 d-none" id="balanceListItemTemplate">
 					<div class="col col-4"><input class="form-control" type="number" step="0.01" name="balance_item_val" onChange="computeSum()"/></div>
 					<div class="col col-6"><input class="form-control" type="text" placeholder="{% translate 'description' %}" name="balance_item_key" onChange="keyItemChange(this)" /></div>
 					<div class="col col-2">
@@ -29,7 +29,7 @@ Registra bilancio corrente
 					</div>
 				</div>
 				{% for item in latests %}
-				<div class="row gx-3" id="balance_item_{{forloop.counter0}}">
+				<div class="row mb-2" id="balance_item_{{forloop.counter0}}">
 					<div class="col col-4"><input class="form-control" type="number" step="0.01" name="balance_item_val" id="balance_item_val_{{forloop.counter0}}"
 							onChange="computeSum()" value="{{item.balance|floatformat:'2u'}}"/></div>
 					<div class="col col-6"><input class="form-control" type="text" placeholder="description" name="balance_item_key" id="balance_item_key_{{forloop.counter0}}"
@@ -58,17 +58,17 @@ Registra bilancio corrente
 		</div>
 	</div>
 	<div class="container" style="max-width: 768px;">
-		<div class="row h2 mb-3">{% translate "Assets log" %}</div>
+		<div class="row h2 text-center justify-content-center m-3">{% translate "Assets log" %}</div>
 		<div class="row justify-content-center border-bottom">
 			<div class="table-header col-4">{% translate "Date" %}</div>
-			<div class="table-header col-4">{% translate "Total" %}</div>
-			<div class="table-header col-4">{% translate "Error" %}</div>
+			<div class="table-header col-4 text-end">{% translate "Total" %}</div>
+			<div class="table-header col-4 text-end">{% translate "Error" %}</div>
 		</div>
 		{% for asset in assets %}
-		<div class="row justify-content-center border-bottom">
+		<div class="row justify-content-center border-bottom p-2">
 			<div class="col-4">{{asset.date | date:'d/m/Y H:i'}}</div>
-			<div class="col-4">{{asset.totbalance | floatformat:2}}</div>
-			<div class="col-4">{{asset.error | floatformat:2}}</div>
+			<div class="col-4 currency text-end">{{asset.totbalance | floatformat:2}}</div>
+			<div class="col-4 currency text-end">{{asset.error | floatformat:2}}</div>
 		</div>
 		{% endfor %}
 	</div>

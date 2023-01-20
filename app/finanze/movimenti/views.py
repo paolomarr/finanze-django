@@ -146,36 +146,39 @@ def summaryXHR(request):
 @login_required
 def assets(request):
     if request.method == 'POST':
-        if request.content_type == 'application/json':
-            jres = {'errors': []}
-            try:
-                deser = jloads(request.body)
-            except Exception as ex:
-                jres['errors'].append("Error parsing input data as JSON string: {}\
-".format(ex.message))
-            else:
-                logger.debug("asset data: {}".format(str(deser)))
-                items = deser.get('assetItems', [])
-                # todo: sanitise/check input
-                if len(items) == 0:
-                    jres['errors'].append("empty data")
-                else:
-                    logger.debug("Received {} asset items to record".format(len(items)))
-                    for item in items:
-                        ab = AssetBalance()
-                        ab.date = item['date']
-                        ab.balance = item['balance']
-                        ab.notes = item['notes']
-                        ab.user = request.user
-                        try:
-                            ab.save()
-                        except Exception as ex:
-                            jres['errors'].append("Error parsing input data as JSON string: {}\
-".format(ex.message))
-            response = JsonResponse(jres)
-            return response
+        jres = {"errors": [], "warnings": []}
+        deser = request.POST
+        date = deser.get('date')
+        asset_labels = deser.getlist('balance_item_key')
+        asset_vals = deser.getlist('balance_item_val')
+        if date is None or asset_labels is None or asset_vals is None:
+            jres['errors'].append("Missing input.")
+        elif len(asset_labels) != len(asset_vals):
+            jres['errors'].append("Invalid input.")
         else:
-            return HttpResponseRedirect('/movimenti/assets')
+            logger.debug("asset data: {}".format(str(deser)))
+            index = -1
+            for key, val in zip(asset_labels, asset_vals):
+                index = 0
+                if len(val) == 0:
+                    val = "0"
+                try:
+                    fval = float(val)
+                except ValueError:
+                    jres['warnings'].append("Invalid value for item %d: %s" % (index, val))
+                    continue
+                ab = AssetBalance()
+                ab.date = date
+                ab.balance = fval
+                ab.notes = key
+                ab.user = request.user
+                try:
+                    ab.save()
+                except Exception as ex:
+                    jres['errors'].append("Error saving item %d: %s" % (index, str(ex)))
+                    continue
+        response = JsonResponse(jres)
+        return response
     else:
         form = NewAssetsBalanceForm()
         allrecords = AssetBalance.objects.filter(user__id=request.user.id).order_by('-date')

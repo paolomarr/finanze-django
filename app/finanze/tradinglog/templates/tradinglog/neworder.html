@@ -1,11 +1,13 @@
 {% extends 'tradinglog/base.html' %}
 {% load static %}
+{% load i18n %}
 {% load django_bootstrap5 %}
 {% block title %}
-Registra nuovo ordine
+{% translate "Record new trade order" %}
 {% endblock %}
 {% block content %}
-<div class="row">
+<div class="row justify-content-center mt-4">
+	<div class="h2 text-center">{% translate "Record new trade order" %}</div>
 	<div class="col col-12 col-md-4">
 		<form action="/tradinglog/orders/new" method="post">
 	{% csrf_token %}
