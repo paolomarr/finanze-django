@@ -1,8 +1,8 @@
 var applyFilter = function() {
 	// body...
-	desc = $('#filter-description').val();
-	cat = $('#filter-category').val();
-	subcat = $('#filter-subcategory').val();
+	desc = document.getElementById('filter-description').value;
+	cat = document.getElementById('filter-category').value;
+	subcat = document.getElementById('filter-subcategory').value;
 	filter = {};
 	filteritems = []
 	changed = false;
@@ -29,18 +29,16 @@ var cleanFilters = function(){
 
 window.addEventListener("load", function(){
 	var searchParams = new URLSearchParams(window.location.search);
-	for(var pair of searchParams.entries()) {
-		if(pair[0] === 'filter'){
-				innerpair = pair[1].split('=')
-				if(innerpair[0] === 'category'){
-					document.getElementById('#filter-category').value = innerpair[1];	
-				}
-				if(innerpair[0] === 'subcategory'){
-					document.getElementById('#filter-subcategory').value = innerpair[1];	
-				}
-				if(innerpair[0] === 'description'){
-					document.getElementById('#filter-description').value = innerpair[1];	
-				}
+	for(var pair of searchParams.getAll('filter')) {
+		innerpair = pair.split('=')
+		if(innerpair[0] === 'category'){
+			document.getElementById('filter-category').value = innerpair[1];	
+		}
+		if(innerpair[0] === 'subcategory'){
+			document.getElementById('filter-subcategory').value = innerpair[1];	
+		}
+		if(innerpair[0] === 'description'){
+			document.getElementById('filter-description').value = innerpair[1];	
 		}
 	}
 });

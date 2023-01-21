@@ -26,29 +26,33 @@ Lista movimenti
 		{% endif %}
 	</span>
 </div>
-<div>
-	<button class="btn btn-secondary" type="button" onclick="cleanFilters()">{% translate "Clear filters" %}</button>
-</div>
-<div class="table-container">
-	<div class="row">
-		<div class="col-12 offset-xl-1 col-xl-4">
-			<input class="form-control" type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" />
+<div class="table-container mt-4">
+	<div class="row align-items-center justify-content-center">
+		<div class="col-8 col-xl-10">
+			<div class="row gy-2">
+				<div class="col-12 offset-xl-1 col-xl-4">
+					<input class="form-control" type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" />
+				</div>
+				<div class="col-12 offset-xl-1 col-xl-3">
+					<select class="form-select" id="filter-category" onchange="applyFilter()">
+						<option value="-1">{% translate "Filter category" %}...</option>
+					{% for cat in categories%}
+						<option value="{{cat.id}}">{{cat.category}}</option>
+					{% endfor %}
+					</select>
+				</div>
+				<div class="col-12 col-xl-3">
+					<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
+						<option value="-1">{% translate "Filter subcategory" %}...</option>
+					{% for cat in subcategories%}
+						<option value="{{cat.id}}">{{cat.subcategory}}</option>
+					{% endfor %}
+					</select>
+				</div>
+			</div>
 		</div>
-		<div class="col-12 offset-xl-1 col-xl-3">
-			<select class="form-select" id="filter-category" onchange="applyFilter()">
-				<option value="-1">{% translate "Filter category" %}...</option>
-			{% for cat in categories%}
-				<option value="{{cat.id}}">{{cat.category}}</option>
-			{% endfor %}
-			</select>
-		</div>
-		<div class="col-12 col-xl-3">
-			<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
-				<option value="-1">{% translate "Filter subcategory" %}...</option>
-			{% for cat in subcategories%}
-				<option value="{{cat.id}}">{{cat.subcategory}}</option>
-			{% endfor %}
-			</select>
+		<div class="col-2 col-xl-2">
+			<button class="btn btn-secondary" type="button" onclick="cleanFilters()">{% translate "Clear filters" %}</button>
 		</div>
 	</div>
 	<div class="container mt-4">
