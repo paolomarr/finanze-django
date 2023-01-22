@@ -43,7 +43,7 @@ def _filterMovements(user, filterParams):
         if col == 'dateto':
             filterdict['date__lt'] = val
         if col in ['category', 'subcategory']:
-            filterdict = {"{}_id".format(col): val}
+            filterdict["{}_id".format(col)] = val
     logger.debug("Filter dict: {}".format(filterdict))
     retmovements = Movement.objects.filter(**filterdict)
     
