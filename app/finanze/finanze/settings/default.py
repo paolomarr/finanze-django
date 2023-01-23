@@ -171,6 +171,7 @@ LOGGING = {
 
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login"
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, "translations")
