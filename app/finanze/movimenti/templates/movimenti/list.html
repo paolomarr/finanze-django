@@ -27,32 +27,62 @@ Lista movimenti
 	</span>
 </div>
 <div class="table-container mt-4">
-	<div class="row align-items-center justify-content-center">
-		<div class="col-8 col-xl-10">
-			<div class="row gy-2">
-				<div class="col-12 offset-xl-1 col-xl-4">
-					<input class="form-control" type="text" id="filter-description" placeholder="Filter description..." onchange="applyFilter()" />
-				</div>
-				<div class="col-12 offset-xl-1 col-xl-3">
-					<select class="form-select" id="filter-category" onchange="applyFilter()">
-						<option value="-1">{% translate "Filter category" %}...</option>
-					{% for cat in categories%}
-						<option value="{{cat.id}}">{{cat.category}}</option>
-					{% endfor %}
-					</select>
-				</div>
-				<div class="col-12 col-xl-3">
-					<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
-						<option value="-1">{% translate "Filter subcategory" %}...</option>
-					{% for cat in subcategories%}
-						<option value="{{cat.id}}">{{cat.subcategory}}</option>
-					{% endfor %}
-					</select>
+	<div class="row align-items-center justify-content-center my-2">
+		<div class="col-6 col-xl-2 text-center">
+			<button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+				aria-expanded="false" aria-controls="collapseExample">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-circle"
+					viewBox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+					<path
+						d="M7 11.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z" />
+				</svg>
+				{% translate " Filters" %}...
+			</button>
+		</div>
+	</div>
+	<div class="collapse" id="collapseExample">
+		<div class="row align-items-center justify-content-center">
+			<div class="col-8 col-xl-10">
+				<div class="row gy-2">
+					<div class="col-12 offset-xl-1 col-xl-4">
+						<input class="form-control" type="text" id="filter-description" placeholder="Filter description..."
+							onchange="applyFilter()" />
+					</div>
+					<div class="col-12 offset-xl-1 col-xl-3">
+						<select class="form-select" id="filter-category" onchange="applyFilter()">
+							<option value="-1">{% translate "Filter category" %}...</option>
+							{% for cat in categories%}
+							<option value="{{cat.id}}">{{cat.category}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-12 col-xl-3">
+						<select class="form-select" id="filter-subcategory" onchange="applyFilter()">
+							<option value="-1">{% translate "Filter subcategory" %}...</option>
+							{% for cat in subcategories%}
+							<option value="{{cat.id}}">{{cat.subcategory}}</option>
+							{% endfor %}
+						</select>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-2 col-xl-2">
-			<button class="btn btn-secondary" type="button" onclick="cleanFilters()">{% translate "Clear filters" %}</button>
+			<div class="col-2 col-xl-2">
+				<button class="btn btn-secondary" type="button" onclick="cleanFilters()"
+					aria-label="{% translate 'Clear filters' %}">
+					<span class="d-flex d-xl-none">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+							<path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+						</svg>
+					</span>
+					<span class="d-none d-xl-flex">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+							<path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+						</svg>
+						{% translate " Clear filters" %}
+					</span>
+				</button>
+			</div>
 		</div>
 	</div>
 	<div class="container mt-4">

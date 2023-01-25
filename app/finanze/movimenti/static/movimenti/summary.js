@@ -12,7 +12,7 @@ var fetchSummaryAjax = function(dateFrom, dateTo) {
 	var XHR = new XMLHttpRequest();
 	XHR.addEventListener('load', function () {
 		// renderSummaryTable(JSON.parse(XHR.responseText));
-		document.getElementById('tableBody').innerHTML = XHR.responseText;
+		document.getElementById('summaryTableContainer').innerHTML = XHR.responseText;
 	});
 	XHR.addEventListener('error', function() {
 		console.log(XHR.statusText);
