@@ -16,19 +16,18 @@
     <p>{% translate "Please login to see this page." %}</p>
     {% endif %}
 {% endif %}
-
+<form method="post" action="{% url 'login' %}">
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-xl-4">
-            <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 {%bootstrap_form form %}
                 <input type="hidden" name="next" value="{{ next }}">
-            </form>
+            </div>
         </div>
-    </div>
-    <div class="d-flex justify-content-center">
-		{% bootstrap_button _("Login") button_type="button" button_class="btn-primary" %}
-    </div>
+        <div class="d-flex justify-content-center">
+            {% bootstrap_button _("Login") button_type="submit" button_class="btn-primary" %}
+        </div>
+</form>
 {# Assumes you set up the password_reset view in your URLconf #}
 <!-- <p><a href="{% url 'password_reset' %}">Lost password?</a></p> -->
 
