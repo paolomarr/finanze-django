@@ -100,12 +100,13 @@ def summary(request):
     years = Movement.objects.filter(user=request.user).dates('date', 'year', order='DESC')
     # create a list of months, indicating the selected one
     months = []
-    today = Movement.objects.order_by('date').last().date
+    latest = Movement.objects.filter(
+        user=request.user,date__lte=datetime.today()).order_by('date').last().date
     for midx in range(1, 13):
         # year is not important here
-        iterdate = date(today.year, midx, 1)
+        iterdate = date(latest.year, midx, 1)
         mname = _(iterdate.strftime("%B"))
-        isCurrent = today.month == midx
+        isCurrent = latest.month == midx
         months.append({"idx": midx, "name": mname, "isCurrent": isCurrent})
     context = {
         'availableYears': years,
