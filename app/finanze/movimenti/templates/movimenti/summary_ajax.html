@@ -3,6 +3,7 @@
 {% load i18n %}
 {% block extra_script %}
 {{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="text/javascript" src="{% static 'movimenti/summary.js' %}"></script>
 {% endblock %}
 
@@ -71,7 +72,29 @@
             </div>
         </div>
     </div>
-    <div class="container" id="summaryTableContainer">
+    <div class="row">
+        <div class="col-12 col-xl-6">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="expenses-pie" data-bs-toggle="tab" data-bs-target="#expenses-pie-pane" type="button"
+                        role="tab" aria-controls="expenses-pie-pane" aria-selected="true">{% translate "Expenses" %}</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="incomes-pie" data-bs-toggle="tab" data-bs-target="#incomes-pie-pane" type="button"
+                        role="tab" aria-controls="incomes-pie-pane" aria-selected="false">{% translate "Incomes" %}</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="expenses-pie-pane" role="tabpanel" aria-labelledby="expenses-pie" tabindex="0">
+                    <canvas id="expensesChart"></canvas>
+                </div>
+                <div class="tab-pane fade" id="incomes-pie-pane" role="tabpanel" aria-labelledby="incomes-pie" tabindex="0">
+                    <canvas id="incomesChart"></canvas>
+                </div>
+            </div>            
+        </div>
+        <div class="col-12 col-xl-6" id="summaryTableContainer">
+        </div>
     </div>
 </div>
 {% endblock %}
