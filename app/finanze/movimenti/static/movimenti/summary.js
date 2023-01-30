@@ -27,6 +27,7 @@ var fetchChartData = function (dateFrom, dateTo) {
 		var invalues = [];
 		for(var i=0; i<data.results.length; i++){
 			item = data.results[i];
+			if(item.empty) 	continue;
 			var inval = parseFloat(item.ins.amount);
 			var outval = parseFloat(item.outs.amount);
 			if(inval > 0.0){

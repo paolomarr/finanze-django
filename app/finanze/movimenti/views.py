@@ -126,10 +126,11 @@ def summaryXHR(request):
     totals = {'ins': {'amount': 0}, 'outs': {'amount': 0}}
     start = None
     end = None
-    for cat in Category.objects.all():
+    for cat in Category.objects.filter(user=request.user):
         start, end, outs = cat.movementsInDatesRange(request.user, Category.OUTCOME, dateFrom, dateTo)
         start, end, ins = cat.movementsInDatesRange(request.user, Category.INCOME, dateFrom, dateTo)
-        results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins})
+        empty = (outs.get("amount", 0) == 0 and ins.get("amount", 0) == 0)
+        results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins, "empty": empty})
         totals['ins']['amount'] += ins['amount']
         totals['outs']['amount'] += outs['amount']
     outdata = {
