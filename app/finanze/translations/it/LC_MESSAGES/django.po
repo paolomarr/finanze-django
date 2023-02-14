@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-20 10:31+0100\n"
+"POT-Creation-Date: 2023-02-13 16:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Remove"
 msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:59
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:60
 msgid "TOTAL"
 msgstr "TOTALE"
 
@@ -52,7 +52,7 @@ msgid "Assets log"
 msgstr "Storico assets"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:63
-#: app/finanze/movimenti/templates/movimenti/list.html:57
+#: app/finanze/movimenti/templates/movimenti/list.html:91
 msgid "Date"
 msgstr "Data"
 
@@ -124,32 +124,40 @@ msgstr "successivo"
 msgid "last"
 msgstr "ultimo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:30
-msgid "Clear filters"
-msgstr "Azzera filtri"
+#: app/finanze/movimenti/templates/movimenti/list.html:40
+msgid " Filters"
+msgstr "Filtri"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:39
+#: app/finanze/movimenti/templates/movimenti/list.html:54
 msgid "Filter category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:47
+#: app/finanze/movimenti/templates/movimenti/list.html:62
 msgid "Filter subcategory"
 msgstr "Filtra sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:58
+#: app/finanze/movimenti/templates/movimenti/list.html:72
+msgid "Clear filters"
+msgstr "Azzera filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:82
+msgid " Clear filters"
+msgstr " Azzera filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:92
 msgid "Description"
 msgstr "Descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:59
+#: app/finanze/movimenti/templates/movimenti/list.html:93
 msgid "Amount"
 msgstr "Importo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:60
+#: app/finanze/movimenti/templates/movimenti/list.html:94
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:6
 msgid "Category"
 msgstr "Categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:61
+#: app/finanze/movimenti/templates/movimenti/list.html:95
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
@@ -162,30 +170,32 @@ msgid "to"
 msgstr "al"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:7
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:85
 msgid "Incomes"
 msgstr "Entrate"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:8
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:81
 msgid "Expenses"
 msgstr "Uscite"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:10
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:11
 msgid "Movements' summary"
 msgstr "Riepilogo movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:18
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:20
 msgid "Filter by range"
 msgstr "Filtra per intervallo date"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:27
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:29
 msgid "From"
 msgstr "Dal"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:33
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:35
 msgid "To"
 msgstr "Al"
 
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:43
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:45
 msgid "Filter by month"
 msgstr "Filtra su mese"
 
@@ -298,6 +308,18 @@ msgstr "Le password non coincidono"
 msgid "Save"
 msgstr "Salva"
 
+#: app/finanze/templates/registration/login.html:8
+msgid "Your username and password didn't match. Please try again."
+msgstr "Nome utente e/o password errati. Riprovare."
+
+#: app/finanze/templates/registration/login.html:16
+msgid "Please login to see this page."
+msgstr "Effettua l'accesso per vedere questa pagina"
+
+#: app/finanze/templates/registration/login.html:28
+msgid "Login"
+msgstr "Accedi"
+
 #: app/finanze/tradinglog/templates/tradinglog/base.html:12
 msgid "Past orders"
 msgstr "Storico ordini"
@@ -310,41 +332,46 @@ msgstr "Statistiche"
 msgid "New order"
 msgstr "Nuovo ordine"
 
+#: app/finanze/tradinglog/templates/tradinglog/neworder.html:6
+#: app/finanze/tradinglog/templates/tradinglog/neworder.html:10
+msgid "Record new trade order"
+msgstr "Registra nuovo ordine"
+
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:15
 msgid "Trading assets"
 msgstr "Portfolio titoli"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:19
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
+msgid "Refresh stats"
+msgstr "Aggiorna"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:25
 msgid "Stock"
 msgstr "Simbolo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:20
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:26
 msgid "Quantity"
 msgstr "Quantità"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:21
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:27
 msgid "Invested"
 msgstr "Investimenti"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:22
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:28
 msgid "Current val."
 msgstr "Val. attuale"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:23
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29
 msgid "Updated"
 msgstr "Aggiornato"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:24
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:30
 msgid "Gross"
 msgstr "Lordo"
 
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:25
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:31
 msgid "Net"
 msgstr "Netto"
-
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:30
-msgid "Refresh stats"
-msgstr "Aggiorna"
 
 #, fuzzy
 #~| msgid "Movements"
