@@ -6,7 +6,7 @@ x-web-template: &web-template
   volumes:
     - .:/code
   ports:
-    - 127.0.0.1:48899:8000
+    - 127.0.0.1:8000:8000
   environment:
     - "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
     - "RAPIDAPI_KEY=${RAPIDAPI_KEY}"

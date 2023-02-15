@@ -12,4 +12,4 @@ if [[ "$DJANGO_SETTINGS_MODULE" =~ dev$ ]]; then
     python app/finanze/manage.py makemessages -a
     python app/finanze/manage.py compilemessages
 fi
-python app/finanze/manage.py runserver ${STATIC_OPT}
+python app/finanze/manage.py runserver ${STATIC_OPT} 0.0.0.0:8000
