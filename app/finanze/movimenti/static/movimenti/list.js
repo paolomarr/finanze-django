@@ -26,7 +26,48 @@ var applyFilter = function() {
 var cleanFilters = function(){
 	window.location.search = "";
 };
+var updateUpdateModal = function(movement) {
+	var form = document.getElementById('updateModalForm');
+	document.getElementsByName('date')[0].value = new Date(movement.date).toISOString().slice(0, -1); // need to remove trailing 'Z'
+	document.getElementsByName('description')[0].value = movement.description;
+	document.getElementsByName('amount')[0].value = parseFloat(movement.amount);
+	document.getElementsByName('category')[0].value = movement.category.id;
+	document.getElementsByName('subcategory')[0].value = movement.subcategory.id;
+};
+var setupUpdateModal = function() {
+	var updateModal = document.getElementById('updateModal')
+	updateModal.addEventListener('show.bs.modal', event => {
+		// Button that triggered the modal
+		var button = event.relatedTarget
+		// Extract info from data-bs-* attributes
+		var entryid = button.getAttribute('data-bs-entryId')
+		
+		// Update the modal's content.
+		var url  = `/movimenti/movement/${entryid}`;
+		var XHR = new XMLHttpRequest();
+		XHR.addEventListener('load', function () {
+			responseData = JSON.parse(XHR.responseText);
+			if (responseData.movements == undefined) {
+				console.log(`Movement ${entryid} not found`);
+			} else {
+				mov = responseData.movements[0]; // only one
+				updateUpdateModal(mov);
+				console.log("Movement: " + XHR.responseText);
+			}
+		});
+		XHR.addEventListener('error', function () {
+			console.log(XHR.statusText);
+		});
+		XHR.open("GET", url);
+		XHR.send();
 
+		// modalTitle.textContent = `New message to ${recipient}`
+		// modalBodyInput.value = recipient
+	});
+	updateModalSubmit.addEventListener('click', event => {
+
+	});
+};
 window.addEventListener("load", function(){
 	var searchParams = new URLSearchParams(window.location.search);
 	for(var pair of searchParams.getAll('filter')) {
@@ -41,4 +82,5 @@ window.addEventListener("load", function(){
 			document.getElementById('filter-description').value = innerpair[1];	
 		}
 	}
+	setupUpdateModal();
 });

@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Sum, F
+from django.db.models import Model
 from .models import Movement, Category, Subcategory, AssetBalance
 from django.contrib.auth.models import User
 from tradinglog.models import Order
@@ -49,6 +50,20 @@ def _filterMovements(user, filterParams):
     
     return retmovements.order_by('-date')
 
+
+@login_required
+def get_movement(request, id: int):
+    movements = []
+    for mov in Movement.objects.filter(id=id):
+        movementDict = {}
+        movementDict['id'] = mov.id
+        movementDict['date'] = mov.date
+        movementDict['amount'] = mov.amount
+        movementDict['description'] = mov.description
+        movementDict['category'] = {'category': mov.category.category, 'id': mov.category.id}
+        movementDict['subcategory'] = {'subcategory': mov.subcategory.subcategory, 'id': mov.subcategory.id}
+        movements.append(movementDict)
+    return JsonResponse({"movements": movements})
 
 @login_required
 def list(request):
