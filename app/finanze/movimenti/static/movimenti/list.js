@@ -27,6 +27,11 @@ var cleanFilters = function(){
 	window.location.search = "";
 };
 var updateModal = null;
+var entryupdated = false;
+var hideFeedbackWithID = function(elementid) {
+	document.getElementById(elementid).classList.remove('d-flex', 'd-clock');
+	document.getElementById(elementid).classList.add('d-none');
+};
 var updateUpdateModal = function(movement) {
 	var form = document.getElementById('updateModalForm');
 	form.elements.namedItem('id').value = movement.id;
@@ -38,6 +43,11 @@ var updateUpdateModal = function(movement) {
 };
 var setupUpdateModal = function() {
 	updateModal = document.getElementById('updateModal')
+	updateModal.addEventListener('hidden.bs.modal', event => {
+		if(entryupdated){
+			window.location.reload();
+		}
+	});
 	updateModal.addEventListener('show.bs.modal', event => {
 		// Button that triggered the modal
 		var button = event.relatedTarget
@@ -79,9 +89,7 @@ var setupUpdateModal = function() {
 			if(jres.updated === true){
 				fallback = "Updated";
 				feedbackToShow = "updateSuccessFeedback";
-				setTimeout(() => {
-					window.location.reload();
-				}, 1000);
+				entryupdated = true;
 			}else{
 				feedbackToShow = "updateFailFeedback";
 				fallback = "Error";
