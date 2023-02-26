@@ -52,18 +52,40 @@ def _filterMovements(user, filterParams):
 
 
 @login_required
-def get_movement(request, id: int):
-    movements = []
-    for mov in Movement.objects.filter(id=id):
-        movementDict = {}
-        movementDict['id'] = mov.id
-        movementDict['date'] = mov.date
-        movementDict['amount'] = mov.amount
-        movementDict['description'] = mov.description
-        movementDict['category'] = {'category': mov.category.category, 'id': mov.category.id}
-        movementDict['subcategory'] = {'subcategory': mov.subcategory.subcategory, 'id': mov.subcategory.id}
-        movements.append(movementDict)
-    return JsonResponse({"movements": movements})
+def movement(request, id: int):
+    if request.method == 'GET':
+        movements = []
+        for mov in Movement.objects.filter(id=id):
+            movementDict = {}
+            movementDict['id'] = mov.id
+            movementDict['date'] = mov.date
+            movementDict['amount'] = mov.amount
+            movementDict['description'] = mov.description
+            movementDict['category'] = {'category': mov.category.category, 'id': mov.category.id}
+            movementDict['subcategory'] = {'subcategory': mov.subcategory.subcategory, 'id': mov.subcategory.id}
+            movements.append(movementDict)
+        return JsonResponse({"movements": movements})
+    elif request.method == 'POST':
+        params = request.POST
+        res = {"updated": True, "message": _("Updated")}
+        validfields = ['date', 'abs_amount',
+                       'description', 'category', 'subcategory', ]
+        # BEWARE: QueryDict.items transforms list values into their last, single element
+        filterparams = { k:v for (k,v) in params.items() if k in validfields}
+        logger.debug("[movement][UPDATE] parameters: %s" % str(filterparams))
+        Movement.objects.filter(id=id).update(**filterparams)
+        # try:
+        #     movement = Movement.objects.get(id=id)
+        #     for field in ['date', 'amount', 'description', 'category', 'subcategory',]:
+        #         if params.get(field):
+        #             movement.__set__(field, params.get(field)) 
+        #     movement.save()
+        # except Exception as ex:
+        #     res['updated'] = False
+        #     res['message'] = str(ex)
+        return JsonResponse(res)
+    else:
+        return JsonResponse({"message": "Invalid request"})
 
 @login_required
 def list(request):

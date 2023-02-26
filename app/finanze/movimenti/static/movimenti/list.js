@@ -26,16 +26,18 @@ var applyFilter = function() {
 var cleanFilters = function(){
 	window.location.search = "";
 };
+var updateModal = null;
 var updateUpdateModal = function(movement) {
 	var form = document.getElementById('updateModalForm');
-	document.getElementsByName('date')[0].value = new Date(movement.date).toISOString().slice(0, -1); // need to remove trailing 'Z'
-	document.getElementsByName('description')[0].value = movement.description;
-	document.getElementsByName('amount')[0].value = parseFloat(movement.amount);
-	document.getElementsByName('category')[0].value = movement.category.id;
-	document.getElementsByName('subcategory')[0].value = movement.subcategory.id;
+	form.elements.namedItem('id').value = movement.id;
+	form.elements.namedItem('date').value = new Date(movement.date).toISOString().slice(0, -1); // need to remove trailing 'Z'
+	form.elements.namedItem('description').value = movement.description;
+	form.elements.namedItem('abs_amount').value = Math.abs(parseFloat(movement.amount));
+	form.elements.namedItem('category').value = movement.category.id;
+	form.elements.namedItem('subcategory').value = movement.subcategory.id;
 };
 var setupUpdateModal = function() {
-	var updateModal = document.getElementById('updateModal')
+	updateModal = document.getElementById('updateModal')
 	updateModal.addEventListener('show.bs.modal', event => {
 		// Button that triggered the modal
 		var button = event.relatedTarget
@@ -64,8 +66,48 @@ var setupUpdateModal = function() {
 		// modalTitle.textContent = `New message to ${recipient}`
 		// modalBodyInput.value = recipient
 	});
+	var updateModalSubmit = document.getElementById('updateModalSubmit');
 	updateModalSubmit.addEventListener('click', event => {
+		var form = document.getElementById('updateModalForm');
+		var movid = form.elements.namedItem('id').value;
+		var FD = new FormData(form);
+		var url = `/movimenti/movement/${movid}`;
+		const XHR = new XMLHttpRequest();
+		// Define what happens on successful data submission
+		XHR.addEventListener('load', function () {
+			jres = JSON.parse(XHR.responseText);
+			if(jres.updated === true){
+				fallback = "Updated";
+				feedbackToShow = "updateSuccessFeedback";
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
+			}else{
+				feedbackToShow = "updateFailFeedback";
+				fallback = "Error";
+			}
+			if(jres.message != undefined){
+				message = jres.message;
+			}else{
+				message = fallback;
+			}
+			feedbackElement = document.getElementById(feedbackToShow);
+			feedbackElement.getElementsByClassName('message')[0].innerHTML = message;
+			feedbackElement.classList.remove('d-none');
+			feedbackElement.classList.add('d-flex');
+		});
 
+		// Define what happens in case of an error
+		XHR.addEventListener('error', (event) => {
+			feedbackElement = document.getElementById('updateFailFeedback');
+			feedbackElement.getElementsByClassName('message')[0].innerHTML = "Server error.";
+			feedbackElement.classList.remove('d-none');
+			feedbackElement.classList.add('d-flex');
+		});
+
+		// Set up our request
+		XHR.open('POST', url);
+		XHR.send(FD);
 	});
 };
 window.addEventListener("load", function(){
