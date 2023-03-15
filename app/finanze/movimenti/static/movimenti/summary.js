@@ -74,13 +74,14 @@ var buildDateRangeFromSelects = function() {
 	var dateTo = new Date(year, monthindex + 1, 1);
 	return [dateFrom, dateTo];
 }
-var fetchSummaryFromDateRangeFields = function () {
+var buildDateRangeFromFromAndTo = function () {
 	from = document.getElementById('dateFrom').value;
 	to = document.getElementById('dateTo').value;
 	if (from !== undefined && from.length > 0 &&
 		to !== undefined && to.length > 0) {
-		fetchSummaryAjax(new Date(from), new Date(to));
+		return [new Date(from), new Date(to)];
 	}
+	return null;
 }
 window.addEventListener("load", function(){
 	document.getElementById('select-month').addEventListener("change", () => {
@@ -94,12 +95,16 @@ window.addEventListener("load", function(){
 		fetchChartData(range[0], range[1]);
 	});
 	document.getElementById("dateFrom").addEventListener("change", () => {
-		fetchSummaryFromDateRangeFields();
-		fetchChartData(range[0], range[1]);
+		var range = buildDateRangeFromFromAndTo();
+		if(range){
+			fetchChartData(range[0], range[1]);
+		}
 	});
 	document.getElementById("dateTo").addEventListener("change", () => {
-		fetchSummaryFromDateRangeFields();
-		fetchChartData(range[0], range[1]);
+		var range = buildDateRangeFromFromAndTo();
+		if(range){
+			fetchChartData(range[0], range[1]);
+		}
 	});
 
 	var range = buildDateRangeFromSelects();
