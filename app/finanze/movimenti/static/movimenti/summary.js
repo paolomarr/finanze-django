@@ -5,7 +5,7 @@ var _myDateFormat = function(date){
 	return `${year}-${month}-${day}`
 };
 
-var _fillChart = function(chartId, data) {
+var _renderChart = function(chartId, data) {
 	var chart = Chart.getChart(chartId);
 	if (chart !== undefined) { // defined already
 		chart.destroy();
@@ -17,7 +17,7 @@ var _fillChart = function(chartId, data) {
 		data: data,
 		options: {}
 	});
-}
+};
 var fetchChartData = function (dateFrom, dateTo) {
 	var success = function (xhr) {
 		var data = JSON.parse(xhr.responseText);
@@ -39,8 +39,8 @@ var fetchChartData = function (dateFrom, dateTo) {
 				outvalues.push(outval);
 			}
 		}
-		_fillChart('expensesChart', { labels: outlabels, datasets: [{data: outvalues, label: "Expenses"}] });
-		_fillChart('incomesChart', { labels: inlabels, datasets: [{data: invalues, label: "Incomes"}] });
+		_renderChart('expensesChart', { labels: outlabels, datasets: [{data: outvalues, label: "Expenses"}] });
+		_renderChart('incomesChart', { labels: inlabels, datasets: [{data: invalues, label: "Incomes"}] });
 	};
 	_fetch(dateFrom, dateTo, "json", success);
 };
@@ -49,7 +49,7 @@ var fetchSummaryAjax = function (dateFrom, dateTo) {
 		document.getElementById('summaryTableContainer').innerHTML = xhr.responseText;
 	};
 	_fetch(dateFrom, dateTo, "fetch", success);
-}
+};
 var _fetch = function(dateFrom, dateTo, mode, success) {
 	// string dates
 	dfString = _myDateFormat(dateFrom);
@@ -103,6 +103,7 @@ window.addEventListener("load", function(){
 	document.getElementById("dateTo").addEventListener("change", () => {
 		var range = buildDateRangeFromFromAndTo();
 		if(range){
+			fetchSummaryAjax(range[0], range[1]);
 			fetchChartData(range[0], range[1]);
 		}
 	});
