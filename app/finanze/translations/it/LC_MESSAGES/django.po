@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-13 16:06+0100\n"
+"POT-Creation-Date: 2023-03-15 08:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,7 @@ msgstr "Storico assets"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:63
 #: app/finanze/movimenti/templates/movimenti/list.html:91
+#: app/finanze/movimenti/templates/movimenti/list.html:159
 msgid "Date"
 msgstr "Data"
 
@@ -145,14 +146,18 @@ msgid " Clear filters"
 msgstr " Azzera filtri"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:92
+#: app/finanze/movimenti/templates/movimenti/list.html:165
 msgid "Description"
 msgstr "Descrizione"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:93
+#: app/finanze/movimenti/templates/movimenti/list.html:171
 msgid "Amount"
 msgstr "Importo"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:94
+#: app/finanze/movimenti/templates/movimenti/list.html:177
+#: app/finanze/movimenti/templates/movimenti/list.html:183
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:6
 msgid "Category"
 msgstr "Categoria"
@@ -160,6 +165,20 @@ msgstr "Categoria"
 #: app/finanze/movimenti/templates/movimenti/list.html:95
 msgid "Subcategory"
 msgstr "Sottocategoria"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:149
+#, fuzzy
+#| msgid "Updated"
+msgid "Update record"
+msgstr "Aggiornato"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:224
+msgid "Close"
+msgstr "Chiudi"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:225
+msgid "Save changes"
+msgstr "Salva modifiche"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:3
 msgid "Viewing movements from"
@@ -199,7 +218,12 @@ msgstr "Al"
 msgid "Filter by month"
 msgstr "Filtra su mese"
 
-#: app/finanze/movimenti/views.py:93
+#: app/finanze/movimenti/views.py:70
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29
+msgid "Updated"
+msgstr "Aggiornato"
+
+#: app/finanze/movimenti/views.py:130
 msgid "Select category"
 msgstr "Filtra categoria"
 
@@ -360,10 +384,6 @@ msgstr "Investimenti"
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:28
 msgid "Current val."
 msgstr "Val. attuale"
-
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29
-msgid "Updated"
-msgstr "Aggiornato"
 
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:30
 msgid "Gross"

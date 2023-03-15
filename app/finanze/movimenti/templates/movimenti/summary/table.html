@@ -14,7 +14,7 @@
     <div class="row border-bottom py-2">
         <div class="col-12 col-sm-6 ">
             <span class="d-sm-none"><i class="bi bi-tag"></i></span>
-            <a href="/movimenti/list?filter=category%253D{{row.cat.id}}&amp;filter=dateto%253D{{end}}&amp;filter=datefrom%253D{{start}}"
+            <a href="/movimenti/list?filter=category%253D{{row.cat.id}}&amp;filter=dateto%253D{{end|date:'Y-m-d'}}&amp;filter=datefrom%253D{{start|date:'Y-m-d'}}"
                 data-category="1">{{row.cat.cat}}</a>
         </div>
         <div class="col-12 col-sm-3 currency text-sm-end">
