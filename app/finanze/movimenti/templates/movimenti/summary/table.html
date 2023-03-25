@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load l10n %}
+{% load extras %}
 <div class="h2" id="tableTitle">{% translate "Viewing movements from" %} {{start|date}} {% translate "to" %} {{end|date}}</div>
 <div class="d-none d-sm-block">
     <div class="row border-bottom" id="tableHeader">
@@ -9,6 +10,20 @@
     </div>
 </div>
 <div id="tableBody">
+    <div class="d-block d-sm-none alert alert-light" role="alert">
+        <hr>
+        <h4 class="alert-heading fw-bold text-bg-primary text-center">{% translate "Balance" %}</h4>
+        <div class="row">
+            <div class="col-4">{% translate "Expenses" %}:</div><div class="col-4 currency text-end">{{totals.outs.amount | floatformat:2}}</div><div class="col-4 text-end px-0">({{totals.outs.amount | divide:totals.days | floatformat:2}}/{% translate "day" %})</div>
+        </div>
+        <div class="row">
+            <div class="col-4">{% translate "Incomes" %}:</div><div class="col-4 currency text-end">{{totals.ins.amount | floatformat:2}}</div><div class="col-4 text-end px-0">({{totals.ins.amount | divide:totals.days | floatformat:2}}/{% translate "day" %})</div>
+        </div>
+        <div class="row">
+            <div class="col-4">{% translate "NET" %}:</div><div class="col-4 currency text-end">{{totals.net.amount | floatformat:2}}</div><div class="col-4 text-end px-0">({{totals.net.amount | divide:totals.days | floatformat:2}}/{% translate "day" %})</div>
+        </div>
+        <hr>
+    </div>
     {% for row in results %}
         {% if not row.empty %}
     <div class="row border-bottom py-2">

@@ -7,3 +7,12 @@ register = template.Library()
 @stringfilter
 def split(value, arg):
     return value.split(arg)
+
+@register.filter
+def divide(value, arg):
+    try:
+        dividend = float(value)
+        divisor = float(arg)
+        return dividend / divisor
+    except Exception:
+        return "ERR"

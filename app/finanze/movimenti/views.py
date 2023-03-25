@@ -160,7 +160,7 @@ def summaryXHR(request):
     dateTo = datetime.fromisoformat(params['dateTo'])
     logger.debug("Requested summary from %s to %s" % (dateFrom, dateTo))
     results = []
-    totals = {'ins': {'amount': 0}, 'outs': {'amount': 0}}
+    totals = {'ins': {'amount': 0}, 'outs': {'amount': 0}, 'days': (dateTo-dateFrom).days}
     start = None
     end = None
     for cat in Category.objects.filter(user=request.user):
@@ -170,6 +170,7 @@ def summaryXHR(request):
         results.append({"cat": {"id": cat.id, "cat": cat.category}, "outs": outs, "ins": ins, "empty": empty})
         totals['ins']['amount'] += ins['amount']
         totals['outs']['amount'] += outs['amount']
+    totals['net'] = {'amount': totals['ins']['amount'] - totals['outs']['amount']}
     outdata = {
         'results': results,
         'totals': totals,
