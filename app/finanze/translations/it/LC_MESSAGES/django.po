@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-15 08:10+0100\n"
+"POT-Creation-Date: 2023-03-23 13:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,42 +26,42 @@ msgstr "Finanze"
 msgid "Movements"
 msgstr "Movimenti"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:24
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:26
 msgid "description"
 msgstr "descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:39
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:41
 msgid "Remove"
 msgstr "Elimina"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:45
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:47
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:60
 msgid "TOTAL"
 msgstr "TOTALE"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:46
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:48
 msgid "Add entry"
 msgstr "Aggiungi elemento"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:49
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:51
 msgid "Submit"
 msgstr "Invia"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:61
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:68
 msgid "Assets log"
 msgstr "Storico assets"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:63
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:70
 #: app/finanze/movimenti/templates/movimenti/list.html:91
 #: app/finanze/movimenti/templates/movimenti/list.html:159
 msgid "Date"
 msgstr "Data"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:64
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:71
 msgid "Total"
 msgstr "Totale"
 
-#: app/finanze/movimenti/templates/movimenti/assetbalance.html:65
+#: app/finanze/movimenti/templates/movimenti/assetbalance.html:72
 msgid "Error"
 msgstr "Scarto"
 
@@ -226,6 +226,10 @@ msgstr "Aggiornato"
 #: app/finanze/movimenti/views.py:130
 msgid "Select category"
 msgstr "Filtra categoria"
+
+#: app/finanze/movimenti/views.py:244
+msgid "Assets time series"
+msgstr ""
 
 #: app/finanze/templates/base.html:92 app/finanze/templates/base.html:138
 msgid "Profile"
