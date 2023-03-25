@@ -182,6 +182,19 @@ def summaryXHR(request):
     else:
         return JsonResponse(outdata)
 
+def _group_by_date_and_total_balance(requestUser):
+    groupByDateAndTotalBalance = AssetBalance.objects.filter(user__id=requestUser.id).values(
+        'date').annotate(totbalance=Sum('balance')).order_by('-date')
+    for idx in range(0, len(groupByDateAndTotalBalance) - 1):
+        rec_to = groupByDateAndTotalBalance[idx]
+        rec_from = groupByDateAndTotalBalance[idx+1]
+        truebalance = rec_to['totbalance'] - rec_from['totbalance']
+        period = Movement.objects.netAmountInPeriod(
+            requestUser, rec_from['date'], rec_to['date'])
+        groupByDateAndTotalBalance[idx]['accounted'] = period
+        groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
+        groupByDateAndTotalBalance[idx]['error'] = truebalance - period
+    return groupByDateAndTotalBalance
 
 @login_required
 def assets(request):
@@ -222,8 +235,15 @@ def assets(request):
     else:
         form = NewAssetsBalanceForm()
         allrecords = AssetBalance.objects.filter(user__id=request.user.id).order_by('-date')
-        groupByDateAndTotalBalance = AssetBalance.objects.filter(user__id=request.user.id).values(
-            'date').annotate(totbalance=Sum('balance')).order_by('-date')
+        groupByDateAndTotalBalance = _group_by_date_and_total_balance(
+            request.user)
+        if request.path.find("/json") >= 0:
+            # send json data
+            data = []
+            for val in groupByDateAndTotalBalance.reverse():
+                val['date'] = val['date'].timestamp()
+                data.append(val)
+            return JsonResponse({"data": data, "title": _("Assets time series")})
         latests = []
         latsum = 0
         if len(allrecords) > 0:
@@ -234,14 +254,6 @@ def assets(request):
                     latsum += rec.balance
                 else:
                     break
-            for idx in range(0, len(groupByDateAndTotalBalance) - 1):
-                rec_to = groupByDateAndTotalBalance[idx]
-                rec_from = groupByDateAndTotalBalance[idx+1]
-                truebalance = rec_to['totbalance'] - rec_from['totbalance']
-                period = Movement.objects.netAmountInPeriod(request.user, rec_from['date'], rec_to['date'])
-                groupByDateAndTotalBalance[idx]['accounted'] = period
-                groupByDateAndTotalBalance[idx]['truebalance'] = truebalance
-                groupByDateAndTotalBalance[idx]['error'] = truebalance - period
         else:
             logger.debug("[assets] no records found for user %s" % str(request.user))
         # Insert finance assets total by default

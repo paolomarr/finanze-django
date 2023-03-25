@@ -9,6 +9,7 @@ urlpatterns = [
     path('new', views.newmovement, name='newmovement'),
     path('summary', views.summary, name='summary'),
     path('assets', views.assets, name='assets'),
+    path('assets/json', views.assets, name='assetsxhr'),
     path('categories', views.categories, name='categories'),
     path('categories/new', views.newcategory, name='categories.new'),
     path('summary/json', views.summaryXHR, name='summaryxhjson'),

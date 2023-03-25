@@ -4,6 +4,8 @@
 {% load django_bootstrap5 %}
 {% block extra_script %}
 {{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script type="text/javascript" src="{% static 'movimenti/scripts.js' %}"></script>
 <script type="text/javascript" src="{% static 'movimenti/assets.js' %}"></script>
 {% endblock %}
@@ -57,20 +59,27 @@ Registra bilancio corrente
 			<div id="messages"></div>
 		</div>
 	</div>
-	<div class="container" style="max-width: 768px;">
-		<div class="row h2 text-center justify-content-center m-3">{% translate "Assets log" %}</div>
-		<div class="row justify-content-center border-bottom">
-			<div class="table-header col-4">{% translate "Date" %}</div>
-			<div class="table-header col-4 text-end">{% translate "Total" %}</div>
-			<div class="table-header col-4 text-end">{% translate "Error" %}</div>
+	<div class="row mt-2">
+		<div class="col-12 col-xl-6">
+			<canvas id="assetsChart"></canvas>
 		</div>
-		{% for asset in assets %}
-		<div class="row justify-content-center border-bottom p-2">
-			<div class="col-4">{{asset.date | date:'d/m/Y H:i'}}</div>
-			<div class="col-4 currency text-end">{{asset.totbalance | floatformat:2}}</div>
-			<div class="col-4 currency text-end">{{asset.error | floatformat:2}}</div>
+		<div class="col-12 col-xl-6">
+			<div class="container" style="max-width: 768px;">
+				<div class="row h2 text-center justify-content-center m-3">{% translate "Assets log" %}</div>
+				<div class="row justify-content-center border-bottom">
+					<div class="table-header col-4">{% translate "Date" %}</div>
+					<div class="table-header col-4 text-end">{% translate "Total" %}</div>
+					<div class="table-header col-4 text-end">{% translate "Error" %}</div>
+				</div>
+				{% for asset in assets %}
+				<div class="row justify-content-center border-bottom p-2">
+					<div class="col-4">{{asset.date | date:'d/m/Y H:i'}}</div>
+					<div class="col-4 currency text-end">{{asset.totbalance | floatformat:2}}</div>
+					<div class="col-4 currency text-end">{{asset.error | floatformat:2}}</div>
+				</div>
+				{% endfor %}
+			</div>
 		</div>
-		{% endfor %}
 	</div>
 </div>
 {% endblock %}

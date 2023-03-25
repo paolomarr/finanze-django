@@ -1,25 +1,53 @@
-// var balanceItemFactory = function(index){
-// 	input = $(`<input type="number" step="0.01" id="balance_item_${index}" name="balance_item" onChange="computeSum()"/>`)
-// 	return input;
-// };
-// var balanceLabelItemFactory = function(index){
-// 	input = $(`<input type="text" placeholder="description" name="balance_item_key" \
-// class="form-control balance_item_key" id="balance_item_key_${index}" onChange="keyItemChange(this)"/>`)
-// 	return input;	
-// };
+// import date-fns locale:
+import { it } from 'date-fns/locale';
+
+var _renderChart = function (chartId, data) {
+	var chart = Chart.getChart(chartId);
+	if (chart !== undefined) { // defined already
+		chart.destroy();
+	}
+	var ctx = document.getElementById(chartId);
+	var chartConfig = {
+		type: 'line',
+		data: data,
+		options: {
+			plugins: {
+				title: {
+					text: 'Chart.js Time Scale',
+					display: false
+				}
+			},
+			parsing: false,
+			scales: {
+				x: {
+					type: 'time',
+					time: {
+						// Luxon format string
+						tooltipFormat: 'dd T'
+					},
+					title: {
+						display: true,
+						text: 'Date'
+					},
+					adapters: {
+						date: {
+							locale: it
+						}
+					}
+				},
+				y: {
+					title: {
+						display: true,
+						text: 'value'
+					}
+				}
+			},
+			aspectRatio: 1,
+		},
+	};
+	new Chart(ctx, chartConfig);
+};
 var insertNewListItem = function() {
-	// var removebtn = $(`<button type="button" onClick="removeButtonClick(this)" />`)
-	// 	.addClass(['col', 'btn', 'btn-light', 'btn-sm', 'remove-button'])
-	// 	.attr("data-index", index)
-	// 	.html('<span class="d-none d-lg-block">Remove</span><span class="d-lg-none"><i class="bi bi-trash"></i></span>');
-	// var labelitem = balanceLabelItemFactory(index).addClass('form-control');
-	// var inputitem = balanceItemFactory(index).addClass('form-control');
-	// var inputrow = $('<div class="row gx-3">')
-	// 	.attr('data-index', index)
-	// 	.append($('<div class="col col-6" />').append(labelitem))
-	// 	.append($('<div class="col col-4" />').append(inputitem))
-	// 	.append($('<div class="col col-2" />').append(removebtn));
-	
 	// return inputrow;
 	var itemsList = document.getElementById('itemsList');
 	var currentItems = itemsList.childElementCount - 1; // -1 to exclude the hidden template
@@ -30,33 +58,14 @@ var insertNewListItem = function() {
 	newitem.querySelector('[name=balance_item_val]').id = `balance_item_val_${currentItems}`;
 	newitem.classList.remove("d-none");
 	itemsList.append(newitem);
-}
+};
 var removeButtonClick = function(element){
-// 	var index = $(element).attr('data-index');
-// 	if($('#itemslist input[type="number"]').length > 1){
-// 		$(`[data-index="${index}"]`).remove();
-// 	}
 	index = parseInt(element.getAttribute('data-index'));
 	idtoremove = `balance_item_${index}`;
 	document.getElementById(idtoremove).remove();
 
 	computeSum();
-}
-// var insertNewListItem = function(key, value){
-// 	newlistitem = balanceListItemFactory(itemscounter++);
-// 	if(!key || key == undefined) {
-// 		key = "";
-// 	}else{
-// 		newlistitem.find('input[name="balance_item_key"]').val(key);
-// 	}
-// 	if(!value || value == undefined) {
-// 		value = 0;
-// 	}else{
-// 		newlistitem.find('input[name="balance_item"]').val(value);
-// 	}
-// 	$('#itemslist').append(newlistitem);
-// 	computeSum();	
-// }
+};
 var computeSum = function(){
 	var sum = 0;
 	var numinputs = document.getElementsByName('balance_item_val');
@@ -66,7 +75,7 @@ var computeSum = function(){
 	});
 	document.getElementById('sum').innerHTML = sum.toFixed(2);
 	document.getElementById('id_balance').value = sum;
-}
+};
 var getAssetItemsObjects = function(){
 	var objects = [];
 	var allrows = document.getElementById('itemsList').querySelectorAll('div.row');
@@ -87,14 +96,28 @@ var getAssetItemsObjects = function(){
 var keyItemChange = function(element){
 	getAssetItemsObjects();
 }
+var fetchChartData = function() {
+	const XHR = new XMLHttpRequest();
+	XHR.addEventListener('load', function () {
+		jdata = JSON.parse(XHR.responseText);
+		dataset = {
+			label: jdata.title,
+			data: []
+		}
+		jdata.data.forEach(item => {
+			dataset.data.push({x: item.date, y: item.totbalance})
+		});
+		_renderChart("assetsChart", {datasets: [dataset]})
+	});
+	XHR.addEventListener('error', (event) => {});
+	XHR.open('GET', "/movimenti/assets/json");
+	XHR.send();
+}
 var itemscounter = 0;
 window.addEventListener("load", function(event) {
 	// Callbacks
 	var addbutton = document.getElementById('addbutton');
 	addbutton.addEventListener("click", function(){
-		// newlistitem = balanceListItemFactory(itemscounter++);
-		// document.getElementById('itemslist').append(newlistitem);
-		// newlistitem.getElementsByName("balance_item_key").last.focus();
 		insertNewListItem();
 	});
 	addbutton.click();
@@ -162,25 +185,6 @@ window.addEventListener("load", function(event) {
 		// Set up our request
 		XHR.open('POST', url);
 		XHR.send(serialized);
-
-		// console.log(JSON.stringify(data));
-		// $.ajax({
-		// 	method: "POST",
-		// 	url: url,
-		// 	data: JSON.stringify(data),
-		// 	contentType: "application/json",
-		// 	headers: {'X-CSRFToken': csrftoken},
-        // 	mode: 'same-origin', // Do not send CSRF token to another domain.
-        // 	success: function (data) {
-        // 		err = data.errors;
-        // 		if(err.length > 0){
-        // 			err.each((idx, el) =>{
-        // 				$('#messages').append(`<p class="bg-warning">${err}</p>`);
-        // 			})
-        // 		}else{
-    	// 			$('#messages').append(`<p class="bg-primary text-white">${err}</p>`);
-        // 		}
-        // 	}
-		// });
 	});
-})
+	fetchChartData();
+});
