@@ -10,12 +10,43 @@ var _renderChart = function(chartId, data) {
 	if (chart !== undefined) { // defined already
 		chart.destroy();
 	}
+	/**
+	 * 
+	 */
 	var ctx = document.getElementById(chartId);
-	new Chart(ctx, {
+	var myPieChart = new Chart(ctx, {
 		type: 'pie',
 		cutout: 0,
 		data: data,
-		options: {}
+		options: {
+			plugins: {
+				tooltip: {
+					callbacks: {
+						label: function (context) {
+							var total = context.dataset.data.reduce(function (previousValue, currentValue, currentIndex, array) {
+								return previousValue + currentValue;
+							});
+							var currentValue = context.parsed.toFixed(2);
+							var percentage = Math.floor(((currentValue / total) * 100) + 0.5).toFixed(1);
+							return `${currentValue} (${percentage}%)`;
+						}
+					}
+				},
+			},
+			// legendCallback: function (chart) {
+			// 	var text = [];
+			// 	text.push('<ul class="' + chart.id + '-legend">');
+			// 	for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+			// 		text.push('<li><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '"></span>');
+			// 		if (chart.data.labels[i]) {
+			// 			text.push(chart.data.labels[i] + " - " + Math.floor((chart.data.datasets[0].data[i] / chart.data.datasets[0]._meta[0].total) * 100 + 0.5) + "%");
+			// 		}
+			// 		text.push('</li>');
+			// 	}
+			// 	text.push('</ul>');
+			// 	return text.join("");
+			// }
+		}
 	});
 };
 var fetchChartData = function (dateFrom, dateTo) {
