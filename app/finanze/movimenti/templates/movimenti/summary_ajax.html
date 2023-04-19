@@ -22,7 +22,7 @@
             </h3>
             <div id="select-range-period" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#summaryFilterAccordion">
                 <div class="accordion-body">
-                    <form class="row row-cols-lg-auto align-items-center">
+                    <form class="row row-cols-lg-auto justify-content-center">
                         <div class="col-12">
                             <div class="form-floating">
                                 <input type="date" class="form-control" name="dateFrom" id="dateFrom"/>
@@ -47,7 +47,7 @@
             </h3>
             <div id="select-month-period" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#summaryFilterAccordion">
                 <div class="accordion-body">
-                    <form class="row row-cols-lg-auto align-items-center">
+                    <form class="row row-cols-lg-auto justify-content-center">
                         <div class="col-12">
                             <div class="form-floating">
                                 <select class="form-select" name="month" id="select-month">
@@ -74,8 +74,22 @@
         </div>
     </div></div>
     <div class="row mt-2">
-        <div class="col-12 col-xl-6">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <div class="col-12 col-xl-4">
+            <!-- <div class="card-group"> -->
+                <div class="card my-3">
+                    <div class="card-header">{% translate "Expenses" %}</div>
+                    <div class="card-img-top">
+                        <canvas id="expensesChart"></canvas>
+                    </div>
+                </div>
+                <div class="card my-3">
+                    <div class="card-header">{% translate "Incomes" %}</div>
+                    <div class="card-img-top">
+                        <canvas id="incomesChart"></canvas>
+                    </div>
+                </div>
+            <!-- </div> -->
+            <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="expenses-pie" data-bs-toggle="tab" data-bs-target="#expenses-pie-pane" type="button"
                         role="tab" aria-controls="expenses-pie-pane" aria-selected="true">{% translate "Expenses" %}</button>
@@ -92,9 +106,9 @@
                 <div class="tab-pane fade" id="incomes-pie-pane" role="tabpanel" aria-labelledby="incomes-pie" tabindex="0">
                     <canvas id="incomesChart"></canvas>
                 </div>
-            </div>            
+            </div>             -->
         </div>
-        <div class="col-12 col-xl-6" id="summaryTableContainer">
+        <div class="col-12 col-xl-8" id="summaryTableContainer">
         </div>
     </div>
 </div>
