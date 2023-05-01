@@ -1,5 +1,6 @@
+// NOT WORKING here
 // import date-fns locale:
-import { it } from 'date-fns/locale';
+// import { it } from 'date-fns/locale';
 
 var _renderChart = function (chartId, data) {
 	var chart = Chart.getChart(chartId);
@@ -29,11 +30,11 @@ var _renderChart = function (chartId, data) {
 						display: true,
 						text: 'Date'
 					},
-					adapters: {
-						date: {
-							locale: it
-						}
-					}
+					// adapters: {
+					// 	date: {
+					// 		locale: it
+					// 	}
+					// }
 				},
 				y: {
 					title: {

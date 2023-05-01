@@ -241,7 +241,7 @@ def assets(request):
             # send json data
             data = []
             for val in groupByDateAndTotalBalance.reverse():
-                val['date'] = val['date'].timestamp()
+                val['date'] = int(val['date'].timestamp() * 1000)
                 data.append(val)
             return JsonResponse({"data": data, "title": _("Assets time series")})
         latests = []
