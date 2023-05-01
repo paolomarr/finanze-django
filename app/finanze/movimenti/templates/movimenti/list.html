@@ -81,10 +81,22 @@ Lista movimenti
 			</div>
 		</div>
 	</div>
-	<div id="summary">
-		<p>Count: {{summary.count}}</p>
-		<p>Expenses: {{summary.expenses | floatformat:2 }}</p>
-		<p>Incomes: {{summary.incomes | floatformat:2 }}</p>
+	<div id="summary" class="row justify-content-center">
+		<div class="col-12 col-sm-6 col-xl-4">
+			<div class="card text-center">
+				<div class="card-header">
+					{% translate "Filter summary" %}
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">{% translate "Items count" %}</h5>
+					<p class="card-text">{{summary.count}}</p>
+					<h5 class="card-title">{% translate "Total expenses" %}</h5>
+					<p class="card-text currency">{{summary.expenses | floatformat:2 }}</p>
+					<h5 class="card-title">{% translate "Total incomes" %}</h5>
+					<p class="card-text currency">{{summary.incomes | floatformat:2 }}</p>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="pagination justify-content-center my-4">
 		<span class="step-links">

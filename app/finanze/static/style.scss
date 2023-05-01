@@ -17,12 +17,12 @@ div {
 		content: "€";
 	}
 }
-@media (min-width: 1200px) {
-	.currency {
-		text-align: right;
-		justify-content: end;
-	}
-}
+// @media (min-width: 1200px) {
+// 	.currency {
+// 		text-align: right;
+// 		justify-content: end;
+// 	}
+// }
 .table-total {
 	font-weight: bold;
 	font-size: larger;
