@@ -138,7 +138,38 @@ window.addEventListener("load", function(){
 			fetchChartData(range[0], range[1]);
 		}
 	});
-
+	document.getElementById('filter-button-currentyear').addEventListener("click", () => {
+		today = new Date();
+		from = new Date(today.getFullYear(), 0, 1, 0, 0, 0);
+		to = today;
+		fetchSummaryAjax(from, to);
+		fetchChartData(from, to);
+	});
+	document.getElementById('filter-button-lastyear').addEventListener("click", () => {
+		today = new Date();
+		from = new Date(today.getFullYear() -1, 0, 1, 0, 0, 0);
+		to = new Date(today.getFullYear(), 0, 1, 0, 0, 0);
+		fetchSummaryAjax(from, to);
+		fetchChartData(from, to);
+	});
+	document.getElementById('filter-button-last3m').addEventListener("click", () => {
+		to = new Date();
+		from = new Date(Date.now() - 3 * 30 * 24 * 3600 * 1000); // flawed: assuming fixed 30 day-months
+		fetchSummaryAjax(from, to);
+		fetchChartData(from, to);
+	});
+	document.getElementById('filter-button-last6m').addEventListener("click", () => {
+		to = new Date();
+		from = new Date(Date.now() - 6 * 30 * 24 * 3600 * 1000); // flawed: assuming fixed 30 day-months
+		fetchSummaryAjax(from, to);
+		fetchChartData(from, to);
+	});
+	document.getElementById('filter-button-last12m').addEventListener("click", () => {
+		to = new Date();
+		from = new Date(to.getFullYear() - 1, to.getMonth(), to.getDate(), to.getHours(), to.getMinutes(), to.getSeconds());
+		fetchSummaryAjax(from, to);
+		fetchChartData(from, to);
+	});
 	var range = buildDateRangeFromSelects();
 	fetchSummaryAjax(range[0], range[1]);
 	fetchChartData(range[0], range[1]);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-01 12:38+0200\n"
+"POT-Creation-Date: 2023-05-01 13:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,15 +191,15 @@ msgstr "al"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:8
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:20
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:86
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:99
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:106
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:119
 msgid "Incomes"
 msgstr "Entrate"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:9
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:17
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:80
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:95
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:100
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:115
 msgid "Expenses"
 msgstr "Uscite"
 
@@ -242,6 +242,36 @@ msgstr "Al"
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:45
 msgid "Filter by month"
 msgstr "Filtra su mese"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:79
+#, fuzzy
+#| msgid " Filters"
+msgid "Quick filters"
+msgstr "Filtri rapidi"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:86
+#, fuzzy
+#| msgid "Current val."
+msgid "Current year"
+msgstr "Quest'anno"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:87
+#, fuzzy
+#| msgid "Past orders"
+msgid "Last year"
+msgstr "Anno passato"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:88
+msgid "Last 3 months"
+msgstr "Ultimi 3 mesi"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:89
+msgid "Last 6 months"
+msgstr "Ultimi 6 mesi"
+
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:90
+msgid "Last 12 months"
+msgstr "Ultimi 12 mesi"
 
 #: app/finanze/movimenti/views.py:70
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29

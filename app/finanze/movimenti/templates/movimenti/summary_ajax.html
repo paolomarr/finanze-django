@@ -72,6 +72,26 @@
                 </div>
             </div>
         </div>
+        <div class="accordion-item">
+            <h3 class="accordion-header" id="headingThree">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#quick-filters-accordion"
+                    aria-expanded="true" aria-controls="quick-filters-accordion">
+                    {% translate "Quick filters" %}
+                </button>
+            </h3>
+            <div id="quick-filters-accordion" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                data-bs-parent="#summaryFilterAccordion">
+                <div class="accordion-body">
+                    <div class="d-grid gap-2 d-md-block text-center">
+                        <button id="filter-button-currentyear" type="button" class="btn btn-secondary">{% translate "Current year" %}</button>
+                        <button id="filter-button-lastyear" type="button" class="btn btn-secondary">{% translate "Last year" %}</button>
+                        <button id="filter-button-last3m" type="button" class="btn btn-secondary">{% translate "Last 3 months" %}</button>
+                        <button id="filter-button-last6m" type="button" class="btn btn-secondary">{% translate "Last 6 months" %}</button>
+                        <button id="filter-button-last12m" type="button" class="btn btn-secondary">{% translate "Last 12 months" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div></div>
     <div class="row mt-2">
         <div class="col-12 col-xl-4">
