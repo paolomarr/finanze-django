@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-01 10:53+0200\n"
+"POT-Creation-Date: 2023-05-01 12:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,7 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:70
 #: app/finanze/movimenti/templates/movimenti/list.html:91
 #: app/finanze/movimenti/templates/movimenti/list.html:159
+#: app/finanze/movimenti/views.py:250
 msgid "Date"
 msgstr "Data"
 
@@ -251,9 +252,15 @@ msgstr "Aggiornato"
 msgid "Select category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/views.py:246
+#: app/finanze/movimenti/views.py:249
 msgid "Assets time series"
-msgstr ""
+msgstr "Storico assets"
+
+#: app/finanze/movimenti/views.py:251
+#, fuzzy
+#| msgid "Trading assets"
+msgid "Total assets"
+msgstr "Totale assets"
 
 #: app/finanze/templates/base.html:92 app/finanze/templates/base.html:138
 msgid "Profile"

@@ -60,10 +60,10 @@ Registra bilancio corrente
 		</div>
 	</div>
 	<div class="row mt-2">
-		<div class="col-12 col-xl-6">
+		<div class="col-12 col-xl-7">
 			<canvas id="assetsChart"></canvas>
 		</div>
-		<div class="col-12 col-xl-6">
+		<div class="col-12 col-xl-5">
 			<div class="container" style="max-width: 768px;">
 				<div class="row h2 text-center justify-content-center m-3">{% translate "Assets log" %}</div>
 				<div class="row justify-content-center border-bottom">
@@ -73,7 +73,7 @@ Registra bilancio corrente
 				</div>
 				{% for asset in assets %}
 				<div class="row justify-content-center border-bottom p-2">
-					<div class="col-4">{{asset.date | date:'d/m/Y H:i'}}</div>
+					<div class="col-4">{{asset.date | date:'d/m/Y'}}</div>
 					<div class="col-4 currency text-end">{{asset.totbalance | floatformat:2}}</div>
 					<div class="col-4 currency text-end">{{asset.error | floatformat:2}}</div>
 				</div>

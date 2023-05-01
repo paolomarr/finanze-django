@@ -243,7 +243,14 @@ def assets(request):
             for val in groupByDateAndTotalBalance.reverse():
                 val['date'] = int(val['date'].timestamp() * 1000)
                 data.append(val)
-            return JsonResponse({"data": data, "title": _("Assets time series")})
+            return JsonResponse({
+                "chartdata": {
+                    "data": data, 
+                    "title": _("Assets time series"),
+                    "xTitle": _("Date"),
+                    "yTitle": _("Total assets"),
+                    }
+                })
         latests = []
         latsum = 0
         if len(allrecords) > 0:

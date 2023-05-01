@@ -2,7 +2,7 @@
 // import date-fns locale:
 // import { it } from 'date-fns/locale';
 
-var _renderChart = function (chartId, data) {
+var _renderChart = function (chartId, chartdata) {
 	var chart = Chart.getChart(chartId);
 	if (chart !== undefined) { // defined already
 		chart.destroy();
@@ -10,25 +10,29 @@ var _renderChart = function (chartId, data) {
 	var ctx = document.getElementById(chartId);
 	var chartConfig = {
 		type: 'line',
-		data: data,
+		data: {datasets: [{data: chartdata.data}]},
 		options: {
 			plugins: {
 				title: {
-					text: 'Chart.js Time Scale',
-					display: false
-				}
+					text: chartdata.titlem,
+					display: true
+				},
+				legend: { display: false}
 			},
-			parsing: false,
+			parsing: {
+				'xAxisKey': 'date',
+				'yAxisKey': 'totbalance'
+			},
 			scales: {
 				x: {
 					type: 'time',
 					time: {
 						// Luxon format string
-						tooltipFormat: 'dd T'
+						tooltipFormat: 'MMM yyyy'
 					},
 					title: {
 						display: true,
-						text: 'Date'
+						text: chartdata.xTitle
 					},
 					// adapters: {
 					// 	date: {
@@ -39,7 +43,7 @@ var _renderChart = function (chartId, data) {
 				y: {
 					title: {
 						display: true,
-						text: 'value'
+						text: chartdata.yTitle
 					}
 				}
 			},
@@ -101,14 +105,10 @@ var fetchChartData = function() {
 	const XHR = new XMLHttpRequest();
 	XHR.addEventListener('load', function () {
 		jdata = JSON.parse(XHR.responseText);
-		dataset = {
-			label: jdata.title,
-			data: []
-		}
-		jdata.data.forEach(item => {
-			dataset.data.push({x: item.date, y: item.totbalance})
-		});
-		_renderChart("assetsChart", {datasets: [dataset]})
+		// jdata.data.forEach(item => {
+		// 	dataset.data.push({x: item.date, y: item.totbalance})
+		// });
+		_renderChart("assetsChart", jdata.chartdata)
 	});
 	XHR.addEventListener('error', (event) => {});
 	XHR.open('GET', "/movimenti/assets/json");
