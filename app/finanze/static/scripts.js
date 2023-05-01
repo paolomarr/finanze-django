@@ -1,3 +1,10 @@
+var _myDateFormat = function (date) {
+	year = date.getFullYear();
+	month = String(date.getMonth() + 1).padStart(2, '0');
+	day = String(date.getDate()).padStart(2, '0');
+	return `${year}-${month}-${day}`
+};
+
 var setNavActiveItem = function(){
 	path = window.location.pathname;
 	const navbar = document.getElementById("navigationBar");
@@ -43,5 +50,18 @@ window.addEventListener("load", () =>{
 				XHR.send(FD);
 			}
 		});
+	}
+	// setup pagination
+	// keep search params while updating 'page' value only
+	var pagcontrols = document.querySelectorAll('div.pagination a[data-page]');
+	for (let index = 0; index < pagcontrols.length; index++) {
+		const element = pagcontrols[index];
+		element.addEventListener("click", event => {
+			var el = event.target;
+			var page = el.getAttribute('data-page');
+			params = new URLSearchParams(window.location.search);
+			params.set('page', page);
+			window.location.search = params.toString();
+		});	
 	}
 });

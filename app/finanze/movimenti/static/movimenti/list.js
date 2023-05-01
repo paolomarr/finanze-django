@@ -1,11 +1,22 @@
 var applyFilter = function() {
-	// body...
+	datefrom = document.getElementById('dateFrom').value;
+	dateto = document.getElementById('dateTo').value;
 	desc = document.getElementById('filter-description').value;
 	cat = document.getElementById('filter-category').value;
 	subcat = document.getElementById('filter-subcategory').value;
 	filter = {};
 	filteritems = []
 	changed = false;
+	if(datefrom.length > 0){
+		date = _myDateFormat(new Date(datefrom));
+		filteritems.push("filter=" + encodeURIComponent(`datefrom=${date}`))
+		changed = true;
+	}
+	if (dateto.length > 0) {
+		date = _myDateFormat(new Date(dateto));
+		filteritems.push("filter=" + encodeURIComponent(`dateto=${date}`))
+		changed = true;
+	}
 	if(cat >= 0){
 		filteritems.push("filter=" + encodeURIComponent(`category=${cat}`))
 		changed = true;
@@ -132,5 +143,12 @@ window.addEventListener("load", function(){
 			document.getElementById('filter-description').value = innerpair[1];	
 		}
 	}
+	var collapseFilterCollapsibleBlock = document.getElementById('collapseFilter');
+	collapseFilterCollapsibleBlock.addEventListener('shown.bs.collapse', event => {
+		document.getElementById('clearFiltersButton').classList.remove('d-none');
+	});
+	collapseFilterCollapsibleBlock.addEventListener('hidden.bs.collapse', event => {
+		document.getElementById('clearFiltersButton').classList.add('d-none');
+	});
 	setupUpdateModal();
 });

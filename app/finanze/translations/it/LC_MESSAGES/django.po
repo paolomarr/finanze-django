@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-01 13:40+0200\n"
+"POT-Creation-Date: 2023-05-01 16:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,12 @@ msgstr "ultimo"
 #: app/finanze/movimenti/templates/movimenti/list.html:40
 msgid " Filters"
 msgstr "Filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:49
+#, fuzzy
+#| msgid "description"
+msgid "Filter description"
+msgstr "Filtra descrizione"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:54
 msgid "Filter category"
