@@ -149,6 +149,10 @@ window.addEventListener("load", function(){
 			document.getElementById('filter-dateTo').value = innerpair[1];
 		}
 	}
+	if(searchParams.getAll('filter').length > 0){
+		var filterCollapsible = new bootstrap.Collapse('#collapseFilter');
+		filterCollapsible.show();
+	}
 	var collapseFilterCollapsibleBlock = document.getElementById('collapseFilter');
 	collapseFilterCollapsibleBlock.addEventListener('shown.bs.collapse', event => {
 		document.getElementById('clearFiltersButton').classList.remove('d-none');
