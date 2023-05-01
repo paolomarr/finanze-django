@@ -49,11 +49,11 @@ Lista movimenti
 				<div class="row gy-2 my-2 align-items-end">
 					<div class="col-12 col-xl-2">
 						<div class="form-floating">
-							<input type="date" class="form-control" name="dateFrom" id="dateFrom" onchange="applyFilter()" />
+							<input type="date" class="form-control" name="dateFrom" id="filter-dateFrom" onchange="applyFilter()" />
 							<label for="dateFrom">{% translate "From" %}</label>
 						</div>
 						<div class="form-floating">
-							<input type="date" class="form-control" name="dateTo" id="dateTo" onchange="applyFilter()" />
+							<input type="date" class="form-control" name="dateTo" id="filter-dateTo" onchange="applyFilter()" />
 							<label for="dateTo">{% translate "To" %}</label>
 						</div>
 					</div>
@@ -80,6 +80,11 @@ Lista movimenti
 				</div>
 			</div>
 		</div>
+	</div>
+	<div id="summary">
+		<p>Count: {{summary.count}}</p>
+		<p>Expenses: {{summary.expenses | floatformat:2 }}</p>
+		<p>Incomes: {{summary.incomes | floatformat:2 }}</p>
 	</div>
 	<div class="pagination justify-content-center my-4">
 		<span class="step-links">

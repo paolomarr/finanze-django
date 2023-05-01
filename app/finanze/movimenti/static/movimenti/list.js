@@ -1,6 +1,6 @@
 var applyFilter = function() {
-	datefrom = document.getElementById('dateFrom').value;
-	dateto = document.getElementById('dateTo').value;
+	datefrom = document.getElementById('filter-dateFrom').value;
+	dateto = document.getElementById('filter-dateTo').value;
 	desc = document.getElementById('filter-description').value;
 	cat = document.getElementById('filter-category').value;
 	subcat = document.getElementById('filter-subcategory').value;
@@ -141,6 +141,12 @@ window.addEventListener("load", function(){
 		}
 		if(innerpair[0] === 'description'){
 			document.getElementById('filter-description').value = innerpair[1];	
+		}
+		if (innerpair[0] === 'datefrom') {
+			document.getElementById('filter-dateFrom').value = innerpair[1];
+		} 
+		if (innerpair[0] === 'dateto') {
+			document.getElementById('filter-dateTo').value = innerpair[1];
 		}
 	}
 	var collapseFilterCollapsibleBlock = document.getElementById('collapseFilter');

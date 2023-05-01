@@ -2,8 +2,9 @@ from django.shortcuts import render as srender
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
 from django.db.models import Model
+from django.db.models import Q
 from .models import Movement, Category, Subcategory, AssetBalance
 from django.contrib.auth.models import User
 from tradinglog.models import Order
@@ -91,6 +92,8 @@ def movement(request, id: int):
 def list(request):
     params = request.GET
     movement_list = _filterMovements(request.user, params.getlist('filter'))
+    qSumOut = Sum('abs_amount', filter=Q(category__direction=Category.OUTCOME))
+    qSumIn = Sum('abs_amount', filter=Q(category__direction=Category.INCOME))
     cats = Category.objects.all()
     subcats = Subcategory.objects.all()
     page = request.GET.get('page', 1)
@@ -101,6 +104,7 @@ def list(request):
                   'movimenti/list.html',
                   {'page_obj': page_obj,
                    'movements': movement_list,
+                   'summary': movement_list.aggregate(count=Count('id'), incomes=qSumIn, expenses=qSumOut),
                    'categories': cats, 'subcategories': subcats})
 
 
