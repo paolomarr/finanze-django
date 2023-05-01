@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-01 16:31+0200\n"
+"POT-Creation-Date: 2023-05-01 18:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,8 +52,8 @@ msgid "Assets log"
 msgstr "Storico assets"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:70
-#: app/finanze/movimenti/templates/movimenti/list.html:91
-#: app/finanze/movimenti/templates/movimenti/list.html:159
+#: app/finanze/movimenti/templates/movimenti/list.html:120
+#: app/finanze/movimenti/templates/movimenti/list.html:188
 #: app/finanze/movimenti/views.py:250
 msgid "Date"
 msgstr "Data"
@@ -110,80 +110,112 @@ msgstr "Entrante"
 msgid "Create"
 msgstr "Crea"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:15
-msgid "first"
-msgstr "primo"
-
 #: app/finanze/movimenti/templates/movimenti/list.html:16
-msgid "previous"
-msgstr "precedente"
-
-#: app/finanze/movimenti/templates/movimenti/list.html:24
-msgid "next"
-msgstr "successivo"
+#, fuzzy
+#| msgid "description"
+msgid "Filter control buttons"
+msgstr "Filtra descrizione"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:25
-msgid "last"
-msgstr "ultimo"
-
-#: app/finanze/movimenti/templates/movimenti/list.html:40
 msgid " Filters"
 msgstr "Filtri"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:49
+#: app/finanze/movimenti/templates/movimenti/list.html:27
+#: app/finanze/movimenti/templates/movimenti/list.html:84
+msgid "Clear filters"
+msgstr "Azzera filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:41
+#: app/finanze/movimenti/templates/movimenti/list.html:94
+msgid " Clear filters"
+msgstr " Azzera filtri"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:53
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:29
+msgid "From"
+msgstr "Dal"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:57
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:35
+msgid "To"
+msgstr "Al"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:61
 #, fuzzy
 #| msgid "description"
 msgid "Filter description"
 msgstr "Filtra descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:54
+#: app/finanze/movimenti/templates/movimenti/list.html:66
 msgid "Filter category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:62
+#: app/finanze/movimenti/templates/movimenti/list.html:74
 msgid "Filter subcategory"
 msgstr "Filtra sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:72
-msgid "Clear filters"
-msgstr "Azzera filtri"
+#: app/finanze/movimenti/templates/movimenti/list.html:103
+#: app/finanze/movimenti/templates/movimenti/list.html:263
+msgid "first"
+msgstr "primo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:82
-msgid " Clear filters"
-msgstr " Azzera filtri"
+#: app/finanze/movimenti/templates/movimenti/list.html:104
+#: app/finanze/movimenti/templates/movimenti/list.html:264
+msgid "previous"
+msgstr "precedente"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:92
-#: app/finanze/movimenti/templates/movimenti/list.html:165
+#: app/finanze/movimenti/templates/movimenti/list.html:108
+#: app/finanze/movimenti/templates/movimenti/list.html:268
+msgid "Page"
+msgstr "Pagina"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:108
+#: app/finanze/movimenti/templates/movimenti/list.html:268
+msgid "of"
+msgstr "di"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:112
+#: app/finanze/movimenti/templates/movimenti/list.html:272
+msgid "next"
+msgstr "successivo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:113
+#: app/finanze/movimenti/templates/movimenti/list.html:273
+msgid "last"
+msgstr "ultimo"
+
+#: app/finanze/movimenti/templates/movimenti/list.html:121
+#: app/finanze/movimenti/templates/movimenti/list.html:194
 msgid "Description"
 msgstr "Descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:93
-#: app/finanze/movimenti/templates/movimenti/list.html:171
+#: app/finanze/movimenti/templates/movimenti/list.html:122
+#: app/finanze/movimenti/templates/movimenti/list.html:200
 msgid "Amount"
 msgstr "Importo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:94
-#: app/finanze/movimenti/templates/movimenti/list.html:177
-#: app/finanze/movimenti/templates/movimenti/list.html:183
+#: app/finanze/movimenti/templates/movimenti/list.html:123
+#: app/finanze/movimenti/templates/movimenti/list.html:206
+#: app/finanze/movimenti/templates/movimenti/list.html:212
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:7
 msgid "Category"
 msgstr "Categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:95
+#: app/finanze/movimenti/templates/movimenti/list.html:124
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:149
+#: app/finanze/movimenti/templates/movimenti/list.html:178
 #, fuzzy
 #| msgid "Updated"
 msgid "Update record"
 msgstr "Aggiornato"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:224
+#: app/finanze/movimenti/templates/movimenti/list.html:253
 msgid "Close"
 msgstr "Chiudi"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:225
+#: app/finanze/movimenti/templates/movimenti/list.html:254
 msgid "Save changes"
 msgstr "Salva modifiche"
 
@@ -236,14 +268,6 @@ msgstr "Riepilogo movimenti"
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:20
 msgid "Filter by range"
 msgstr "Filtra per intervallo date"
-
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:29
-msgid "From"
-msgstr "Dal"
-
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:35
-msgid "To"
-msgstr "Al"
 
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:45
 msgid "Filter by month"
