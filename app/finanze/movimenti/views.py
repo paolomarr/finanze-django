@@ -2,7 +2,7 @@ from django.shortcuts import render as srender
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count
+from django.db.models import Sum, F, Count, Min, Max
 from django.db.models import Model
 from django.db.models import Q
 from .models import Movement, Category, Subcategory, AssetBalance
@@ -104,7 +104,7 @@ def list(request):
                   'movimenti/list.html',
                   {'page_obj': page_obj,
                    'movements': movement_list,
-                   'summary': movement_list.aggregate(count=Count('id'), incomes=qSumIn, expenses=qSumOut),
+                   'summary': movement_list.aggregate(count=Count('id'), incomes=qSumIn, expenses=qSumOut, datefrom=Min('date'), dateto=Max('date')),
                    'categories': cats, 'subcategories': subcats})
 
 
