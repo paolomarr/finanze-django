@@ -88,16 +88,16 @@ Lista movimenti
 					{% translate "Filter summary" %}
 				</div>
 				<div class="card-body">
-					<h5 class="card-title">{% translate "Items count" %}</h5>
-					<p class="card-text">{{summary.count}}</p>
 					<h5 class="card-title">{% translate "Period" %}</h5>
 					<p class="card-text ">{{summary.datefrom | date:"SHORT_DATE_FORMAT"}} - {{summary.dateto | date:"SHORT_DATE_FORMAT"}} 
 						<br/>
-						({{summary.datefrom|timesince:summary.dateto}})</p>
+		   			({{summary.datefrom|timesince:summary.dateto}})</p>
 					<h5 class="card-title">{% translate "Total expenses" %}</h5>
 					<p class="card-text currency">{{summary.expenses | floatformat:2 }}</p>
 					<h5 class="card-title">{% translate "Total incomes" %}</h5>
 					<p class="card-text currency">{{summary.incomes | floatformat:2 }}</p>
+					<h5 class="card-title">{% translate "Items count" %}</h5>
+					<p class="card-text">{{summary.count}}</p>
 				</div>
 			</div>
 		</div>
