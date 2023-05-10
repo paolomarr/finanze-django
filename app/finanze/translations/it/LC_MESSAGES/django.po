@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-02 13:39+0200\n"
+"POT-Creation-Date: 2023-05-09 17:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,24 +159,24 @@ msgid "Filter summary"
 msgstr "Sommario movimenti filtrati"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:91
-msgid "Items count"
-msgstr "Numero movimenti"
-
-#: app/finanze/movimenti/templates/movimenti/list.html:93
 msgid "Period"
 msgstr ""
+
+#: app/finanze/movimenti/templates/movimenti/list.html:95
+#, fuzzy
+#| msgid "Trading assets"
+msgid "Total expenses"
+msgstr "Totale spese"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:97
 #, fuzzy
 #| msgid "Trading assets"
-msgid "Total expenses"
-msgstr "Totale assets"
+msgid "Total incomes"
+msgstr "Totale guadagni"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:99
-#, fuzzy
-#| msgid "Trading assets"
-msgid "Total incomes"
-msgstr "Totale assets"
+msgid "Items count"
+msgstr "Numero movimenti"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:108
 #: app/finanze/movimenti/templates/movimenti/list.html:268
