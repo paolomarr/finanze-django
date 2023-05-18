@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-09 17:12+0200\n"
+"POT-Creation-Date: 2023-05-18 15:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgid "Remove"
 msgstr "Elimina"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:47
-#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:60
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:70
 msgid "TOTAL"
 msgstr "TOTALE"
 
@@ -111,8 +111,6 @@ msgid "Create"
 msgstr "Crea"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:16
-#, fuzzy
-#| msgid "description"
 msgid "Filter control buttons"
 msgstr "Filtra descrizione"
 
@@ -139,8 +137,6 @@ msgid "To"
 msgstr "Al"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:61
-#, fuzzy
-#| msgid "description"
 msgid "Filter description"
 msgstr "Filtra descrizione"
 
@@ -153,24 +149,18 @@ msgid "Filter subcategory"
 msgstr "Filtra sottocategoria"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:88
-#, fuzzy
-#| msgid "Filter subcategory"
 msgid "Filter summary"
 msgstr "Sommario movimenti filtrati"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:91
 msgid "Period"
-msgstr ""
+msgstr "Periodo"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:95
-#, fuzzy
-#| msgid "Trading assets"
 msgid "Total expenses"
 msgstr "Totale spese"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:97
-#, fuzzy
-#| msgid "Trading assets"
 msgid "Total incomes"
 msgstr "Totale guadagni"
 
@@ -230,8 +220,6 @@ msgid "Subcategory"
 msgstr "Sottocategoria"
 
 #: app/finanze/movimenti/templates/movimenti/list.html:183
-#, fuzzy
-#| msgid "Updated"
 msgid "Update record"
 msgstr "Aggiornato"
 
@@ -280,8 +268,6 @@ msgid "NET"
 msgstr "NETTO"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:49
-#, fuzzy
-#| msgid "TOTAL"
 msgid "TOTALS"
 msgstr "TOTALI"
 
@@ -298,20 +284,14 @@ msgid "Filter by month"
 msgstr "Filtra su mese"
 
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:79
-#, fuzzy
-#| msgid " Filters"
 msgid "Quick filters"
 msgstr "Filtri rapidi"
 
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:86
-#, fuzzy
-#| msgid "Current val."
 msgid "Current year"
 msgstr "Quest'anno"
 
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:87
-#, fuzzy
-#| msgid "Past orders"
 msgid "Last year"
 msgstr "Anno passato"
 
@@ -341,8 +321,6 @@ msgid "Assets time series"
 msgstr "Storico assets"
 
 #: app/finanze/movimenti/views.py:255
-#, fuzzy
-#| msgid "Trading assets"
 msgid "Total assets"
 msgstr "Totale assets"
 
@@ -511,8 +489,3 @@ msgstr "Lordo"
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:31
 msgid "Net"
 msgstr "Netto"
-
-#, fuzzy
-#~| msgid "Movements"
-#~ msgid "Movimenti"
-#~ msgstr "Movimenti"
