@@ -11,6 +11,35 @@ Lista movimenti
 {% block content %}
 
 <div class="table-container mt-4">
+	<div id="summary">
+			<div class="card text-center">
+				<div class="card-header">
+					{% translate "Filter summary" %}
+				</div>
+				<div class="card-body">
+					<div class="row gy-3">
+						<div class="col-12 col-xl-3">
+							<h5 class="card-title">{% translate "Period" %}</h5>
+							<p class="card-text ">{{summary.datefrom | date:"SHORT_DATE_FORMAT"}} - {{summary.dateto | date:"SHORT_DATE_FORMAT"}}
+								<br/>
+							({{summary.datefrom|timesince:summary.dateto}})</p>
+						</div>
+						<div class="col-12 col-xl-3">
+							<h5 class="card-title">{% translate "Total expenses" %}</h5>
+							<p class="card-text currency">{{summary.expenses | floatformat:2 }}</p>
+						</div>
+						<div class="col-12 col-xl-3">
+							<h5 class="card-title">{% translate "Total incomes" %}</h5>
+							<p class="card-text currency">{{summary.incomes | floatformat:2 }}</p>
+						</div>
+						<div class="col-12 col-xl-3">
+							<h5 class="card-title">{% translate "Items count" %}</h5>
+							<p class="card-text">{{summary.count}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
 	<div class="row align-items-center justify-content-center my-2">
 		<div class="col-12 text-center">
 			<div class="btn-group" role="group" aria-label={% translate "Filter control buttons" %}></div>
@@ -77,27 +106,6 @@ Lista movimenti
 							{% endfor %}
 						</select>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="summary" class="row justify-content-center">
-		<div class="col-12 col-sm-6 col-xl-4">
-			<div class="card text-center">
-				<div class="card-header">
-					{% translate "Filter summary" %}
-				</div>
-				<div class="card-body">
-					<h5 class="card-title">{% translate "Period" %}</h5>
-					<p class="card-text ">{{summary.datefrom | date:"SHORT_DATE_FORMAT"}} - {{summary.dateto | date:"SHORT_DATE_FORMAT"}} 
-						<br/>
-		   			({{summary.datefrom|timesince:summary.dateto}})</p>
-					<h5 class="card-title">{% translate "Total expenses" %}</h5>
-					<p class="card-text currency">{{summary.expenses | floatformat:2 }}</p>
-					<h5 class="card-title">{% translate "Total incomes" %}</h5>
-					<p class="card-text currency">{{summary.incomes | floatformat:2 }}</p>
-					<h5 class="card-title">{% translate "Items count" %}</h5>
-					<p class="card-text">{{summary.count}}</p>
 				</div>
 			</div>
 		</div>
