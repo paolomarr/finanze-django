@@ -282,7 +282,7 @@ def assets(request):
 @login_required
 def time_series(request):
     params = request.GET
-    # fetch the last assets record before request's start time, if any. 
+    # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
     rawFrom = params.get('dateFrom', None)
     if rawFrom is None:
         dateFrom = Movement.objects.all().order_by('date').first().date
@@ -297,24 +297,18 @@ def time_series(request):
         dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
         # dateTo.tzinfo = timezone.get_default_timezone()
 
+    # lastAsset = AssetBalance.objects.raw(
+    #     "SELECT id, date, SUM(balance) AS sum FROM movimenti_assetbalance WHERE date <= '%s' GROUP BY date ORDER BY date DESC LIMIT 1" %
+    #     dateFrom)[0]
     lastAsset = AssetBalance.objects.filter(
         user__id=request.user.id, date__lte=dateFrom).values(
             'date').annotate(sum=Sum('balance')).order_by('-date').first()
-    if lastAsset is not None:
-        baseline = lastAsset['sum']
-        logger.debug("[time_series] Baseline set to the latest asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
+    if lastAsset is None:
+        logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
+        baseline = 0
     else:
-        # take the oldest asset values, which is newer than the older movement but it's better than nothing
-        lastAsset = AssetBalance.objects.filter(
-            user__id=request.user.id).values(
-            'date').annotate(sum=Sum('balance')).order_by('date').first()
-        if lastAsset is not None:
-            baseline = lastAsset['sum']
-            logger.debug("[time_series] Baseline set to the oldest asset: %f." % baseline)
-        else:    
-            logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
-            baseline = 0
-
+        baseline = lastAsset['sum']
+        logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
     # compute the timespan to-from and divide it into N time slots
     time_span = dateTo - dateFrom
     time_interval = time_span / 100
