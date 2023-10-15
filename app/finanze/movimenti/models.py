@@ -67,9 +67,14 @@ class Category(models.Model):
             return (dateFrom, dateTo, filtered)
         
 class MovementManager(models.Manager):
-    def netAmountInPeriod(self, user, fromDate, toDate):
+    def netAmountInPeriod(self, user, fromDate=None, toDate=None):
         amount = 0
-        for movement in self.filter(user=user, date__gte=fromDate, date__lt=toDate):
+        filterDict = {"user": user}
+        if fromDate is not None:
+            filterDict['date__gte'] = fromDate
+        if toDate is not None:
+            filterDict['date__lt'] = toDate
+        for movement in self.filter(**filterDict):
             amount += movement.amount
         return amount
 

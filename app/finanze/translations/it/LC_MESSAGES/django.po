@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-20 12:19+0200\n"
+"POT-Creation-Date: 2023-10-14 18:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -241,14 +241,15 @@ msgstr "al"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:8
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:20
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:114
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:106
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:119
 msgid "Incomes"
 msgstr "Entrate"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:9
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:17
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:100
-#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:110
+#: app/finanze/movimenti/templates/movimenti/summary_ajax.html:115
 msgid "Expenses"
 msgstr "Uscite"
 

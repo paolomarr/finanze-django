@@ -1,23 +1,35 @@
 // NOT WORKING here
 // import date-fns locale:
 // import { it } from 'date-fns/locale';
-
-var _renderChart = function (chartId, chartdata) {
+var chartdata = {};
+var _renderChart = function (chartId) {
 	var chart = Chart.getChart(chartId);
 	if (chart !== undefined) { // defined already
 		chart.destroy();
 	}
 	var ctx = document.getElementById(chartId);
+	var datasets = []
+	for(const series of [
+		"timeseries", 
+		"assets",
+	]){
+		if (chartdata[series].chartdata.data.length > 0) {
+			datasets.push({
+				label: chartdata[series].chartdata.title,
+				data: chartdata[series].chartdata.data
+			})
+		}
+	}
 	var chartConfig = {
 		type: 'line',
-		data: {datasets: [{data: chartdata.data}]},
+		data: {datasets: datasets},
 		options: {
 			plugins: {
 				title: {
-					text: chartdata.titlem,
+					text: chartdata.timeseries.chartdata.title,
 					display: true
 				},
-				legend: { display: false}
+				legend: { display: true}
 			},
 			parsing: {
 				'xAxisKey': 'date',
@@ -32,7 +44,7 @@ var _renderChart = function (chartId, chartdata) {
 					},
 					title: {
 						display: true,
-						text: chartdata.xTitle
+						text: chartdata.timeseries.chartdata.xTitle
 					},
 					// adapters: {
 					// 	date: {
@@ -43,7 +55,7 @@ var _renderChart = function (chartId, chartdata) {
 				y: {
 					title: {
 						display: true,
-						text: chartdata.yTitle
+						text: chartdata.timeseries.chartdata.yTitle
 					}
 				}
 			},
@@ -102,17 +114,27 @@ var keyItemChange = function(element){
 	getAssetItemsObjects();
 }
 var fetchChartData = function() {
-	const XHR = new XMLHttpRequest();
-	XHR.addEventListener('load', function () {
-		jdata = JSON.parse(XHR.responseText);
-		// jdata.data.forEach(item => {
-		// 	dataset.data.push({x: item.date, y: item.totbalance})
-		// });
-		_renderChart("assetsChart", jdata.chartdata)
+	const timeseriesXHR = new XMLHttpRequest();
+	timeseriesXHR.addEventListener('load', function () {
+		jdata = JSON.parse(timeseriesXHR.responseText);
+		chartdata['timeseries'] = jdata;
+		if('assets' in chartdata)
+			_renderChart("assetsChart");
 	});
-	XHR.addEventListener('error', (event) => {});
-	XHR.open('GET', "/movimenti/assets/json");
-	XHR.send();
+	timeseriesXHR.addEventListener('error', (event) => {});
+	timeseriesXHR.open('GET', "/movimenti/timeseries");
+	timeseriesXHR.send();
+
+	const assetsXHR = new XMLHttpRequest();
+	assetsXHR.addEventListener('load', function () {
+		jdata = JSON.parse(assetsXHR.responseText);
+		chartdata['assets'] = jdata;
+		if ('timeseries' in chartdata)
+			_renderChart("assetsChart");
+	});
+	assetsXHR.addEventListener('error', (event) => { });
+	assetsXHR.open('GET', "/movimenti/assets/json");
+	assetsXHR.send();
 }
 var itemscounter = 0;
 window.addEventListener("load", function(event) {

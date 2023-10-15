@@ -1,24 +1,25 @@
-from django.shortcuts import render as srender
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-from django.db.models import Sum, F, Count, Min, Max
-from django.db.models import Model
-from django.db.models import Q
-from .models import Movement, Category, Subcategory, AssetBalance
-from django.contrib.auth.models import User
-from tradinglog.models import Order
-from .forms import NewMovementForm, NewAssetsBalanceForm
-from urllib.parse import unquote, urlparse, parse_qs
-from json import loads as jloads
-from django.http import JsonResponse
-from datetime import date, datetime
-from django.utils.translation import gettext as _
-from . import logger
-from django.apps import apps
-from . import app_name
-from django.urls import reverse
 import re
+from datetime import date, datetime
+from json import loads as jloads
+from urllib.parse import parse_qs, unquote, urlparse
+
+from django.apps import apps
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Count, F, Max, Min, Model, Q, Sum
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render as srender
+from django.urls import reverse
+from django.utils.translation import gettext as _
+from zoneinfo import ZoneInfo
+from django.utils import timezone
+from tradinglog.models import Order
+
+from . import app_name, logger
+from .forms import NewAssetsBalanceForm, NewMovementForm
+from .models import AssetBalance, Category, Movement, Subcategory
+
 
 def render(request, path, context):
     request.current_app = apps.get_app_config(app_name).verbose_name
@@ -186,7 +187,7 @@ def summaryXHR(request):
     else:
         return JsonResponse(outdata)
 
-def _group_by_date_and_total_balance(requestUser):
+def _group_assets_by_date_and_total_balance(requestUser):
     groupByDateAndTotalBalance = AssetBalance.objects.filter(user__id=requestUser.id).values(
         'date').annotate(totbalance=Sum('balance')).order_by('-date')
     for idx in range(0, len(groupByDateAndTotalBalance) - 1):
@@ -213,7 +214,7 @@ def assets(request):
         elif len(asset_labels) != len(asset_vals):
             jres['errors'].append("Invalid input.")
         else:
-            logger.debug("asset data: {}".format(str(deser)))
+            # logger.debug("asset data: {}".format(str(deser)))
             index = -1
             for key, val in zip(asset_labels, asset_vals):
                 index = 0
@@ -239,7 +240,7 @@ def assets(request):
     else:
         form = NewAssetsBalanceForm()
         allrecords = AssetBalance.objects.filter(user__id=request.user.id).order_by('-date')
-        groupByDateAndTotalBalance = _group_by_date_and_total_balance(
+        groupByDateAndTotalBalance = _group_assets_by_date_and_total_balance(
             request.user)
         if request.path.find("/json") >= 0:
             # send json data
@@ -277,6 +278,59 @@ def assets(request):
             {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets, 'totalassets': latsum})
         response.set_cookie("user", request.user, path=request.path)
         return response
+
+@login_required
+def time_series(request):
+    params = request.GET
+    # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
+    rawFrom = params.get('dateFrom', None)
+    if rawFrom is None:
+        dateFrom = Movement.objects.all().order_by('date').first().date
+    else:
+        # need to make it TZ aware
+        dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
+        # dateFrom.tzinfo = timezone.get_default_timezone()
+    rawTo = params.get('dateTo', None)
+    if rawTo is None:
+        dateTo = timezone.now()
+    else:
+        dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
+        # dateTo.tzinfo = timezone.get_default_timezone()
+
+    # lastAsset = AssetBalance.objects.raw(
+    #     "SELECT id, date, SUM(balance) AS sum FROM movimenti_assetbalance WHERE date <= '%s' GROUP BY date ORDER BY date DESC LIMIT 1" %
+    #     dateFrom)[0]
+    lastAsset = AssetBalance.objects.filter(
+        user__id=request.user.id, date__lte=dateFrom).values(
+            'date').annotate(sum=Sum('balance')).order_by('-date').first()
+    if lastAsset is None:
+        logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
+        baseline = 0
+    else:
+        baseline = lastAsset['sum']
+        logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
+    # compute the timespan to-from and divide it into N time slots
+    time_span = dateTo - dateFrom
+    time_interval = time_span / 100
+    # TODO: check for interval validity (not too short)
+    # loop over time slots and take movements balance for each
+    dateiter = dateFrom
+    running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+    results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
+    while dateiter < dateTo:
+        loop_from = dateiter
+        loop_to = dateiter + time_interval
+        running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
+        results.append({"date": int(loop_to.timestamp()*1000), "totbalance": running_balance})
+        dateiter = loop_to
+    return JsonResponse({
+                "chartdata": {
+                    "data": results, 
+                    "title": _("Movements time series"),
+                    "xTitle": _("Date"),
+                    "yTitle": _("Balance"),
+                    }
+                })
 
 @login_required
 def newcategory(request):

@@ -14,4 +14,5 @@ urlpatterns = [
     path('categories/new', views.newcategory, name='categories.new'),
     path('summary/json', views.summaryXHR, name='summaryxhjson'),
     path('summary/fetch', views.summaryXHR, name='summaryxhr'),
+    path('timeseries', views.time_series, name='time_series'),
 ]
