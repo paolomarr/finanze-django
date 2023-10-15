@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-14 18:58+0200\n"
+"POT-Creation-Date: 2023-10-15 21:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,7 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:70
 #: app/finanze/movimenti/templates/movimenti/list.html:133
 #: app/finanze/movimenti/templates/movimenti/list.html:201
-#: app/finanze/movimenti/views.py:254
+#: app/finanze/movimenti/views.py:255 app/finanze/movimenti/views.py:330
 msgid "Date"
 msgstr "Data"
 
@@ -254,6 +254,7 @@ msgid "Expenses"
 msgstr "Uscite"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:15
+#: app/finanze/movimenti/views.py:331
 msgid "Balance"
 msgstr "Bilancio"
 
@@ -307,22 +308,26 @@ msgstr "Ultimi 6 mesi"
 msgid "Last 12 months"
 msgstr "Ultimi 12 mesi"
 
-#: app/finanze/movimenti/views.py:71
+#: app/finanze/movimenti/views.py:72
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29
 msgid "Updated"
 msgstr "Aggiornato"
 
-#: app/finanze/movimenti/views.py:134
+#: app/finanze/movimenti/views.py:135
 msgid "Select category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/views.py:253
+#: app/finanze/movimenti/views.py:254
 msgid "Assets time series"
 msgstr "Storico assets"
 
-#: app/finanze/movimenti/views.py:255
+#: app/finanze/movimenti/views.py:256
 msgid "Total assets"
 msgstr "Totale assets"
+
+#: app/finanze/movimenti/views.py:329
+msgid "Movements time series"
+msgstr "Storico movimenti"
 
 #: app/finanze/templates/base.html:92 app/finanze/templates/base.html:138
 msgid "Profile"
