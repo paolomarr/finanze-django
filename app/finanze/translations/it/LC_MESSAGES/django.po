@@ -292,7 +292,9 @@ msgstr "giorno"
 msgid "NET"
 msgstr "NETTO"
 
-#: app/finanze/movimenti/templates/movimenti/summary/table.html:49
+#: app/finanze/movimenti/te
+
+mplates/movimenti/summary/table.html:49
 msgid "TOTALS"
 msgstr "TOTALI"
 

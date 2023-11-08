@@ -285,56 +285,57 @@ def assets(request):
 
 @login_required
 def time_series(request):
-    params = request.GET
-    # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
-    rawFrom = params.get('dateFrom', None)
-    if rawFrom is None:
-        dateFrom = Movement.objects.all().order_by('date').first().date
-    else:
-        # need to make it TZ aware
-        dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
-        # dateFrom.tzinfo = timezone.get_default_timezone()
-    rawTo = params.get('dateTo', None)
-    if rawTo is None:
-        dateTo = timezone.now()
-    else:
-        dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
-        # dateTo.tzinfo = timezone.get_default_timezone()
+    if request.path.find("/json") > 0:
+        params = request.GET
+        # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
+        rawFrom = params.get('dateFrom', None)
+        if rawFrom is None:
+            dateFrom = Movement.objects.all().order_by('date').first().date
+        else:
+            # need to make it TZ aware
+            dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
+            # dateFrom.tzinfo = timezone.get_default_timezone()
+        rawTo = params.get('dateTo', None)
+        if rawTo is None:
+            dateTo = timezone.now()
+        else:
+            dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
+            # dateTo.tzinfo = timezone.get_default_timezone()
 
-    # lastAsset = AssetBalance.objects.raw(
-    #     "SELECT id, date, SUM(balance) AS sum FROM movimenti_assetbalance WHERE date <= '%s' GROUP BY date ORDER BY date DESC LIMIT 1" %
-    #     dateFrom)[0]
-    lastAsset = AssetBalance.objects.filter(
-        user__id=request.user.id, date__lte=dateFrom).values(
-            'date').annotate(sum=Sum('balance')).order_by('-date').first()
-    if lastAsset is None:
-        logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
-        baseline = 0
+        lastAsset = AssetBalance.objects.filter(
+            user__id=request.user.id, date__lte=dateFrom).values(
+                'date').annotate(sum=Sum('balance')).order_by('-date').first()
+        if lastAsset is None:
+            logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
+            baseline = 0
+        else:
+            baseline = lastAsset['sum']
+            logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
+        # compute the timespan to-from and divide it into N time slots
+        time_span = dateTo - dateFrom
+        time_interval = time_span / 100
+        # TODO: check for interval validity (not too short)
+        # loop over time slots and take movements balance for each
+        dateiter = dateFrom
+        running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+        results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
+        while dateiter < dateTo:
+            loop_from = dateiter
+            loop_to = dateiter + time_interval
+            running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
+            results.append({"date": int(loop_to.timestamp()*1000), "totbalance": running_balance})
+            dateiter = loop_to
+        return JsonResponse({
+                    "chartdata": {
+                        "data": results, 
+                        "title": _("Movements time series"),
+                        "xTitle": _("Date"),
+                        "yTitle": _("Balance"),
+                        }
+                    })
     else:
-        baseline = lastAsset['sum']
-        logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
-    # compute the timespan to-from and divide it into N time slots
-    time_span = dateTo - dateFrom
-    time_interval = time_span / 100
-    # TODO: check for interval validity (not too short)
-    # loop over time slots and take movements balance for each
-    dateiter = dateFrom
-    running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
-    results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
-    while dateiter < dateTo:
-        loop_from = dateiter
-        loop_to = dateiter + time_interval
-        running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
-        results.append({"date": int(loop_to.timestamp()*1000), "totbalance": running_balance})
-        dateiter = loop_to
-    return JsonResponse({
-                "chartdata": {
-                    "data": results, 
-                    "title": _("Movements time series"),
-                    "xTitle": _("Date"),
-                    "yTitle": _("Balance"),
-                    }
-                })
+        return srender(request, "movimenti/timeseries.html")
+        
 
 @login_required
 def newcategory(request):
