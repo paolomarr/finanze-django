@@ -76,18 +76,23 @@ def movement(request, id: int):
         filterparams = { k:v for (k,v) in params.items() if k in validfields}
         logger.debug("[movement][UPDATE] parameters: %s" % str(filterparams))
         Movement.objects.filter(id=id).update(**filterparams)
-        # try:
-        #     movement = Movement.objects.get(id=id)
-        #     for field in ['date', 'amount', 'description', 'category', 'subcategory',]:
-        #         if params.get(field):
-        #             movement.__set__(field, params.get(field)) 
-        #     movement.save()
-        # except Exception as ex:
-        #     res['updated'] = False
-        #     res['message'] = str(ex)
         return JsonResponse(res)
     else:
-        return JsonResponse({"message": "Invalid request"})
+        return JsonResponse({"message": _("Invalid request")})
+
+@login_required
+def deleteMovement(request):
+    if request.method == 'POST':
+        params = request.POST
+        movId = params.get("id")
+        # return JsonResponse({"deleted": True, "message": f"No deletion actually occurred. Selected item: {movId}"})
+        totdeleted, deletedDetails = Movement.objects.get(id=movId).delete()
+        if totdeleted < 1:
+            return JsonResponse({"deleted": False, "message": _(f"No entry with id {movId}")})
+        else:
+            return JsonResponse({"deleted": True})
+    else:
+        return JsonResponse({"message": _("Invalid request"), "deleted": False})
 
 @login_required
 def list(request):
@@ -336,7 +341,7 @@ def time_series(request):
 def newcategory(request):
     errors = []
     if request.method != 'POST':
-        errors.append("invalid request")
+        errors.append(_("invalid request"))
     else:
         params = request.POST
         catname = params.get('category', '')

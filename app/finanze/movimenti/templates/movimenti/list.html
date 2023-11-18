@@ -140,23 +140,54 @@ Lista movimenti
 			{% for mov in page_obj %}
 		<div class="row border-bottom {% if mov.is_future %}text-muted{% endif %} pb-2 pt-2 align-items-center position-relative">
 			<div class="d-none d-xl-block col-xl-1">
-				<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal" data-bs-entryId="{{mov.id}}">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
-						viewBox="0 0 16 16">
-						<path
-							d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-					</svg>
-				</button>
+				<div class="dropdown">
+					<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+					<ul class="dropdown-menu">
+						{% comment %} edit menu item {% endcomment %}
+						<li>
+							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateModal" data-bs-entryId="{{mov.id}}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
+									viewBox="0 0 16 16">
+									<path
+										d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+								</svg> {% translate "Edit" %}
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-bs-entryId="{{mov.id}}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+									<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+								</svg> {% translate "Delete" %}
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="d-block d-xl-none position-absolute end-0 text-end">
-				<button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal"
-					data-bs-entryId="{{mov.id}}">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
-						viewBox="0 0 16 16">
-						<path
-							d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-					</svg>
-				</button>
+				<div class="dropdown">
+					<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+					<ul class="dropdown-menu">
+						{% comment %} edit menu item {% endcomment %}
+						<li>
+							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateModal" data-bs-entryId="{{mov.id}}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil"
+									viewBox="0 0 16 16">
+									<path
+										d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+								</svg> {% translate "Edit" %}
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal" data-bs-entryId="{{mov.id}}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+									<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+									<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+								</svg> {% translate "Delete" %}
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="col-12 col-xl-1">
 				<span class="d-xl-none"><i class="bi bi-calendar-check"></i></span>
@@ -246,29 +277,47 @@ Lista movimenti
 							</symbol>
 						</svg>
 						<div class="alert alert-dismissible fade show alert-success d-none align-items-center" id="updateSuccessFeedback" role="alert">
-							<!-- icon sizing issues -_- -->
-							<!-- <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Info:">
-								<use xlink:href="#check-circle-fills" />
-							</svg> -->
 							<div class="message">Message</div>
 							<button type="button" class="btn-close" aria-label="Close" onclick="hideFeedbackWithID('updateSuccessFeedback')"></button>
 						</div>
 						<div class="alert alert-dismissible fade show alert-danger d-none align-items-center" id="updateFailFeedback" role="alert">
-							<!-- icon sizing issues -_- -->
-							<!-- <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:">
-								<use xlink:href="#exclamation-triangle-fill" />
-							</svg> -->
 							<div class="message">Message</div>
 							<button type="button" class="btn-close" aria-label="Close" onclick="hideFeedbackWithID('updateFailFeedback')"></button>
 						</div>
-					</div>
+					</div> <!-- modal body -->
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Close" %}</button>
 						<button type="button" class="btn btn-primary" id="updateModalSubmit">{% translate "Save changes" %}</button>
 					</div>
-				</div>
+				</div> <!-- modeal content -->
 			</div>
-		</div>
+		</div> <!-- END entry edit modal -->
+		<!-- Entry DELETE Modal -->
+		<div class="modal" id="deleteConfirmationModal" aria-hidden="true" aria-labelledby="deleteConfirmationModalLabel" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="deleteConfirmationModalLabel">{% translate "Confirm deletion" %}</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form id="deleteModalForm">
+							{% csrf_token %}
+							<input type="hidden" name="id" />
+						</form>
+						{% translate "Are you sure you want to delete this entry? This cannot be undone." %}
+						<div class="alert alert-dismissible fade show alert-danger d-none align-items-center" id="deleteFailFeedback" role="alert">
+							<div class="message">Message</div>
+							<button type="button" class="btn-close" aria-label="Close" onclick="hideFeedbackWithID('deleteFailFeedback')"></button>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% translate "Cancel" %}</button>
+						<button type="button" id="deleteConfirmationModalDeleteButton" class="btn btn-danger">{% translate "Delete" %}</button>
+					</div>
+				</div>
+			</div> <!-- modal-dialog -->
+		</div> <!-- END entry DELETE modal -->
 	</div>
 	<div class="pagination justify-content-center my-4">
 		<span class="step-links">

@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('movement/<int:id>', views.movement, name='movement'),
+    path('movement/delete', views.deleteMovement, name='movement'),
     path('list', views.list, name='list'),
     path('new', views.newmovement, name='newmovement'),
     path('summary', views.summary, name='summary'),
