@@ -8,3 +8,5 @@ staticfiles/
 .env
 *.backup
 app/finanze/static/style.css
+.idea/
+gdrive_sync/
