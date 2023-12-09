@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from django.db.models import Sum, F, FloatField, ExpressionWrapper
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from .models import Order, Stock, StockQuote
 from .lib import yahoo_finance
@@ -24,7 +26,7 @@ def render(request, path, context):
     context['base_app_path'] = reverse("index", current_app=app_name)
     return srender(request, path, context)
 
-
+@login_required
 def index(request):
     return HttpResponseRedirect("/tradinglog/orders")
 
@@ -50,7 +52,7 @@ def filterOrders(filterParams):
 
     return retOrders.order_by('-date')
 
-
+@login_required
 def orders(request):
     params = request.GET
     orders = filterOrders(params.getlist('filter'))
@@ -60,7 +62,7 @@ def orders(request):
 ".format(content))
     return render(request, 'tradinglog/orderlist.html', context)
 
-
+@login_required
 def neworder(request):
     # create a form instance and populate it with data from the request:
     if request.method == 'GET':
@@ -74,7 +76,7 @@ def neworder(request):
             # redirect to a new URL:
             return index(request)
 
-
+@login_required
 def updateCurrentPrice(request):
     symbols = request.GET.getlist('symbol')
     results = []
@@ -128,7 +130,7 @@ closeval {} at {}".format(sym, cval, ctime))
     logger.debug("[updateCurrentPrice] Results: %s" % str(results))
     return JsonResponse({"results": results})
 
-
+@login_required
 def tradingStats(request):
     tradedStocks = Stock.objects.annotate(
         quantity=Sum('order__quantity')
@@ -148,3 +150,32 @@ def tradingStats(request):
                'totalthree': totalthree, 'totalfour': totalfour,
                'gain': totaltwo - totalone}
     return render(request, "tradinglog/tradingstats.html", context)
+
+@login_required
+def tradingHistory(request):
+    params = request.GET
+    # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
+    rawFrom = params.get('dateFrom', None)
+    if rawFrom is None:
+        dateFrom = Order.objects.all().order_by('date').first().date
+    else:
+        # need to make it TZ aware
+        dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
+    rawTo = params.get('dateTo', None)
+    if rawTo is None:
+        dateTo = timezone.now()
+    else:
+        dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
+
+    allOrderDatesInRange = Order.objects.order_by("date")
+    results = [["Date", "Total ordered"]]
+    dateset = set()
+    for order in allOrderDatesInRange:
+        ordDate = order.date
+        ordAmount = Order.objects.amountOrderedInPeriod(stocks=None, start=None, end=ordDate)
+        if ordDate in dateset:
+            continue
+        results.append([ordDate, -ordAmount])
+    context = {"data": results}
+    return render(request, "tradinglog/tradinghistory.html", context)
+    # return JsonResponse(context)

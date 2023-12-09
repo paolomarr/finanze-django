@@ -9,4 +9,5 @@ urlpatterns = [
     path('orders/new', views.neworder, name='neworder'),
     path('updatecurrentprice', views.updateCurrentPrice, name='updatePrice'),
     path('tradingstats', views.tradingStats, name='tradingStats'),
+    path('tradinghistory', views.tradingHistory, name='tradingHistory'),
 ]

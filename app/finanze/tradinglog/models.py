@@ -70,7 +70,23 @@ class StockQuote(models.Model):
     close_timestamp = models.DateTimeField()
 
 
+class OrderManager(models.Manager):
+    def amountOrderedInPeriod(self, stocks: list, start: datetime, end: datetime) -> float:
+        filterdict = {}
+        if start:
+            filterdict["date__gte"] = start
+        if end:
+            filterdict["date__lt"] = end
+        if stocks and len(stocks)>0:
+            filterdict["stock__in"] = stocks
+        amount = 0
+        for order in self.filter(**filterdict):
+            amount += order.amount
+        return amount
+
 class Order(models.Model):
+    objects = OrderManager()
+    
     """docstring for TradingLog"""
     date = models.DateField()
     code = models.CharField(max_length=100)
@@ -83,7 +99,10 @@ class Order(models.Model):
 
     @property
     def amount(self):
-        return self.price * self.quantity
+        absamount = self.price * self.quantity
+        if self.operation.operation == "BUY":
+            absamount *= -1.0
+        return absamount
 
     @property
     def currentval(self):
@@ -91,7 +110,8 @@ class Order(models.Model):
 
     @property
     def gross_gain(self):
-        return self.currentval - self.amount
+        # + sign because the amount of a BUY operation is negative
+        return self.currentval + self.amount
 
     @property
     def net_gain(self):
