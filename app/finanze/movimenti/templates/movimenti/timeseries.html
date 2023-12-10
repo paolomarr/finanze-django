@@ -5,12 +5,14 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
 
-const data = await d3.json("/movimenti/timeseries/json");
+const data = await d3.json("/movimenti/timeseries/json?dateFrom={{dateFrom}}&dateTo={{dateTo}}");
 
 const plot = Plot.plot({
+  color: {legend: true},
   marks: [
     Plot.ruleY([0]),
-    Plot.lineY(data.chartdata.data, {x: "date", y: "totbalance", stroke: "steelblue"})
+    Plot.areaY(data.chardata.data, {x: "date", y: "cumulative", fill: "category"})
+    // Plot.lineY(data.chartdata.data, {x: "date", y: "totbalance", stroke: "steelblue"})
     // Plot.lineY(aapl, {x: "Date", y: "Close"})
   ],
   x: {

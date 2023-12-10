@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from zoneinfo import ZoneInfo
 from django.utils import timezone
 from tradinglog.models import Order
-
+from django.db import connection
 from . import app_name, logger
 from .forms import NewAssetsBalanceForm, NewMovementForm
 from .models import AssetBalance, Category, Movement, Subcategory
@@ -285,23 +285,24 @@ def assets(request):
 
 @login_required
 def time_series(request):
-    if request.path.find("/json") > 0:
-        params = request.GET
-        # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
-        rawFrom = params.get('dateFrom', None)
-        if rawFrom is None:
-            dateFrom = Movement.objects.all().order_by('date').first().date
-        else:
-            # need to make it TZ aware
-            dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
-            # dateFrom.tzinfo = timezone.get_default_timezone()
-        rawTo = params.get('dateTo', None)
-        if rawTo is None:
-            dateTo = timezone.now()
-        else:
-            dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
-            # dateTo.tzinfo = timezone.get_default_timezone()
+    params = request.GET
+    # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
+    rawFrom = params.get('dateFrom', None)
+    if rawFrom is None:
+        dateFrom = Movement.objects.all().order_by('date').first().date
+    else:
+        # need to make it TZ aware
+        dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
+        # dateFrom.tzinfo = timezone.get_default_timezone()
+    rawTo = params.get('dateTo', None)
+    if rawTo is None:
+        dateTo = timezone.now()
+    else:
+        dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
+        # dateTo.tzinfo = timezone.get_default_timezone()
 
+    if request.path.find("/json") > 0:
+        
         lastAsset = AssetBalance.objects.filter(
             user__id=request.user.id, date__lte=dateFrom).values(
                 'date').annotate(sum=Sum('balance')).order_by('-date').first()
@@ -313,20 +314,35 @@ def time_series(request):
             logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
         # compute the timespan to-from and divide it into N time slots
         time_span = dateTo - dateFrom
-        time_interval = time_span / 100
+        time_interval = time_span / 10
         # TODO: check for interval validity (not too short)
         # loop over time slots and take movements balance for each
         dateiter = dateFrom
         running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
         results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
+        queryTemplate = """SELECT ct.category category, mv.date date, SUM(mv.abs_amount) cumulative FROM movimenti_movement mv JOIN movimenti_category ct using (id) \
+            WHERE mv.date <= %s AND ct.direction = %s GROUP BY mv.category_id ORDER BY mv.date ASC
+        """
+            
         while dateiter < dateTo:
             loop_from = dateiter
             loop_to = dateiter + time_interval
-            running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
-            results.append({"date": int(loop_to.timestamp()*1000), "totbalance": running_balance})
+            with connection.cursor() as cursor:
+                for res in cursor.execute(queryTemplate, [loop_to, Category.OUTCOME]):
+                    results.append({"category": res[0], "date": res[1], "cumulative": res[2]})
+            # for res in Movement.objects.raw(queryTemplate, [loop_to, Category.OUTCOME]): # {"date": loop_to, "direction": Category.OUTCOME}):
+            #     results.append({"category": res.category.category, "date": res.date, "cumulative": res.cumulative})
+            # select outcomes only
+            # for res in Movement.objects.filter(
+            #     category__direction=Category.OUTCOME, date__lte=loop_to).values(
+            #         ).order_by("category").distinct("category").annotate(cumulative=Sum("abs_amount")):
+            #         results.append(res)
+            # running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
+            # results.append({"date": int(loop_to.timestamp()*1000), "balance": running_balance})
             dateiter = loop_to
         return JsonResponse({
                     "chartdata": {
+                        "count": len(results),
                         "data": results, 
                         "title": _("Movements time series"),
                         "xTitle": _("Date"),
@@ -334,7 +350,7 @@ def time_series(request):
                         }
                     })
     else:
-        return srender(request, "movimenti/timeseries.html")
+        return render(request, "movimenti/timeseries.html", {"dateFrom": dateFrom, "dateTo": dateTo})
         
 
 @login_required
