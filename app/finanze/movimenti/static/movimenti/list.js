@@ -180,8 +180,47 @@ var setupUpdateModal = function() {
 		XHR.send(FD);
 	});
 };
+function drawChart(chartbundle) {
+	var data = new google.visualization.DataTable(); //arrayToDataTable([
+	const meta = chartbundle.metadata;
+	const chartdata = chartbundle.data;
+	header = chartdata[0];
+	datalines = chartdata.slice(1).map(item => {
+		return [
+			new Date(item[0]),
+			item[1],
+			item[2],
+		];
+	});
+	data.addColumn("date", header[0]);
+	data.addColumn("number", header[1]);
+	data.addColumn("number", header[2]);
+	data.addRows(datalines);
+
+	var options = {
+		title: meta.title,
+		hAxis: {
+			title: meta.xTitle,
+			titleTextStyle: { color: '#333' },
+			format: "M-Y"
+		},
+		vAxis: {
+			minValue: 0,
+			format: "€###.##"
+		}
+	};
+
+	var formatter = new google.visualization.NumberFormat(
+		{ prefix: '€', decimalSymbol: ",", groupingSymbol: ".", });
+	formatter.format(data, 1); // Apply formatter to second column
+	formatter.format(data, 2); // Apply formatter to second column
+
+	var chart = new google.visualization.AreaChart(document.getElementById('movement_history_chart_div'));
+	chart.draw(data, options);
+}
 window.addEventListener("load", function(){
 	var searchParams = new URLSearchParams(window.location.search);
+	var timeseries_query_elements = [];
 	for(var pair of searchParams.getAll('filter')) {
 		innerpair = pair.split('=')
 		if(innerpair[0] === 'category'){
@@ -195,9 +234,11 @@ window.addEventListener("load", function(){
 		}
 		if (innerpair[0] === 'datefrom') {
 			document.getElementById('filter-dateFrom').value = innerpair[1];
+			timeseries_query_elements.push(`datefrom=${innerpair[1]}`);
 		} 
 		if (innerpair[0] === 'dateto') {
 			document.getElementById('filter-dateTo').value = innerpair[1];
+			timeseries_query_elements.push(`dateto=${innerpair[1]}`);
 		}
 	}
 	if(searchParams.getAll('filter').length > 0){
@@ -215,53 +256,17 @@ window.addEventListener("load", function(){
 	setupDeleteModal();
 
 	google.charts.load('current', { 'packages': ['corechart'] });
-	var XHR = new XMLHttpRequest();
-	XHR.addEventListener('load', function () {
-		const responseData = JSON.parse(XHR.responseText);
-		drawChart(responseData);
+	// Set a callback to run when the Google Visualization API is loaded.
+	google.charts.setOnLoadCallback(() => {
+		var XHR = new XMLHttpRequest();
+		XHR.addEventListener('load', function () {
+			const responseData = JSON.parse(XHR.responseText);
+			drawChart(responseData);
+		});
+		XHR.addEventListener('error', function () {
+			console.log("Error loading tradinghistory");
+		});
+		XHR.open("GET", `/movimenti/timeseries?${timeseries_query_elements.join("&")}`);
+		XHR.send();
 	});
-	XHR.addEventListener('error', function () {
-		console.log("Error loading tradinghistory");
-	});
-	XHR.open("GET", "/movimenti/timeseries");
-	XHR.send();
 });
-
-function drawChart(chartbundle) {
-	var data = new google.visualization.DataTable(); //arrayToDataTable([
-	const meta = chartbundle.metadata;
-	const chartdata = chartbundle.data;
-	header = chartdata[0];
-	datalines = chartdata.slice(1).map(item => {
-		return [
-			new Date(item[0]), 
-			item[1],
-			item[2],
-		];
-	});
-	data.addColumn("date", header[0]);
-	data.addColumn("number", header[1]);
-	data.addColumn("number", header[2]);
-	data.addRows(datalines);
-
-	var options = {
-		title: meta.title,
-		hAxis: {
-			title: meta.xTitle,
-			titleTextStyle: { color: '#333' },
-			format: "M-Y"
-		},
-		vAxis: { 
-			minValue: 0,
-			format: "€###.##"
-		}
-	};
-
-	var formatter = new google.visualization.NumberFormat(
-		{ prefix: '€', decimalSymbol: ",", groupingSymbol: ".",  });
-	formatter.format(data, 1); // Apply formatter to second column
-	formatter.format(data, 2); // Apply formatter to second column
-
-	var chart = new google.visualization.AreaChart(document.getElementById('movement_history_chart_div'));
-	chart.draw(data, options);
-}
