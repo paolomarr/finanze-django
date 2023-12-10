@@ -286,6 +286,7 @@ def assets(request):
 @login_required
 def time_series(request):
     params = request.GET
+    filterdict = {"user__id": request.user.id}
     # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
     rawFrom = params.get('dateFrom', None)
     if rawFrom is None:
@@ -293,65 +294,86 @@ def time_series(request):
     else:
         # need to make it TZ aware
         dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
-        # dateFrom.tzinfo = timezone.get_default_timezone()
+    filterdict["date__gte"] = dateFrom
     rawTo = params.get('dateTo', None)
     if rawTo is None:
         dateTo = timezone.now()
     else:
         dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
         # dateTo.tzinfo = timezone.get_default_timezone()
-
-    if request.path.find("/json") > 0:
-        
-        lastAsset = AssetBalance.objects.filter(
-            user__id=request.user.id, date__lte=dateFrom).values(
-                'date').annotate(sum=Sum('balance')).order_by('-date').first()
-        if lastAsset is None:
-            logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
-            baseline = 0
-        else:
-            baseline = lastAsset['sum']
-            logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
-        # compute the timespan to-from and divide it into N time slots
-        time_span = dateTo - dateFrom
-        time_interval = time_span / 10
-        # TODO: check for interval validity (not too short)
-        # loop over time slots and take movements balance for each
-        dateiter = dateFrom
-        running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
-        results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
-        queryTemplate = """SELECT ct.category category, mv.date date, SUM(mv.abs_amount) cumulative FROM movimenti_movement mv JOIN movimenti_category ct using (id) \
-            WHERE mv.date <= %s AND ct.direction = %s GROUP BY mv.category_id ORDER BY mv.date ASC
-        """
-            
-        while dateiter < dateTo:
-            loop_from = dateiter
-            loop_to = dateiter + time_interval
-            with connection.cursor() as cursor:
-                for res in cursor.execute(queryTemplate, [loop_to, Category.OUTCOME]):
-                    results.append({"category": res[0], "date": res[1], "cumulative": res[2]})
-            # for res in Movement.objects.raw(queryTemplate, [loop_to, Category.OUTCOME]): # {"date": loop_to, "direction": Category.OUTCOME}):
-            #     results.append({"category": res.category.category, "date": res.date, "cumulative": res.cumulative})
-            # select outcomes only
-            # for res in Movement.objects.filter(
-            #     category__direction=Category.OUTCOME, date__lte=loop_to).values(
-            #         ).order_by("category").distinct("category").annotate(cumulative=Sum("abs_amount")):
-            #         results.append(res)
-            # running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
-            # results.append({"date": int(loop_to.timestamp()*1000), "balance": running_balance})
-            dateiter = loop_to
-        return JsonResponse({
-                    "chartdata": {
-                        "count": len(results),
-                        "data": results, 
-                        "title": _("Movements time series"),
-                        "xTitle": _("Date"),
-                        "yTitle": _("Balance"),
-                        }
-                    })
+    filterdict["date__lt"] = dateTo
+    lastAsset = AssetBalance.objects.filter(
+        user__id=request.user.id, date__lte=dateFrom).values(
+            'date').annotate(sum=Sum('balance')).order_by('-date').first()
+    if lastAsset is None:
+        logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
+        baseline = 0
     else:
-        return render(request, "movimenti/timeseries.html", {"dateFrom": dateFrom, "dateTo": dateTo})
+        baseline = lastAsset['sum']
+        logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
+
+    # smear factor
+    nMovementsInRange = Movement.objects.filter(**filterdict).count()
+    MAX_POINTS_REF = 50
+    reduce_factor = max(int(nMovementsInRange/MAX_POINTS_REF), 1)
+    if reduce_factor > 1:
+        logger.debug(f"[time_series] Will reduce movement series points from {nMovementsInRange} to {int(nMovementsInRange/reduce_factor)}")
+    running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+    loop_filter_dict = {"user__id": request.user.id}
+    results = [[_("Date"), _("Balance"), _("Assets")]]
+    movement_count = 1
+    for movement in Movement.objects.filter(**filterdict):
+        running_balance += movement.amount
+        if movement_count % reduce_factor == 0:
+            refdate = movement.date
+            loop_filter_dict["date__lt"] = refdate
+            latestAsset = AssetBalance.objects.filter(**loop_filter_dict).order_by("-date").values("date").annotate(totbalance=Sum("balance")).first()
+            results.append([movement.date, running_balance, latestAsset["totbalance"]])
+        movement_count += 1
+
+    return JsonResponse({
+        "data": results, 
+        "metadata": {
+            "title": _("Movements time series"),
+            "xTitle": _("Date"),
+        }})
+    # # compute the timespan to-from and divide it into N time slots
+    # time_span = dateTo - dateFrom
+    # time_interval = time_span / 10
+    # # TODO: check for interval validity (not too short)
+    # # loop over time slots and take movements balance for each
+    # dateiter = dateFrom
+    # running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+    # results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
+    # queryTemplate = """SELECT ct.category category, mv.date date, SUM(mv.abs_amount) cumulative FROM movimenti_movement mv JOIN movimenti_category ct using (id) \
+    #     WHERE mv.date <= %s AND ct.direction = %s GROUP BY mv.category_id ORDER BY mv.date ASC
+    # """
         
+    # while dateiter < dateTo:
+    #     loop_from = dateiter
+    #     loop_to = dateiter + time_interval
+    #     with connection.cursor() as cursor:
+    #         for res in cursor.execute(queryTemplate, [loop_to, Category.OUTCOME]):
+    #             results.append({"category": res[0], "date": res[1], "cumulative": res[2]})
+    #     # for res in Movement.objects.raw(queryTemplate, [loop_to, Category.OUTCOME]): # {"date": loop_to, "direction": Category.OUTCOME}):
+    #     #     results.append({"category": res.category.category, "date": res.date, "cumulative": res.cumulative})
+    #     # select outcomes only
+    #     # for res in Movement.objects.filter(
+    #     #     category__direction=Category.OUTCOME, date__lte=loop_to).values(
+    #     #         ).order_by("category").distinct("category").annotate(cumulative=Sum("abs_amount")):
+    #     #         results.append(res)
+    #     # running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
+    #     # results.append({"date": int(loop_to.timestamp()*1000), "balance": running_balance})
+    #     dateiter = loop_to
+    # return JsonResponse({
+    #             "chartdata": {
+    #                 "count": len(results),
+    #                 "data": results, 
+    #                 "title": _("Movements time series"),
+    #                 "xTitle": _("Date"),
+    #                 "yTitle": _("Balance"),
+    #                 }
+    #             })    
 
 @login_required
 def newcategory(request):

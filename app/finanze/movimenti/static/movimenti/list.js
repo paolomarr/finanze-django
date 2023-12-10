@@ -213,4 +213,47 @@ window.addEventListener("load", function(){
 	});
 	setupUpdateModal();
 	setupDeleteModal();
+
+	google.charts.load('current', { 'packages': ['corechart'] });
+	var XHR = new XMLHttpRequest();
+	XHR.addEventListener('load', function () {
+		const responseData = JSON.parse(XHR.responseText);
+		drawChart(responseData);
+	});
+	XHR.addEventListener('error', function () {
+		console.log("Error loading tradinghistory");
+	});
+	XHR.open("GET", "/movimenti/timeseries");
+	XHR.send();
 });
+
+function drawChart(chartbundle) {
+	var data = new google.visualization.DataTable(); //arrayToDataTable([
+	const meta = chartbundle.metadata;
+	const chartdata = chartbundle.data;
+	header = chartdata[0];
+	datalines = chartdata.slice(1).map(item => {
+		return [
+			new Date(item[0]), 
+			item[1],
+			item[2],
+		];
+	});
+	data.addColumn("date", header[0]);
+	data.addColumn("number", header[1]);
+	data.addColumn("number", header[2]);
+	data.addRows(datalines);
+
+	var options = {
+		title: meta.title,
+		hAxis: {
+			title: meta.xTitle,
+			titleTextStyle: { color: '#333' },
+			format: "M-Y"
+		},
+		vAxis: { minValue: 0 }
+	};
+
+	var chart = new google.visualization.AreaChart(document.getElementById('movement_history_chart_div'));
+	chart.draw(data, options);
+}
