@@ -288,14 +288,14 @@ def time_series(request):
     params = request.GET
     filterdict = {"user__id": request.user.id}
     # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
-    rawFrom = params.get('dateFrom', None)
+    rawFrom = params.get('datefrom', None)
     if rawFrom is None:
         dateFrom = Movement.objects.all().order_by('date').first().date
     else:
         # need to make it TZ aware
         dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
     filterdict["date__gte"] = dateFrom
-    rawTo = params.get('dateTo', None)
+    rawTo = params.get('dateto', None)
     if rawTo is None:
         dateTo = timezone.now()
     else:
@@ -303,8 +303,8 @@ def time_series(request):
         # dateTo.tzinfo = timezone.get_default_timezone()
     filterdict["date__lt"] = dateTo
     lastAsset = AssetBalance.objects.filter(
-        user__id=request.user.id, date__lte=dateFrom).values(
-            'date').annotate(sum=Sum('balance')).order_by('-date').first()
+        user__id=request.user.id, date__lte=dateFrom).order_by('-date').values(
+            'date').annotate(sum=Sum('balance')).first()
     if lastAsset is None:
         logger.debug("[time_series] no asset records found prior to date %s. Baseline set to 0." % dateFrom.isoformat())
         baseline = 0
@@ -318,9 +318,10 @@ def time_series(request):
     reduce_factor = max(int(nMovementsInRange/MAX_POINTS_REF), 1)
     if reduce_factor > 1:
         logger.debug(f"[time_series] Will reduce movement series points from {nMovementsInRange} to {int(nMovementsInRange/reduce_factor)}")
-    running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+    running_balance = baseline # Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
     loop_filter_dict = {"user__id": request.user.id}
     results = [[_("Date"), _("Balance"), _("Assets")]]
+    results.append([dateFrom.date(), running_balance, baseline])
     movement_count = 1
     for movement in Movement.objects.filter(**filterdict).order_by("date"):
         running_balance += movement.amount
