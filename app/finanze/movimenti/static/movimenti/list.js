@@ -251,8 +251,16 @@ function drawChart(chartbundle) {
 			titleTextStyle: { color: '#333' },
 			format: "M-Y"
 		},
-		vAxis: { minValue: 0 }
+		vAxis: { 
+			minValue: 0,
+			format: "€###.##"
+		}
 	};
+
+	var formatter = new google.visualization.NumberFormat(
+		{ prefix: '€', decimalSymbol: ",", groupingSymbol: ".",  });
+	formatter.format(data, 1); // Apply formatter to second column
+	formatter.format(data, 2); // Apply formatter to second column
 
 	var chart = new google.visualization.AreaChart(document.getElementById('movement_history_chart_div'));
 	chart.draw(data, options);

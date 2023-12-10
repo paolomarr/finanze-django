@@ -209,5 +209,5 @@ window.addEventListener("load", function(event) {
 		XHR.open('POST', url);
 		XHR.send(serialized);
 	});
-	fetchChartData();
+	// fetchChartData();
 });
