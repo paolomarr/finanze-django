@@ -322,7 +322,7 @@ def time_series(request):
     loop_filter_dict = {"user__id": request.user.id}
     results = [[_("Date"), _("Balance"), _("Assets")]]
     movement_count = 1
-    for movement in Movement.objects.filter(**filterdict):
+    for movement in Movement.objects.filter(**filterdict).order_by("date"):
         running_balance += movement.amount
         if movement_count % reduce_factor == 0:
             refdate = movement.date
