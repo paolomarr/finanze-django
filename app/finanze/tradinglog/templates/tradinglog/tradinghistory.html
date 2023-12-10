@@ -9,10 +9,11 @@
         var data = new google.visualization.DataTable(); //arrayToDataTable([
         data.addColumn("date", "{{data.0.0}}");
         data.addColumn("number", "{{data.0.1}}");
+        data.addColumn("number", "{{data.0.2}}");
         {% with datalines=data|slice:"1:" %}
         data.addRows([
             {% for date in datalines %}
-            [new Date("{{ date.0 | date:"Y-m-d"}}"), {{ date.1 | floatformat:"2u" }}],
+            [new Date("{{ date.0 | date:"Y-m-d"}}"), {{ date.1 | floatformat:"2u" }}, {{ date.2 | floatformat:"2u" }}],
             {% endfor %}
         {% endwith %}
         ]);
@@ -23,7 +24,7 @@
           vAxis: {minValue: 0}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.SteppedAreaChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
     </script>
