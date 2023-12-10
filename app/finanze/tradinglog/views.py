@@ -5,6 +5,7 @@ from django.db.models import Sum, F, FloatField, ExpressionWrapper
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from .models import Order, Stock, StockQuote
 from .lib import yahoo_finance
@@ -168,14 +169,17 @@ def tradingHistory(request):
         dateTo = datetime.fromisoformat(rawTo).astimezone(timezone.get_default_timezone())
 
     allOrderDatesInRange = Order.objects.order_by("date")
-    results = [["Date", "Total ordered"]]
+    results = [[_("Date"), _("Total ordered"), _("Countervalue")]]
     dateset = set()
     for order in allOrderDatesInRange:
-        ordDate = order.date
+        ordDate = datetime(order.date.year, order.date.month, order.date.day)
+        # get the amount ordered to ordDate
         ordAmount = Order.objects.amountOrderedInPeriod(stocks=None, start=None, end=ordDate)
         if ordDate in dateset:
             continue
-        results.append([ordDate, -ordAmount])
+        # get the countervalue of the selected owned stocks at date
+        countervalue = StockQuote.objects.CountervalueAtDate(ordDate)
+        results.append([ordDate, -ordAmount, countervalue])
     context = {"data": results}
-    return render(request, "tradinglog/tradinghistory.html", context)
-    # return JsonResponse(context)
+    # return render(request, "tradinglog/tradinghistory.html", context)
+    return JsonResponse(context)

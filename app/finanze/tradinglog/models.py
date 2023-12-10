@@ -64,7 +64,35 @@ class Stock(models.Model):
         return "{sym} - {name}".format(sym=self.symbol, name=self.name)
 
 
+class StockQuoteManager(models.Manager):
+    def CountervalueAtDate(self, todate: datetime = datetime.now(), symbols: list = None) -> float:
+        retval = 0
+        filterdict = {"close_timestamp__lt": todate}
+        if symbols and len(symbols)>0:
+            stocks = Stock.objects.filter(symbol__in=symbols)
+        else:
+            stocks = []
+            for qstock in Stock.objects.all():
+                stocks.append(qstock)
+        latestQuotes = {}
+        for stock in stocks:
+            filterdict["stock"] = stock
+            latest = self.filter(**filterdict).order_by("-close_timestamp").first()
+            if latest:
+                # get the amount of titles of the stock owned at date
+                ownedCount = 0
+                for order in Order.objects.filter(stock=stock, date__lte=todate.date()):
+                    if order.operation.operation == "BUY":
+                        ownedCount += order.quantity
+                    else:
+                        ownedCount -= order.quantity
+                retval += latest.close_val * ownedCount
+        return retval
+    
+
 class StockQuote(models.Model):
+    objects = StockQuoteManager()
+    
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     close_val = models.FloatField()
     close_timestamp = models.DateTimeField()

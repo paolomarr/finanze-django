@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-18 18:24+0100\n"
+"POT-Creation-Date: 2023-12-10 15:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,8 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:70
 #: app/finanze/movimenti/templates/movimenti/list.html:133
 #: app/finanze/movimenti/templates/movimenti/list.html:234
-#: app/finanze/movimenti/views.py:260 app/finanze/movimenti/views.py:335
+#: app/finanze/movimenti/views.py:260 app/finanze/movimenti/views.py:334
+#: app/finanze/tradinglog/views.py:172
 msgid "Date"
 msgstr "Data"
 
@@ -277,7 +278,7 @@ msgid "Expenses"
 msgstr "Uscite"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:15
-#: app/finanze/movimenti/views.py:336
+#: app/finanze/movimenti/views.py:335
 msgid "Balance"
 msgstr "Bilancio"
 
@@ -357,11 +358,11 @@ msgstr "Storico assets"
 msgid "Total assets"
 msgstr "Totale assets"
 
-#: app/finanze/movimenti/views.py:334
+#: app/finanze/movimenti/views.py:333
 msgid "Movements time series"
 msgstr "Storico movimenti"
 
-#: app/finanze/movimenti/views.py:344
+#: app/finanze/movimenti/views.py:343
 msgid "invalid request"
 msgstr "richiesta non valida"
 
@@ -482,15 +483,15 @@ msgstr "Effettua l'accesso per vedere questa pagina"
 msgid "Login"
 msgstr "Accedi"
 
-#: app/finanze/tradinglog/templates/tradinglog/base.html:12
+#: app/finanze/tradinglog/templates/tradinglog/base.html:13
 msgid "Past orders"
 msgstr "Storico ordini"
 
-#: app/finanze/tradinglog/templates/tradinglog/base.html:13
+#: app/finanze/tradinglog/templates/tradinglog/base.html:14
 msgid "Stats"
 msgstr "Statistiche"
 
-#: app/finanze/tradinglog/templates/tradinglog/base.html:14
+#: app/finanze/tradinglog/templates/tradinglog/base.html:15
 msgid "New order"
 msgstr "Nuovo ordine"
 
@@ -530,3 +531,15 @@ msgstr "Lordo"
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:31
 msgid "Net"
 msgstr "Netto"
+
+#: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:92
+msgid "Trading history"
+msgstr "Storico trading"
+
+#: app/finanze/tradinglog/views.py:172
+msgid "Total ordered"
+msgstr "Totale ordini"
+
+#: app/finanze/tradinglog/views.py:172
+msgid "Countervalue"
+msgstr "Controvalore"
