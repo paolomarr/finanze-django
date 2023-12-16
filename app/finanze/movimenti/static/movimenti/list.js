@@ -182,7 +182,7 @@ var setupUpdateModal = function() {
 };
 function drawChart(chartbundle) {
 	var data = new google.visualization.DataTable(); //arrayToDataTable([
-	const meta = chartbundle.metadata;
+	const chartmeta = chartbundle.metadata.chart;
 	const chartdata = chartbundle.data;
 	header = chartdata[0];
 	datalines = chartdata.slice(1).map(item => {
@@ -198,9 +198,9 @@ function drawChart(chartbundle) {
 	data.addRows(datalines);
 
 	var options = {
-		title: meta.title,
+		title: chartmeta.title.chart,
 		hAxis: {
-			title: meta.xTitle,
+			title: chartmeta.xTitle.chart,
 			titleTextStyle: { color: '#333' },
 			format: "M-Y"
 		},

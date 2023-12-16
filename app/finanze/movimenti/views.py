@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from json import loads as jloads
 from urllib.parse import parse_qs, unquote, urlparse
 
@@ -47,6 +47,12 @@ def _filterMovements(user, filterParams):
             filterdict['date__lt'] = val
         if col in ['category', 'subcategory']:
             filterdict["{}_id".format(col)] = val
+    # if no date range was specified, pick the last three months only
+    if "date__gte" not in filterdict and "date__lt" not in filterdict:
+        dateto = datetime.now() 
+        datefrom = dateto - timedelta(90)
+        filterdict["date__gte"] = datefrom
+        filterdict["date__lt"] = dateto
     logger.debug("Filter dict: {}".format(filterdict))
     retmovements = Movement.objects.filter(**filterdict)
     
@@ -103,7 +109,7 @@ def list(request):
     cats = Category.objects.all()
     subcats = Subcategory.objects.all()
     page = request.GET.get('page', 1)
-    paginator = Paginator(movement_list, 50)  # Show 25 contacts per page.
+    paginator = Paginator(movement_list, 50)  # Show 50 items per page.
     page_obj = paginator.get_page(page)
 
     return render(request,
@@ -289,8 +295,10 @@ def time_series(request):
     filterdict = {"user__id": request.user.id}
     # fetch the last assets record before request's start time, if any. Take baseline value 0 if none
     rawFrom = params.get('datefrom', None)
+    minDate = Movement.objects.all().order_by('date').first().date
+    maxDate = Movement.objects.all().order_by('-date').first().date
     if rawFrom is None:
-        dateFrom = Movement.objects.all().order_by('date').first().date
+        dateFrom = minDate
     else:
         # need to make it TZ aware
         dateFrom = datetime.fromisoformat(rawFrom).astimezone(timezone.get_default_timezone())
@@ -335,46 +343,16 @@ def time_series(request):
     return JsonResponse({
         "data": results, 
         "metadata": {
-            "title": _("Movements time series"),
-            "xTitle": _("Date"),
+            "chart": {
+                "title": _("Movements time series"),
+                "xTitle": _("Date"),
+            },
+            "minDate": minDate,
+            "maxDate": maxDate,
+            "dateFrom": dateFrom,
+            "dateTo": dateTo,
         }})
-    # # compute the timespan to-from and divide it into N time slots
-    # time_span = dateTo - dateFrom
-    # time_interval = time_span / 10
-    # # TODO: check for interval validity (not too short)
-    # # loop over time slots and take movements balance for each
-    # dateiter = dateFrom
-    # running_balance = baseline + Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
-    # results = [{"date": int(dateiter.timestamp()*1000), "balance": running_balance}]
-    # queryTemplate = """SELECT ct.category category, mv.date date, SUM(mv.abs_amount) cumulative FROM movimenti_movement mv JOIN movimenti_category ct using (id) \
-    #     WHERE mv.date <= %s AND ct.direction = %s GROUP BY mv.category_id ORDER BY mv.date ASC
-    # """
-        
-    # while dateiter < dateTo:
-    #     loop_from = dateiter
-    #     loop_to = dateiter + time_interval
-    #     with connection.cursor() as cursor:
-    #         for res in cursor.execute(queryTemplate, [loop_to, Category.OUTCOME]):
-    #             results.append({"category": res[0], "date": res[1], "cumulative": res[2]})
-    #     # for res in Movement.objects.raw(queryTemplate, [loop_to, Category.OUTCOME]): # {"date": loop_to, "direction": Category.OUTCOME}):
-    #     #     results.append({"category": res.category.category, "date": res.date, "cumulative": res.cumulative})
-    #     # select outcomes only
-    #     # for res in Movement.objects.filter(
-    #     #     category__direction=Category.OUTCOME, date__lte=loop_to).values(
-    #     #         ).order_by("category").distinct("category").annotate(cumulative=Sum("abs_amount")):
-    #     #         results.append(res)
-    #     # running_balance += Movement.objects.netAmountInPeriod(user=request.user, fromDate=loop_from, toDate=loop_to)
-    #     # results.append({"date": int(loop_to.timestamp()*1000), "balance": running_balance})
-    #     dateiter = loop_to
-    # return JsonResponse({
-    #             "chartdata": {
-    #                 "count": len(results),
-    #                 "data": results, 
-    #                 "title": _("Movements time series"),
-    #                 "xTitle": _("Date"),
-    #                 "yTitle": _("Balance"),
-    #                 }
-    #             })    
+    
 
 @login_required
 def newcategory(request):
