@@ -203,7 +203,7 @@ function drawChart(chartbundle) {
 		hAxis: {
 			title: chartmeta.xTitle,
 			titleTextStyle: { color: '#333' },
-			format: "M-Y"
+			format: "MM-Y"
 		},
 		vAxis: {
 			title: chartmeta.yTitle,
@@ -271,7 +271,13 @@ window.addEventListener("load", function(){
 		XHR.addEventListener('error', function () {
 			console.log("Error loading tradinghistory");
 		});
-		XHR.open("GET", `/movimenti/timeseries?${timeseries_query_elements.join("&")}`);
+		queryparams = [];
+		datefrom = document.getElementById('filter-dateFrom').value;
+		if(datefrom.length>0) queryparams.push(`datefrom=${datefrom}`);
+		dateto = document.getElementById('filter-dateTo').value;
+		if (dateto.length > 0) queryparams.push(`dateto=${dateto}`);
+
+		XHR.open("GET", `/movimenti/timeseries?${queryparams.join("&")}`);
 		XHR.send();
 	});
 });
