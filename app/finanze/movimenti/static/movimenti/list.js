@@ -182,6 +182,7 @@ var setupUpdateModal = function() {
 };
 function drawChart(chartbundle) {
 	var data = new google.visualization.DataTable(); //arrayToDataTable([
+	const datameta = chartbundle.metadata;
 	const chartmeta = chartbundle.metadata.chart;
 	const chartdata = chartbundle.data;
 	header = chartdata[0];
@@ -198,15 +199,19 @@ function drawChart(chartbundle) {
 	data.addRows(datalines);
 
 	var options = {
-		title: chartmeta.title.chart,
+		title: chartmeta.title,
 		hAxis: {
-			title: chartmeta.xTitle.chart,
+			title: chartmeta.xTitle,
 			titleTextStyle: { color: '#333' },
 			format: "M-Y"
 		},
 		vAxis: {
-			minValue: 0,
-			format: "€###.##"
+			title: chartmeta.yTitle,
+			// minValue: 0,
+			format: "€###.##",
+			viewWindowMode: 'pretty',
+			// minValue: datameta.minVal,
+			// maxValue: datameta.maxVal,
 		}
 	};
 
@@ -215,7 +220,7 @@ function drawChart(chartbundle) {
 	formatter.format(data, 1); // Apply formatter to second column
 	formatter.format(data, 2); // Apply formatter to second column
 
-	var chart = new google.visualization.AreaChart(document.getElementById('movement_history_chart_div'));
+	var chart = new google.visualization.LineChart(document.getElementById('movement_history_chart_div'));
 	chart.draw(data, options);
 }
 window.addEventListener("load", function(){

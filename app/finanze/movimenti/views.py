@@ -323,17 +323,21 @@ def time_series(request):
 
     # smear factor
     nMovementsInRange = Movement.objects.filter(**filterdict).count()
-    MAX_POINTS_REF = 50
+    MAX_POINTS_REF = 100
     reduce_factor = max(int(nMovementsInRange/MAX_POINTS_REF), 1)
     if reduce_factor > 1:
         logger.debug(f"[time_series] Will reduce movement series points from {nMovementsInRange} to {int(nMovementsInRange/reduce_factor)}")
     running_balance = baseline # Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
+    minVal = running_balance
+    maxVal = running_balance
     loop_filter_dict = {"user__id": request.user.id}
     results = [[_("Date"), _("Balance"), _("Assets")]]
     # results.append([dateFrom.date(), running_balance, baseline])
     movement_count = 1
     for movement in Movement.objects.filter(**filterdict).order_by("date"):
         running_balance += movement.amount
+        minVal = min(minVal, running_balance)
+        maxVal = max(maxVal, running_balance)
         if movement_count % reduce_factor == 0:
             refdate = movement.date
             if refdate > dateFrom:
@@ -348,9 +352,12 @@ def time_series(request):
             "chart": {
                 "title": _("Movements time series"),
                 "xTitle": _("Date"),
+                "yTltle": _("Balance"),
             },
             "minDate": minDate,
             "maxDate": maxDate,
+            "minVal": minVal,
+            "maxVal": maxVal,
             "dateFrom": dateFrom,
             "dateTo": dateTo,
         }})
