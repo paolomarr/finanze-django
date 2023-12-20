@@ -318,6 +318,7 @@ def time_series(request):
         baseline = 0
     else:
         baseline = lastAsset['sum']
+        filterdict["date__gte"] = lastAsset['date']
         logger.debug("[time_series] Baseline set to the last asset record before date %s: %f." % (dateFrom.isoformat(), baseline))
 
     # smear factor
@@ -329,15 +330,16 @@ def time_series(request):
     running_balance = baseline # Movement.objects.netAmountInPeriod(user=request.user, toDate=dateFrom) # starting point
     loop_filter_dict = {"user__id": request.user.id}
     results = [[_("Date"), _("Balance"), _("Assets")]]
-    results.append([dateFrom.date(), running_balance, baseline])
+    # results.append([dateFrom.date(), running_balance, baseline])
     movement_count = 1
     for movement in Movement.objects.filter(**filterdict).order_by("date"):
         running_balance += movement.amount
         if movement_count % reduce_factor == 0:
             refdate = movement.date
-            loop_filter_dict["date__lt"] = refdate
-            latestAsset = AssetBalance.objects.filter(**loop_filter_dict).order_by("-date").values("date").annotate(totbalance=Sum("balance")).first()
-            results.append([movement.date, running_balance, latestAsset["totbalance"]])
+            if refdate > dateFrom:
+                loop_filter_dict["date__lt"] = refdate
+                latestAsset = AssetBalance.objects.filter(**loop_filter_dict).order_by("-date").values("date").annotate(totbalance=Sum("balance")).first()
+                results.append([movement.date, running_balance, latestAsset["totbalance"]])
         movement_count += 1
 
     return JsonResponse({
