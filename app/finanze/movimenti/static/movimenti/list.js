@@ -203,7 +203,10 @@ function drawChart(chartbundle) {
 		hAxis: {
 			title: chartmeta.xTitle,
 			titleTextStyle: { color: '#333' },
-			format: "MM-Y"
+			format: "dd-MM-Y",
+			gridlines: {
+				count: 10,
+			}
 		},
 		vAxis: {
 			title: chartmeta.yTitle,
