@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('tradinglog/', include('tradinglog.urls')),
     path('movimenti/', include('movimenti.urls')),
+    path('movimenti/api/', include('movimenti.api.urls')),
     path('admin/', admin.site.urls),
     path('profile/', views.profile, name='profile'),
     path('profile/password-change', views.profile, name='password_change'),

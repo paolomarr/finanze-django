@@ -6,3 +6,5 @@ django-compressor
 django-sass-processor
 requests
 psycopg2-binary==2.9.3
+djangorestframework
+django-cors-headers
