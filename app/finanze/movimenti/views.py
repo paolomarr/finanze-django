@@ -1,4 +1,3 @@
-import re
 from datetime import date, datetime, timedelta
 from json import loads as jloads
 from urllib.parse import parse_qs, unquote, urlparse
@@ -7,15 +6,13 @@ from django.apps import apps
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Count, F, Max, Min, Model, Q, Sum
+from django.db.models import Count, Max, Min, Q, Sum
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render as srender
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from zoneinfo import ZoneInfo
 from django.utils import timezone
 from tradinglog.models import Order
-from django.db import connection
 from . import app_name, logger
 from .forms import NewAssetsBalanceForm, NewMovementForm
 from .models import AssetBalance, Category, Movement, Subcategory
