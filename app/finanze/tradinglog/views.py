@@ -1,3 +1,4 @@
+from ast import Or
 from django.shortcuts import render as srender
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
@@ -32,8 +33,10 @@ def index(request):
     return HttpResponseRedirect("/tradinglog/orders")
 
 
-def filterOrders(filterParams):
-    filterdict = {}
+def filterOrders(request):
+    params = request.GET
+    filterParams = params.getlist('filter')
+    filterdict = {"user": request.user}
     logging.debug("Filter parameters: {}".format(filterParams))
     for rawitem in filterParams:
         item = unquote(rawitem)
@@ -56,7 +59,7 @@ def filterOrders(filterParams):
 @login_required
 def orders(request):
     params = request.GET
-    orders = filterOrders(params.getlist('filter'))
+    orders = filterOrders(request)
     context = {'orders': orders}
     content = request.content_type
     logger.info("[VIEWS][orderlist] Requested content type: {}\
@@ -73,7 +76,9 @@ def neworder(request):
         # parse the form and add new item
         form = NewOrderForm(request.POST)
         if form.is_valid():
-            form.save()
+            neworder: Order = form.save(commit=False)
+            neworder.user = request.user
+            neworder.save() 
             # redirect to a new URL:
             return index(request)
 
@@ -133,20 +138,28 @@ closeval {} at {}".format(sym, cval, ctime))
 
 @login_required
 def tradingStats(request):
-    tradedStocks = Stock.objects.annotate(
-        quantity=Sum('order__quantity')
-    ).order_by('symbol')
-    # logger.debug([x.buys for x in tradedStocks])
+    allorders = Order.objects.filter(user=request.user).values("id", "stock__id", "stock__symbol").annotate(quantity=Sum('quantity'))
+
+    traded_stocks = []
+    parsed_symbols = set()
     totalone = 0
     totaltwo = 0
     totalthree = 0
     totalfour = 0
-    for stock in tradedStocks:
-        totalone += stock.amountOrdered
-        totaltwo += stock.currentAsset
-        totalthree += stock.currentGrossGain
-        totalfour += stock.currentNetGain
-    context = {'tradedStocks': tradedStocks,
+    for order in allorders:
+        symbol = order["stock__symbol"]
+        if symbol in parsed_symbols:
+            continue
+        else:
+            parsed_symbols.add(symbol)
+            stock = Stock.objects.get(id=order["stock__id"])
+            traded_stocks.append(stock)
+            totalone += stock.amountOrdered
+            totaltwo += stock.currentAsset
+            totalthree += stock.currentGrossGain
+            totalfour += stock.currentNetGain
+
+    context = {'tradedStocks': traded_stocks,
                'totalone': totalone, 'totaltwo': totaltwo,
                'totalthree': totalthree, 'totalfour': totalfour,
                'gain': totaltwo - totalone}
@@ -174,7 +187,7 @@ def tradingHistory(request):
     for order in allOrderDatesInRange:
         ordDate = datetime(order.date.year, order.date.month, order.date.day)
         # get the amount ordered to ordDate
-        ordAmount = Order.objects.amountOrderedInPeriod(stocks=None, start=None, end=ordDate)
+        ordAmount = Order.objects.amountOrderedInPeriod(request.user, stocks=None, start=None, end=ordDate)
         if ordDate in dateset:
             continue
         # get the countervalue of the selected owned stocks at date

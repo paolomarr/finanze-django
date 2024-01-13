@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.db.models import Sum, ExpressionWrapper, F, FloatField
 from datetime import datetime, timedelta
 
@@ -99,8 +100,8 @@ class StockQuote(models.Model):
 
 
 class OrderManager(models.Manager):
-    def amountOrderedInPeriod(self, stocks: list, start: datetime, end: datetime) -> float:
-        filterdict = {}
+    def amountOrderedInPeriod(self, user: User, stocks: list, start: datetime, end: datetime) -> float:
+        filterdict = {"user": user}
         if start:
             filterdict["date__gte"] = start
         if end:
@@ -124,6 +125,7 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField()
     price = models.FloatField()
     transaction_cost = models.FloatField(default=2.0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     @property
     def amount(self):
