@@ -50,6 +50,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',  # The default port for create-react-app
+     'http://localhost:8000',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    # ...
+}
+
 ROOT_URLCONF = 'finanze.urls'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'

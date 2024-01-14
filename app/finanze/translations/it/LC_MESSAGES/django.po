@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-13 14:37+0100\n"
+"POT-Creation-Date: 2024-01-14 15:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/list.html:136
 #: app/finanze/movimenti/templates/movimenti/list.html:237
 #: app/finanze/movimenti/views.py:263 app/finanze/movimenti/views.py:331
-#: app/finanze/movimenti/views.py:351 app/finanze/tradinglog/views.py:172
+#: app/finanze/movimenti/views.py:351 app/finanze/tradinglog/views.py:185
 msgid "Date"
 msgstr "Data"
 
@@ -537,10 +537,10 @@ msgstr "Netto"
 msgid "Trading history"
 msgstr "Storico trading"
 
-#: app/finanze/tradinglog/views.py:172
+#: app/finanze/tradinglog/views.py:185
 msgid "Total ordered"
 msgstr "Totale ordini"
 
-#: app/finanze/tradinglog/views.py:172
+#: app/finanze/tradinglog/views.py:185
 msgid "Countervalue"
 msgstr "Controvalore"
