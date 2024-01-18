@@ -9,12 +9,11 @@ from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 
 from django.contrib.auth.models import User
 
-from movimenti.serializers import CategorySerializer, MovementSerializer, UserSerializer
-from movimenti.models import Category, Movement
+from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer
+from movimenti.models import Category, Movement, Subcategory
 
 
 class MovementList(APIView):
-    permission_classes = [IsAuthenticated]
 
     def _filterDict(self, request):
         params = request.GET
@@ -113,11 +112,27 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class CategoryList(APIView):
-    """
-    List all categories, or create a new one.
-    """
-    def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
+
+class CategoryListCreate(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(user=[self.request.user])
+
+class CategoryDetail(generics.RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class SubcategoryListCreate(generics.ListCreateAPIView):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(user=[self.request.user])
+
+class SubcategoryDetail(generics.RetrieveAPIView):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategorySerializer
+
