@@ -38,6 +38,16 @@ class Stock(models.Model):
     last_price_update = models.DateTimeField(auto_now=False)
 
     @property
+    def quantityOwned(self):
+        quantity = 0
+        for order in self.order_set.all():
+            direction = 1
+            if order.operation == "SELL":
+                direction = -1
+            quantity += order.quantity * direction
+        return quantity
+
+    @property
     def amountOrdered(self):
         return self.order_set.aggregate(value=Sum(
             ExpressionWrapper(F('price') * F('quantity'),
