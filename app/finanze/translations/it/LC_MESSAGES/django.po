@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-12 16:12+0100\n"
+"POT-Creation-Date: 2024-01-13 14:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,8 +54,8 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:71
 #: app/finanze/movimenti/templates/movimenti/list.html:136
 #: app/finanze/movimenti/templates/movimenti/list.html:237
-#: app/finanze/movimenti/views.py:269 app/finanze/movimenti/views.py:337
-#: app/finanze/movimenti/views.py:357 app/finanze/tradinglog/views.py:172
+#: app/finanze/movimenti/views.py:263 app/finanze/movimenti/views.py:331
+#: app/finanze/movimenti/views.py:351 app/finanze/tradinglog/views.py:172
 msgid "Date"
 msgstr "Data"
 
@@ -80,7 +80,7 @@ msgid "Insert new"
 msgstr "Registra nuovo"
 
 #: app/finanze/movimenti/templates/movimenti/base.html:14
-#: app/finanze/movimenti/views.py:337
+#: app/finanze/movimenti/views.py:331
 msgid "Assets"
 msgstr "Assets"
 
@@ -279,7 +279,7 @@ msgid "Expenses"
 msgstr "Uscite"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:15
-#: app/finanze/movimenti/views.py:337 app/finanze/movimenti/views.py:358
+#: app/finanze/movimenti/views.py:331 app/finanze/movimenti/views.py:352
 msgid "Balance"
 msgstr "Bilancio"
 
@@ -333,37 +333,37 @@ msgstr "Ultimi 6 mesi"
 msgid "Last 12 months"
 msgstr "Ultimi 12 mesi"
 
-#: app/finanze/movimenti/views.py:81
+#: app/finanze/movimenti/views.py:75
 #: app/finanze/tradinglog/templates/tradinglog/tradingstats.html:29
 msgid "Updated"
 msgstr "Aggiornato"
 
-#: app/finanze/movimenti/views.py:90 app/finanze/movimenti/views.py:104
+#: app/finanze/movimenti/views.py:84 app/finanze/movimenti/views.py:98
 msgid "Invalid request"
 msgstr "Richiesta non valida"
 
-#: app/finanze/movimenti/views.py:100
+#: app/finanze/movimenti/views.py:94
 #, python-brace-format
 msgid "No entry with id {movId}"
 msgstr "Nessun record trovato con id {movId}"
 
-#: app/finanze/movimenti/views.py:149
+#: app/finanze/movimenti/views.py:143
 msgid "Select category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/views.py:268
+#: app/finanze/movimenti/views.py:262
 msgid "Assets time series"
 msgstr "Storico assets"
 
-#: app/finanze/movimenti/views.py:270
+#: app/finanze/movimenti/views.py:264
 msgid "Total assets"
 msgstr "Totale assets"
 
-#: app/finanze/movimenti/views.py:356
+#: app/finanze/movimenti/views.py:350
 msgid "Movements time series"
 msgstr "Storico movimenti"
 
-#: app/finanze/movimenti/views.py:373
+#: app/finanze/movimenti/views.py:367
 msgid "invalid request"
 msgstr "richiesta non valida"
 
