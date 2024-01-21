@@ -154,8 +154,8 @@ def tradingStats(request):
             parsed_symbols.add(symbol)
             stock = Stock.objects.get(id=order["stock__id"])
             traded_stocks.append(stock)
-            totalone += stock.amountOrdered
-            totaltwo += stock.currentAsset
+            totalone += stock.amountOwned
+            totaltwo += stock.currentAssetMarketValue
             totalthree += stock.currentGrossGain
             totalfour += stock.currentNetGain
 

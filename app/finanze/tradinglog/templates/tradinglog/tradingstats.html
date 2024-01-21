@@ -48,12 +48,12 @@ Trading stats
 		<div class="d-xl-none w-100"></div>
 		<div class="col-5 d-xl-none">
 			<div class="row">
-				<div class="currency col-12"><i class="d-xl-none bi bi-cash-coin"></i> {{stock.amountOrdered | floatformat:2}}</div>
-				<div class="currency col-12"><i class="d-xl-none bi bi-graph-up-arrow"></i> {{stock.currentAsset | floatformat:2}}</div>
+				<div class="currency col-12"><i class="d-xl-none bi bi-cash-coin"></i> {{stock.amountOwned | floatformat:2}}</div>
+				<div class="currency col-12"><i class="d-xl-none bi bi-graph-up-arrow"></i> {{stock.currentAssetMarketValue | floatformat:2}}</div>
 			</div>
 		</div>
-		<div class="currency text-end d-none d-xl-block col-xl-2 order-xl-2">{{stock.amountOrdered | floatformat:2}}</div>
-		<div class="currency text-end d-none d-xl-block col-xl-2 order-xl-3">{{stock.currentAsset | floatformat:2}}</div>
+		<div class="currency text-end d-none d-xl-block col-xl-2 order-xl-2">{{stock.amountOwned | floatformat:2}}</div>
+		<div class="currency text-end d-none d-xl-block col-xl-2 order-xl-3">{{stock.currentAssetMarketValue | floatformat:2}}</div>
 		<div class="col-7 d-xl-none">
 			<div class="row">
 				<div class="col-12 currency fw-bolder">

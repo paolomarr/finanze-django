@@ -42,27 +42,28 @@ class Stock(models.Model):
         quantity = 0
         for order in self.order_set.all():
             direction = 1
-            if order.operation == "SELL":
+            if order.operation.operation == "SELL":
                 direction = -1
             quantity += order.quantity * direction
         return quantity
 
     @property
-    def amountOrdered(self):
-        return self.order_set.aggregate(value=Sum(
-            ExpressionWrapper(F('price') * F('quantity'),
-                              output_field=FloatField())))['value']
+    def amountOwned(self):
+        '''
+        negative sign means loss
+        '''
+        amount = 0
+        for order in self.order_set.all():
+            amount += order.amount # take into account sign depending on BUY/SELL
+        return amount
 
     @property
-    def currentAsset(self):
-        return self.regular_market_price * self.order_set.aggregate(qty=Sum('quantity'))['qty']
+    def currentAssetMarketValue(self):
+        return self.regular_market_price * self.quantityOwned
 
     @property
     def currentGrossGain(self):
-        gain = 0
-        for order in Order.objects.filter(stock=self):
-            gain += order.gross_gain
-        return gain
+        return self.currentAssetMarketValue - self.amountOwned
 
     @property
     def currentNetGain(self):
@@ -140,7 +141,7 @@ class Order(models.Model):
     @property
     def amount(self):
         absamount = self.price * self.quantity
-        if self.operation.operation == "BUY":
+        if self.operation.operation == "SELL":
             absamount *= -1.0
         return absamount
 
@@ -150,8 +151,10 @@ class Order(models.Model):
 
     @property
     def gross_gain(self):
-        # + sign because the amount of a BUY operation is negative
-        return self.currentval + self.amount
+        if self.operation.operation == "BUY":
+            return self.currentval - self.amount
+        else:
+            return 0
 
     @property
     def net_gain(self):

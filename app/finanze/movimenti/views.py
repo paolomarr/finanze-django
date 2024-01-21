@@ -279,8 +279,7 @@ def assets(request):
         # Insert finance assets total by default
         financeassets = 0
         for buy in Order.objects.all():
-            # - sign here is because teh Order model sign convention makes BUy operations amount negative
-            financeassets -= buy.amount
+            financeassets += buy.amount
         response = render(request, 'movimenti/assetbalance.html',
             {'form': form, 'assets': groupByDateAndTotalBalance, 'latests': latests, 'financeassets': financeassets, 'totalassets': latsum})
         response.set_cookie("user", request.user, path=request.path)
