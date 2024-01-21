@@ -16,12 +16,12 @@ services:
   web-dev:
     <<: *web-template
     profiles:
-      - dev
+      - local_db
     
   web:
     <<: *web-template
     profiles:
-      - prod
+      - pg_db
     depends_on:
       - db
       
@@ -32,7 +32,7 @@ services:
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     profiles:
-      - prod
+      - pg_db
 
 volumes:
   postgres_data:
