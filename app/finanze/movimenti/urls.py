@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
@@ -17,4 +17,5 @@ urlpatterns = [
     path('summary/fetch', views.summaryXHR, name='summaryxhr'),
     path('timeseries', views.time_series, name='time_series'),
     path('timeseries/json', views.time_series, name='time_series_xhr'),
+    path('api/', include('movimenti.api.urls')),
 ]

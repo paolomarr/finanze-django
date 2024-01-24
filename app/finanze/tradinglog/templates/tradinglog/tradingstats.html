@@ -32,7 +32,7 @@ Trading stats
 		</div>
 	</div>
 	{% for stock in tradedStocks %}
-	<div class="row border-bottom pt-2 pb-2 align-items-center">
+	<div class="row border-bottom pt-2 pb-2 align-items-center{% if stock.quantityOwned == 0 %} dimmed{% endif %}">
 		<div class="col-5 col-xl-1 order-xl-first"><i class="d-xl-none bi bi-shop"></i> 
 			<a href="#" data-stock="{{stock.id}}">{{stock.symbol}}</a><a href="https://finance.yahoo.com/quote/{{stock.symbol}}" target="_blank">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right"

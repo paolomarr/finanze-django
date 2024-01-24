@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-14 15:30+0100\n"
+"POT-Creation-Date: 2024-01-21 15:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,8 +54,8 @@ msgstr "Storico assets"
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:71
 #: app/finanze/movimenti/templates/movimenti/list.html:136
 #: app/finanze/movimenti/templates/movimenti/list.html:237
-#: app/finanze/movimenti/views.py:263 app/finanze/movimenti/views.py:331
-#: app/finanze/movimenti/views.py:351 app/finanze/tradinglog/views.py:185
+#: app/finanze/movimenti/views.py:263 app/finanze/movimenti/views.py:330
+#: app/finanze/movimenti/views.py:350 app/finanze/tradinglog/views.py:185
 msgid "Date"
 msgstr "Data"
 
@@ -80,7 +80,7 @@ msgid "Insert new"
 msgstr "Registra nuovo"
 
 #: app/finanze/movimenti/templates/movimenti/base.html:14
-#: app/finanze/movimenti/views.py:331
+#: app/finanze/movimenti/views.py:330
 msgid "Assets"
 msgstr "Assets"
 
@@ -279,7 +279,7 @@ msgid "Expenses"
 msgstr "Uscite"
 
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:15
-#: app/finanze/movimenti/views.py:331 app/finanze/movimenti/views.py:352
+#: app/finanze/movimenti/views.py:330 app/finanze/movimenti/views.py:351
 msgid "Balance"
 msgstr "Bilancio"
 
@@ -359,11 +359,11 @@ msgstr "Storico assets"
 msgid "Total assets"
 msgstr "Totale assets"
 
-#: app/finanze/movimenti/views.py:350
+#: app/finanze/movimenti/views.py:349
 msgid "Movements time series"
 msgstr "Storico movimenti"
 
-#: app/finanze/movimenti/views.py:367
+#: app/finanze/movimenti/views.py:366
 msgid "invalid request"
 msgstr "richiesta non valida"
 

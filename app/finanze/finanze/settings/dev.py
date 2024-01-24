@@ -17,3 +17,5 @@ DATABASES = {
 LOGGING['loggers']['tradinglog']['level'] = 'DEBUG'
 LOGGING['loggers']['movimenti']['level'] = 'DEBUG'
 LOGGING['loggers']['finanze']['level'] = 'DEBUG'
+
+CORS_ALLOW_ALL_ORIGINS = True

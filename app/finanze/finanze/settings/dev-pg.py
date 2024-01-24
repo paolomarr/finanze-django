@@ -1,8 +1,5 @@
 # import django_heroku
 from .default import *
-import os
-import re
-from urllib.parse import urlparse
 
 DEBUG = True
 
@@ -28,6 +25,4 @@ DATABASES = {
     }
 }
 
-# MIDDLEWARE += [
-#     "whitenoise.middleware.WhiteNoiseMiddleware",
-# ]
+CORS_ALLOW_ALL_ORIGINS = True
