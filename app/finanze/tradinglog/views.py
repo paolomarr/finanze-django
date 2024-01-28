@@ -192,7 +192,7 @@ def tradingHistory(request):
             continue
         # get the countervalue of the selected owned stocks at date
         countervalue = StockQuote.objects.CountervalueAtDate(ordDate)
-        results.append([ordDate, -ordAmount, countervalue])
+        results.append([ordDate, ordAmount, countervalue])
     context = {"data": results}
     # return render(request, "tradinglog/tradinghistory.html", context)
     return JsonResponse(context)
