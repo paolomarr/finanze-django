@@ -123,3 +123,27 @@ class AssetBalance(models.Model):
     balance = models.FloatField()
     notes = models.CharField(blank=True, max_length=256)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+
+    def balance_to_date(self, user: User, date: date) -> (date, float):
+        outbalance = 0.0
+        refdate = None
+        for entry in self.objects.filter(user=user, date__lte=date).order_by("-date"):
+            if not refdate:
+                refdate = entry.date
+            elif entry.date != refdate:
+                break
+            else:
+                outbalance += entry.balance
+        return (refdate, outbalance)
+
+    def initial_balance(self, user: User) -> (date, float):
+        outbalance = 0.0
+        refdate = None
+        for entry in self.objects.filter(user=user).order_by("date"):
+            if not refdate:
+                refdate = entry.date
+            elif entry.date != refdate:
+                break
+            else:
+                outbalance += entry.balance
+        return (refdate, outbalance)
