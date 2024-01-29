@@ -114,20 +114,11 @@ class Movement(models.Model):
         return self.date > timezone.now()
 
 
-class AssetBalance(models.Model):
-    """
-    each instance of this model represents
-    a snapshot of own's total assets' value
-    """
-    date = models.DateTimeField(default=timezone.now)    
-    balance = models.FloatField()
-    notes = models.CharField(blank=True, max_length=256)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-
+class AssetBalanceManager(models.Manager):
     def balance_to_date(self, user: User, date: date) -> (date, float):
         outbalance = 0.0
         refdate = None
-        for entry in self.objects.filter(user=user, date__lte=date).order_by("-date"):
+        for entry in self.filter(user=user, date__lte=date).order_by("-date"):
             if not refdate:
                 refdate = entry.date
             elif entry.date != refdate:
@@ -139,11 +130,23 @@ class AssetBalance(models.Model):
     def initial_balance(self, user: User) -> (date, float):
         outbalance = 0.0
         refdate = None
-        for entry in self.objects.filter(user=user).order_by("date"):
+        for entry in self.filter(user=user).order_by("date"):
             if not refdate:
                 refdate = entry.date
             elif entry.date != refdate:
                 break
             else:
                 outbalance += entry.balance
-        return (refdate, outbalance)
+        return (refdate, outbalance)    
+
+        
+class AssetBalance(models.Model):
+    """
+    each instance of this model represents
+    a snapshot of own's total assets' value
+    """
+    objects = AssetBalanceManager
+    date = models.DateTimeField(default=timezone.now)    
+    balance = models.FloatField()
+    notes = models.CharField(blank=True, max_length=256)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
