@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.db.models import expressions
+from django.db.models import Min, Max
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
@@ -10,7 +10,7 @@ from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 from django.contrib.auth.models import User
 
 from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer
-from movimenti.models import Category, Movement, Subcategory
+from movimenti.models import AssetBalance, Category, Movement, Subcategory
 
 
 class MovementList(APIView):
@@ -35,7 +35,9 @@ class MovementList(APIView):
     List all movements, or create a new one.
     """
     def get(self, request):
-        movements = Movement.objects.filter(**(self._filterDict(request)))
+        filterdict = self._filterDict(request)
+            
+        movements = Movement.objects.filter(**filterdict)
         params = request.GET
         sort_field = params.get("sort_field", "-date")
         movements = movements.order_by(sort_field)
@@ -56,8 +58,14 @@ class MovementList(APIView):
             start = (page-1)*size
             end = start + size
             movements = movements[start:end]
+
+        aggregates = movements.aggregate(minDate=Min("date"), maxDate=Max("date"))
+
+        baseline = AssetBalance.objects.balance_to_date(user=request.user, date=aggregates["minDate"])
+        
+
         serializer = MovementSerializer(movements, many=True)
-        return Response(serializer.data)
+        return Response({"movements": serializer.data, "baseline": baseline, "minDate": aggregates.get("minDate"), "maxDate": aggregates.get("maxDate")})
 
     def post(self, request):
         # this will require proper CSRF handling

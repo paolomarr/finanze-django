@@ -145,7 +145,7 @@ class AssetBalance(models.Model):
     each instance of this model represents
     a snapshot of own's total assets' value
     """
-    objects = AssetBalanceManager
+    objects = AssetBalanceManager()
     date = models.DateTimeField(default=timezone.now)    
     balance = models.FloatField()
     notes = models.CharField(blank=True, max_length=256)
