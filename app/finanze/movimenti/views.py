@@ -6,7 +6,7 @@ from django.apps import apps
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Count, Max, Min, Q, Sum
+from django.db.models import Count, Max, Min, Q, Sum, FloatField
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render as srender
 from django.urls import reverse
@@ -101,8 +101,8 @@ def deleteMovement(request):
 def list(request):
     params = request.GET
     movement_list = _filterMovements(request.user, params.getlist('filter'))
-    qSumOut = Sum('abs_amount', filter=Q(category__direction=Category.OUTCOME))
-    qSumIn = Sum('abs_amount', filter=Q(category__direction=Category.INCOME))
+    qSumOut = Sum('abs_amount', filter=Q(category__direction=Category.OUTCOME), output_field=FloatField())
+    qSumIn = Sum('abs_amount', filter=Q(category__direction=Category.INCOME), output_field=FloatField())
     cats = Category.objects.all()
     subcats = Subcategory.objects.all()
     page = request.GET.get('page', 1)
@@ -113,7 +113,7 @@ def list(request):
                   'movimenti/list.html',
                   {'page_obj': page_obj,
                    'movements': movement_list,
-                   'summary': movement_list.aggregate(count=Count('id'), incomes=qSumIn, expenses=qSumOut, datefrom=Min('date'), dateto=Max('date')),
+                   'summary': movement_list.aggregate(count=Count('id'), incomes=qSumIn, expenses=qSumOut, savingrate=(qSumIn - qSumOut)/qSumIn * 100, datefrom=Min('date'), dateto=Max('date')),
                    'categories': cats, 'subcategories': subcats})
 
 
