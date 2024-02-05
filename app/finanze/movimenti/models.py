@@ -123,3 +123,7 @@ class AssetBalance(models.Model):
     balance = models.FloatField()
     notes = models.CharField(blank=True, max_length=256)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+
+    def __str__(self):
+        return f"[{self.id}] {self.user.get_username()} - {self.date.strftime('%x %X')} | {self.notes} | {self.balance}"
+    
