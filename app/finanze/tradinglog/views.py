@@ -138,32 +138,56 @@ closeval {} at {}".format(sym, cval, ctime))
 
 @login_required
 def tradingStats(request):
-    allorders = Order.objects.filter(user=request.user).values("id", "stock__id", "stock__symbol").annotate(quantity=Sum('quantity'))
-
+    allstocks = Stock.objects.all()
     traded_stocks = []
-    parsed_symbols = set()
     totalone = 0
     totaltwo = 0
     totalthree = 0
     totalfour = 0
-    for order in allorders:
-        symbol = order["stock__symbol"]
-        if symbol in parsed_symbols:
+    for stock in allstocks:
+        if stock.quantityOwned == 0:
             continue
-        else:
-            parsed_symbols.add(symbol)
-            stock = Stock.objects.get(id=order["stock__id"])
-            traded_stocks.append(stock)
-            totalone += stock.amountOwned
-            totaltwo += stock.currentAssetMarketValue
-            totalthree += stock.currentGrossGain
-            totalfour += stock.currentNetGain
+        traded_stocks.append(stock)
+        totalone += stock.amountOwned
+        totaltwo += stock.currentAssetMarketValue
+        totalthree += stock.currentGrossGain
+        totalfour += stock.currentNetGain
 
     context = {'tradedStocks': traded_stocks,
                'totalone': totalone, 'totaltwo': totaltwo,
                'totalthree': totalthree, 'totalfour': totalfour,
                'gain': totaltwo - totalone}
     return render(request, "tradinglog/tradingstats.html", context)
+
+# deprecated 23.02.2024
+# @login_required
+# def tradingStats(request):
+#     allorders = Order.objects.filter(user=request.user).values("id", "stock__id", "stock__symbol").annotate(quantity=Sum('quantity'))
+
+#     traded_stocks = []
+#     parsed_symbols = set()
+#     totalone = 0
+#     totaltwo = 0
+#     totalthree = 0
+#     totalfour = 0
+#     for order in allorders:
+#         symbol = order["stock__symbol"]
+#         if symbol in parsed_symbols:
+#             continue
+#         else:
+#             parsed_symbols.add(symbol)
+#             stock = Stock.objects.get(id=order["stock__id"])
+#             traded_stocks.append(stock)
+#             totalone += stock.amountOwned
+#             totaltwo += stock.currentAssetMarketValue
+#             totalthree += stock.currentGrossGain
+#             totalfour += stock.currentNetGain
+
+#     context = {'tradedStocks': traded_stocks,
+#                'totalone': totalone, 'totaltwo': totaltwo,
+#                'totalthree': totalthree, 'totalfour': totalfour,
+#                'gain': totaltwo - totalone}
+#     return render(request, "tradinglog/tradingstats.html", context)
 
 @login_required
 def tradingHistory(request):
