@@ -10,3 +10,6 @@ staticfiles/
 app/finanze/static/style.css
 .idea/
 gdrive_sync/
+movimenti-fe/build
+movimenti-fe/node_modules
+.vscode
