@@ -135,8 +135,8 @@ def newmovement(request):
                 redirect = '/movimenti/new'
             return HttpResponseRedirect(redirect)
         else:
-            errors.append("Form not valid (tbd)")
-
+            errors = form.errors
+            return render(request, 'movimenti/newmovement.html', {'form': form, 'errors': errors})
 
     emptySubcat = Subcategory.objects.get(subcategory="")
     form = NewMovementForm(initial={'subcategory': emptySubcat.id})
