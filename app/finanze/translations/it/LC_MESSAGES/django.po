@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-21 15:42+0100\n"
+"POT-Creation-Date: 2024-03-08 22:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,10 +52,10 @@ msgid "Assets log"
 msgstr "Storico assets"
 
 #: app/finanze/movimenti/templates/movimenti/assetbalance.html:71
-#: app/finanze/movimenti/templates/movimenti/list.html:136
-#: app/finanze/movimenti/templates/movimenti/list.html:237
+#: app/finanze/movimenti/templates/movimenti/list.html:131
+#: app/finanze/movimenti/templates/movimenti/list.html:232
 #: app/finanze/movimenti/views.py:263 app/finanze/movimenti/views.py:330
-#: app/finanze/movimenti/views.py:350 app/finanze/tradinglog/views.py:185
+#: app/finanze/movimenti/views.py:350 app/finanze/tradinglog/views.py:209
 msgid "Date"
 msgstr "Data"
 
@@ -116,143 +116,139 @@ msgstr "Crea"
 msgid "Filter summary"
 msgstr "Sommario movimenti filtrati"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:22
-msgid "Period"
-msgstr "Periodo"
-
-#: app/finanze/movimenti/templates/movimenti/list.html:28
+#: app/finanze/movimenti/templates/movimenti/list.html:23
 msgid "Total expenses"
 msgstr "Totale spese"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:32
+#: app/finanze/movimenti/templates/movimenti/list.html:27
 msgid "Total incomes"
 msgstr "Totale guadagni"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:36
-msgid "Items count"
-msgstr "Numero movimenti"
+#: app/finanze/movimenti/templates/movimenti/list.html:31
+msgid "Saving rate"
+msgstr ""
 
-#: app/finanze/movimenti/templates/movimenti/list.html:48
+#: app/finanze/movimenti/templates/movimenti/list.html:43
 msgid "Filter control buttons"
 msgstr "Filtra descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:57
+#: app/finanze/movimenti/templates/movimenti/list.html:52
 msgid " Filters"
 msgstr "Filtri"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:59
+#: app/finanze/movimenti/templates/movimenti/list.html:54
 msgid "Clear filters"
 msgstr "Azzera filtri"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:73
+#: app/finanze/movimenti/templates/movimenti/list.html:68
 msgid " Clear filters"
 msgstr " Azzera filtri"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:85
+#: app/finanze/movimenti/templates/movimenti/list.html:80
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:29
 msgid "From"
 msgstr "Dal"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:89
+#: app/finanze/movimenti/templates/movimenti/list.html:84
 #: app/finanze/movimenti/templates/movimenti/summary_ajax.html:35
 msgid "To"
 msgstr "Al"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:93
+#: app/finanze/movimenti/templates/movimenti/list.html:88
 msgid "Filter description"
 msgstr "Filtra descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:98
+#: app/finanze/movimenti/templates/movimenti/list.html:93
 msgid "Filter category"
 msgstr "Filtra categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:106
+#: app/finanze/movimenti/templates/movimenti/list.html:101
 msgid "Filter subcategory"
 msgstr "Filtra sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:119
-#: app/finanze/movimenti/templates/movimenti/list.html:330
+#: app/finanze/movimenti/templates/movimenti/list.html:114
+#: app/finanze/movimenti/templates/movimenti/list.html:325
 msgid "first"
 msgstr "primo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:120
-#: app/finanze/movimenti/templates/movimenti/list.html:331
+#: app/finanze/movimenti/templates/movimenti/list.html:115
+#: app/finanze/movimenti/templates/movimenti/list.html:326
 msgid "previous"
 msgstr "precedente"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:124
-#: app/finanze/movimenti/templates/movimenti/list.html:335
+#: app/finanze/movimenti/templates/movimenti/list.html:119
+#: app/finanze/movimenti/templates/movimenti/list.html:330
 msgid "Page"
 msgstr "Pagina"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:124
-#: app/finanze/movimenti/templates/movimenti/list.html:335
+#: app/finanze/movimenti/templates/movimenti/list.html:119
+#: app/finanze/movimenti/templates/movimenti/list.html:330
 msgid "of"
 msgstr "di"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:128
-#: app/finanze/movimenti/templates/movimenti/list.html:339
+#: app/finanze/movimenti/templates/movimenti/list.html:123
+#: app/finanze/movimenti/templates/movimenti/list.html:334
 msgid "next"
 msgstr "successivo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:129
-#: app/finanze/movimenti/templates/movimenti/list.html:340
+#: app/finanze/movimenti/templates/movimenti/list.html:124
+#: app/finanze/movimenti/templates/movimenti/list.html:335
 msgid "last"
 msgstr "ultimo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:137
-#: app/finanze/movimenti/templates/movimenti/list.html:243
+#: app/finanze/movimenti/templates/movimenti/list.html:132
+#: app/finanze/movimenti/templates/movimenti/list.html:238
 msgid "Description"
 msgstr "Descrizione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:138
-#: app/finanze/movimenti/templates/movimenti/list.html:249
+#: app/finanze/movimenti/templates/movimenti/list.html:133
+#: app/finanze/movimenti/templates/movimenti/list.html:244
 msgid "Amount"
 msgstr "Importo"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:139
-#: app/finanze/movimenti/templates/movimenti/list.html:255
-#: app/finanze/movimenti/templates/movimenti/list.html:261
+#: app/finanze/movimenti/templates/movimenti/list.html:134
+#: app/finanze/movimenti/templates/movimenti/list.html:250
+#: app/finanze/movimenti/templates/movimenti/list.html:256
 #: app/finanze/movimenti/templates/movimenti/summary/table.html:7
 msgid "Category"
 msgstr "Categoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:140
+#: app/finanze/movimenti/templates/movimenti/list.html:135
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:157
-#: app/finanze/movimenti/templates/movimenti/list.html:183
+#: app/finanze/movimenti/templates/movimenti/list.html:152
+#: app/finanze/movimenti/templates/movimenti/list.html:178
 msgid "Edit"
 msgstr "Modifica"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:165
-#: app/finanze/movimenti/templates/movimenti/list.html:191
-#: app/finanze/movimenti/templates/movimenti/list.html:321
+#: app/finanze/movimenti/templates/movimenti/list.html:160
+#: app/finanze/movimenti/templates/movimenti/list.html:186
+#: app/finanze/movimenti/templates/movimenti/list.html:316
 msgid "Delete"
 msgstr "Elimina"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:227
+#: app/finanze/movimenti/templates/movimenti/list.html:222
 msgid "Update record"
 msgstr "Aggiornato"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:294
+#: app/finanze/movimenti/templates/movimenti/list.html:289
 msgid "Close"
 msgstr "Chiudi"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:295
+#: app/finanze/movimenti/templates/movimenti/list.html:290
 msgid "Save changes"
 msgstr "Salva modifiche"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:305
+#: app/finanze/movimenti/templates/movimenti/list.html:300
 msgid "Confirm deletion"
 msgstr "Conferma cancellazione"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:313
+#: app/finanze/movimenti/templates/movimenti/list.html:308
 msgid "Are you sure you want to delete this entry? This cannot be undone."
 msgstr "Vuoi davvero eliminare questo record? Non può essere annulato"
 
-#: app/finanze/movimenti/templates/movimenti/list.html:320
+#: app/finanze/movimenti/templates/movimenti/list.html:315
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -537,10 +533,16 @@ msgstr "Netto"
 msgid "Trading history"
 msgstr "Storico trading"
 
-#: app/finanze/tradinglog/views.py:185
+#: app/finanze/tradinglog/views.py:209
 msgid "Total ordered"
 msgstr "Totale ordini"
 
-#: app/finanze/tradinglog/views.py:185
+#: app/finanze/tradinglog/views.py:209
 msgid "Countervalue"
 msgstr "Controvalore"
+
+#~ msgid "Period"
+#~ msgstr "Periodo"
+
+#~ msgid "Items count"
+#~ msgstr "Numero movimenti"
