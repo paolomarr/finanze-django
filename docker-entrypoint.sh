@@ -2,7 +2,7 @@
 
 set -x
 rm -rf app/finanze/staticfiles
-python app/finanze/manage.py migrate || exit 1
+python app/finanze/manage.py migrate # || exit 1
 python app/finanze/manage.py compilescss
 if [[ "$DJANGO_SETTINGS_MODULE" =~ production ]]; then
     python app/finanze/manage.py collectstatic --ignore=*.scss

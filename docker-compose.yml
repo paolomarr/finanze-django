@@ -1,22 +1,24 @@
 version: "3.9"
 
 x-web-template: &web-template
-  build: .
+  build:
+    dockerfile: ./Dockerfile_django
   command: ./docker-entrypoint.sh
   volumes:
     - .:/code
-  ports:
-    - 127.0.0.1:8000:8000
   environment:
-    - "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
-    - "RAPIDAPI_KEY=${RAPIDAPI_KEY}"
-    - "SECRET_KEY=${SECRET_KEY}" # to be put in .env file
+    DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE}"
+    RAPIDAPI_KEY: "${RAPIDAPI_KEY}"
+    SECRET_KEY: "${SECRET_KEY}" # to be put in .env file
+  
 
 services:
   web-dev:
     <<: *web-template
     profiles:
       - local_db
+    ports:
+      - 127.0.0.1:8001:8000
     
   web:
     <<: *web-template
@@ -24,7 +26,35 @@ services:
       - pg_db
     depends_on:
       - db
-      
+    ports:
+      - 127.0.0.1:8000:8000
+
+  web-staging:
+    <<: *web-template
+    profiles:
+      - pg_db_staging
+    depends_on:
+      - db
+    ports:
+      - 127.0.0.1:8002:8000
+
+  react_backend:
+    <<: *web-template
+    profiles:
+      - react
+    depends_on:
+      - db
+    ports:
+      - 127.0.0.1:8003:8000
+
+  react_frontend:
+    build:
+      dockerfile: ./Dockerfile_react
+    profiles:
+      - react
+    ports:
+      - 127.0.0.1:3300:3000
+    
   db:
     image: postgres:13
     volumes:
@@ -33,6 +63,8 @@ services:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     profiles:
       - pg_db
+      - pg_db_staging
+      - react
 
 volumes:
   postgres_data:
