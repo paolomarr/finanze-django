@@ -15,4 +15,7 @@ RUN pip install -r requirements.txt
 RUN apt-get update && apt-get install -y gettext
 
 # Copy project
-# COPY . .
+COPY docker-entrypoint.sh ./
+COPY ./app/finanze/ ./app/finanze
+
+ENTRYPOINT [ "./docker-entrypoint.sh" ]

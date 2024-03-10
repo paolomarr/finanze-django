@@ -4,12 +4,14 @@ FROM node:21-alpine
 WORKDIR /app
 
 # Install dependencies
-COPY ./movimenti-fe/public/ ./public
-COPY ./movimenti-fe/src/ ./src
 COPY ./movimenti-fe/package.json .
 COPY ./movimenti-fe/lingui.config.js .
 
 RUN npm install
+
+COPY ./movimenti-fe/public/ ./public
+COPY ./movimenti-fe/src/ ./src
+
 RUN npm run extract && npm run compile
 
 CMD ["npm", "start"]

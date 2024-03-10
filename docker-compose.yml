@@ -3,9 +3,6 @@ version: "3.9"
 x-web-template: &web-template
   build:
     dockerfile: ./Dockerfile_django
-  command: ./docker-entrypoint.sh
-  volumes:
-    - .:/code
   environment:
     DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE}"
     RAPIDAPI_KEY: "${RAPIDAPI_KEY}"
@@ -15,15 +12,19 @@ x-web-template: &web-template
 services:
   web-dev:
     <<: *web-template
+    volumes:
+      - .:/code # override base container code, for live updates
     profiles:
       - local_db
+    environment:
+      DJANGO_SETTINGS_MODULE: finanze.settings.dev
     ports:
       - 127.0.0.1:8001:8000
     
   web:
     <<: *web-template
     profiles:
-      - pg_db
+      - production
     depends_on:
       - db
     ports:
@@ -32,7 +33,7 @@ services:
   web-staging:
     <<: *web-template
     profiles:
-      - pg_db_staging
+      - staging
     depends_on:
       - db
     ports:
@@ -40,6 +41,7 @@ services:
 
   react_backend:
     <<: *web-template
+    command: []
     profiles:
       - react
     depends_on:
@@ -63,8 +65,6 @@ services:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     profiles:
       - pg_db
-      - pg_db_staging
-      - react
 
 volumes:
   postgres_data:
