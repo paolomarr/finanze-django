@@ -14,7 +14,7 @@ RUN npm install
 
 COPY ./movimenti-fe/public/ ./public
 COPY ./movimenti-fe/src/ ./src
-COPY ./.env ./
+COPY ./movimenti-fe/.env ./
 
 RUN npm run extract && npm run compile && npm run build
 
