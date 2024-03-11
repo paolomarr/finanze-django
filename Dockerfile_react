@@ -12,6 +12,6 @@ RUN npm install
 COPY ./movimenti-fe/public/ ./public
 COPY ./movimenti-fe/src/ ./src
 
-RUN npm run extract && npm run compile
+RUN npm run extract && npm run compile && npm run build
 
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-l", "3300"]
