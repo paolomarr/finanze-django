@@ -17,4 +17,6 @@ COPY ./movimenti-fe/src/ ./src
 
 RUN npm run extract && npm run compile && npm run build
 
+RUN npm install -g serve
+
 CMD ["serve", "-s", "build", "-l", "3300"]
