@@ -26,7 +26,7 @@ class AssetBalanceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MovementSerializer(serializers.ModelSerializer):
-    amount = serializers.FloatField()
+    amount = serializers.FloatField(required=False)
     # category = CategorySerializer(read_only=True)
     # subcategory = SubcategorySerializer(read_only=True)
     

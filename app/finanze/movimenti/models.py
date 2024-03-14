@@ -87,7 +87,7 @@ class Movement(models.Model):
     description = models.CharField(max_length=1024)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     abs_amount = models.FloatField()
-    subcategory = models.ForeignKey(Subcategory, on_delete=models.PROTECT)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self):
         subcatstr = ""
