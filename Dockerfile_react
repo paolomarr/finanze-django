@@ -10,14 +10,15 @@ ENV NODE_OPTIONS=--max_old_space_size=2048
 COPY ./movimenti-fe/package.json .
 COPY ./movimenti-fe/lingui.config.js .
 
+RUN npm install -g serve
+
 RUN npm install
 
 COPY ./movimenti-fe/public/ ./public
 COPY ./movimenti-fe/src/ ./src
 COPY ./movimenti-fe/.env ./
 
-RUN npm run extract && npm run compile && npm run build
+RUN npm run compile && npm run build
 
-RUN npm install -g serve
 
 CMD ["serve", "-s", "build", "-l", "3000"]
