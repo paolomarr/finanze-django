@@ -7,6 +7,9 @@ from urllib.parse import urlparse
 DEBUG = False
 
 ALLOWED_HOSTS = ['paolomarchetti.tk', 'paolomarchetti.my.to', '.localhost', '127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS.append('https://paolomarchetti.my.to')
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECRET_KEY = os.environ['SECRET_KEY']
 

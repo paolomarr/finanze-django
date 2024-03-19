@@ -52,6 +52,8 @@ services:
   react_frontend:
     build:
       dockerfile: ./Dockerfile_react
+      tags:
+      - $REACT_FRONTEND_TAG
     profiles:
       - react
     ports:
