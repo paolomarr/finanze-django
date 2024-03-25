@@ -121,9 +121,21 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
 
+class LoggedInUserDetail(UserList):
+    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
+    
+    def get(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(id=request.user.id)
+        return super().get(request, *args, **kwargs)
+
+
 class CategoryListCreate(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def list(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(user=request.user)
+        return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         return serializer.save(user=[self.request.user])

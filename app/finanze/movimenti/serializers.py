@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'category_set', 'subcategory_set']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined', 'category_set', 'subcategory_set']
 
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
