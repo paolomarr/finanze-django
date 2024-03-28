@@ -91,7 +91,7 @@ class Movement(models.Model):
 
     def __str__(self):
         subcatstr = ""
-        if len(self.subcategory.subcategory) > 0:
+        if self.subcategory and len(self.subcategory.subcategory) > 0:
             subcatstr = " | (%s)" % self.subcategory.subcategory
         username = "-"
         if self.user is not None:
