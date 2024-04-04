@@ -4,38 +4,39 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 
 from django.contrib.auth.models import User
 
-from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer
+from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer, AssetBalanceSerializer
 from movimenti.models import AssetBalance, Category, Movement, Subcategory
 
 
-class MovementList(APIView):
+def filterDict(request, accepted_filter_params: list[tuple]):
+    params = request.GET
+    filterdict = {"user": request.user}
+    for (param, column) in accepted_filter_params:
+        val = params.get(param)
+        if val:
+            filterdict[column] = val
+    return filterdict
 
-    def _filterDict(self, request):
-        params = request.GET
-        filterdict = {"user": request.user}
-        accepted_filter_params = [
-            ("datefrom", "date_gte"),
-            ("dateto", "date_lt"),
-            ("description", "description_icontains"),
-            ("category", "category_id"),
-            ("subcategory", "subcategory_id"),
-        ]
-        for (param, column) in accepted_filter_params:
-            val = params.get(param)
-            if val:
-                filterdict[column] = val
-        return filterdict
+    
+class MovementList(APIView):
 
     """
     List all movements, or create a new one.
     """
     def get(self, request):
-        filterdict = self._filterDict(request)
+        accepted_filter_params = [
+            ("datefrom", "date__gte"),
+            ("dateto", "date__lt"),
+            ("description", "description_icontains"),
+            ("category", "category_id"),
+            ("subcategory", "subcategory_id"),
+        ]
+        filterdict = filterDict(request, accepted_filter_params)
             
         movements = Movement.objects.filter(**filterdict)
         params = request.GET
@@ -156,3 +157,26 @@ class SubcategoryDetail(generics.RetrieveAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategorySerializer
 
+
+class AssetBalanceListCreate(generics.ListCreateAPIView):
+    queryset = AssetBalance.objects.all()
+    serializer_class = AssetBalanceSerializer
+
+    def list(self, request, *args, **kwargs):
+        accepted_filter_params = [
+            ("datefrom", "date__gte"),
+            ("dateto", "date__lt"),
+        ]
+        filter = filterDict(request, accepted_filter_params)
+        self.queryset = self.queryset.filter(**filter)
+        return super().list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=[self.request.user])
+
+
+class AssetBalanceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AssetBalance.objects.all()
+    serializer_class = AssetBalanceSerializer
+    permission_classes = [IsOwnerOrDeny]
+    

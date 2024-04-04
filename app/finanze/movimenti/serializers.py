@@ -21,16 +21,13 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id", "category", "direction"]
 
 class AssetBalanceSerializer(serializers.ModelSerializer):
+    submission_id = serializers.CharField(read_only=True)
     class Meta:
         model = AssetBalance
         fields = '__all__'
 
 class MovementSerializer(serializers.ModelSerializer):
     amount = serializers.FloatField(required=False)
-    # category = CategorySerializer(read_only=True)
-    # subcategory = SubcategorySerializer(read_only=True)
-    
-    # user = serializers.ReadOnlyField(source='user.username')
     
     class Meta:
         model = Movement

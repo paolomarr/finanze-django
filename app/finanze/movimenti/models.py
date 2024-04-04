@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Expression
 from django.db.models.functions import Coalesce
+
 from django.utils import timezone
-from datetime import date, datetime
+from datetime import date
+from hashlib import md5
 
 
 class Subcategory(models.Model):
@@ -115,7 +117,7 @@ class Movement(models.Model):
 
 
 class AssetBalanceManager(models.Manager):
-    def balance_to_date(self, user: User, date: date) -> (date, float):
+    def balance_to_date(self, user: User, date: date) -> tuple[date, float]:
         outbalance = 0.0
         refdate = None
         for entry in self.filter(user=user, date__lte=date).order_by("-date"):
@@ -127,7 +129,7 @@ class AssetBalanceManager(models.Manager):
                 outbalance += entry.balance
         return (refdate, outbalance)
 
-    def initial_balance(self, user: User) -> (date, float):
+    def initial_balance(self, user: User) -> tuple[date, float]:
         outbalance = 0.0
         refdate = None
         for entry in self.filter(user=user).order_by("date"):
@@ -150,7 +152,11 @@ class AssetBalance(models.Model):
     balance = models.FloatField()
     notes = models.CharField(blank=True, max_length=256)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-
+    
     def __str__(self):
         return f"[{self.id}] {self.user.get_username()} - {self.date.strftime('%x %X')} | {self.notes} | {self.balance}"
-    
+
+    @property
+    def submission_id(self):
+        timestamp = str(int(self.date.timestamp()))
+        return md5(timestamp.encode()).hexdigest()
