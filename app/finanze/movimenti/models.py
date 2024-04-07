@@ -19,9 +19,11 @@ class Subcategory(models.Model):
 class Category(models.Model):
     INCOME = 1.0
     OUTCOME = -1.0
+    NULL = 0.0
     DIRECTIONS = [
         (INCOME, 'Income'),
-        (OUTCOME, 'Outcome')
+        (OUTCOME, 'Outcome'),
+        (NULL, 'Null')
     ]
     category = models.CharField(max_length=50)
     direction = models.FloatField(choices=DIRECTIONS)

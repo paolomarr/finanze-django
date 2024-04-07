@@ -135,7 +135,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
 
     def list(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(user=request.user)
+        self.queryset = self.queryset.filter(user=request.user) | self.queryset.filter(user__isnull=True)
         return super().list(request, *args, **kwargs)
 
     def perform_create(self, serializer):
