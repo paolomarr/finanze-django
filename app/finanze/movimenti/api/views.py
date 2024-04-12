@@ -157,7 +157,7 @@ class SubcategoryDetail(generics.RetrieveAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategorySerializer
 
-
+# UNUSED. REmove when ready
 class AssetBalanceListCreate(generics.ListCreateAPIView):
     queryset = AssetBalance.objects.all()
     serializer_class = AssetBalanceSerializer
@@ -174,7 +174,7 @@ class AssetBalanceListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         return serializer.save(user=[self.request.user])
 
-
+# UNUSED. REmove when ready
 class AssetBalanceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = AssetBalance.objects.all()
     serializer_class = AssetBalanceSerializer
