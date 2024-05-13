@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.http import Http404
 from django.db.models import Min, Max
 from rest_framework.response import Response
@@ -76,6 +77,13 @@ class MovementList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+
+class BalanceMovementList(generics.ListAPIView):
+    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
+    balance_cat = Category.objects.get(category="BALANCE")
+    queryset = Movement.objects.filter(category=balance_cat)
+    serializer_class = MovementSerializer
+
 
 class MovementDetail(APIView):
     permission_classes = [IsOwnerOrDeny]
