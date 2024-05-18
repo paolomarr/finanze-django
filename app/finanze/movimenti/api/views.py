@@ -81,7 +81,7 @@ class MovementList(APIView):
 class BalanceMovementList(generics.ListAPIView):
     permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
     balance_cat = Category.objects.get(category="BALANCE")
-    queryset = Movement.objects.filter(category=balance_cat)
+    queryset = Movement.objects.filter(category=balance_cat).order_by("-date")
     serializer_class = MovementSerializer
 
 
