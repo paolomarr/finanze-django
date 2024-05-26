@@ -84,6 +84,10 @@ class BalanceMovementList(generics.ListAPIView):
     queryset = Movement.objects.filter(category=balance_cat).order_by("-date")
     serializer_class = MovementSerializer
 
+    def get(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(user=request.user)
+        return self.list(request, *args, **kwargs)
+
 
 class MovementDetail(APIView):
     permission_classes = [IsOwnerOrDeny]
