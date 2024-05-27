@@ -16,7 +16,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rf_views.obtain_auth_token),
     path('balances/', views.BalanceMovementList.as_view()),
-    # path('balance/<int:pk>', views.AssetBalanceRetrieveUpdateDestroy.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

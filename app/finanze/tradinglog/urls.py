@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('updatecurrentprice', views.updateCurrentPrice, name='updatePrice'),
     path('tradingstats', views.tradingStats, name='tradingStats'),
     path('tradinghistory', views.tradingHistory, name='tradingHistory'),
+    path('api/', include('tradinglog.api.urls')),
 ]
