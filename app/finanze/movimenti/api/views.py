@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.http import Http404
 from django.db.models import Min, Max
 from rest_framework.response import Response
@@ -169,26 +168,4 @@ class SubcategoryDetail(generics.RetrieveAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategorySerializer
 
-# UNUSED. REmove when ready
-class AssetBalanceListCreate(generics.ListCreateAPIView):
-    queryset = AssetBalance.objects.all()
-    serializer_class = AssetBalanceSerializer
-
-    def list(self, request, *args, **kwargs):
-        accepted_filter_params = [
-            ("datefrom", "date__gte"),
-            ("dateto", "date__lt"),
-        ]
-        filter = filterDict(request, accepted_filter_params)
-        self.queryset = self.queryset.filter(**filter)
-        return super().list(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        return serializer.save(user=[self.request.user])
-
-# UNUSED. REmove when ready
-class AssetBalanceRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = AssetBalance.objects.all()
-    serializer_class = AssetBalanceSerializer
-    permission_classes = [IsOwnerOrDeny]
     

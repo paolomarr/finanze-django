@@ -86,7 +86,6 @@ class StockQuoteManager(models.Manager):
             stocks = []
             for qstock in Stock.objects.all():
                 stocks.append(qstock)
-        latestQuotes = {}
         for stock in stocks:
             filterdict["stock"] = stock
             latest = self.filter(**filterdict).order_by("-close_timestamp").first()
