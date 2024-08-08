@@ -8,6 +8,17 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
+    def create(self, validated_data):
+        """
+        Create and return a new `Order` instance, given the validated data.
+        """
+        return Order.objects.create(**validated_data)
+
+class OrderOperatioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderOperation
+        fields = '__all__'
 
 class StockSerializer(serializers.ModelSerializer):
     

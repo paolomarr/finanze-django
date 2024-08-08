@@ -13,6 +13,9 @@ class OrderListCreate(generics.ListCreateAPIView):
     
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).order_by("-date")
+
+    def perform_create(self, serializer):
+        return serializer.save(user=[self.request.user])
     
 
 class RetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -46,6 +49,13 @@ class CurrencyList(generics.ListAPIView):
         return Currency.objects.all()
 
 
+class OrderOperationList(generics.ListAPIView):
+    serializer_class = OrderOperationSerializer
+
+    def get_queryset(self):
+        return OrderOperation.objects.all()
+
+    
 class StockQuoteListCreate(generics.ListCreateAPIView):
     serializer_class = StockQuoteSerializer
 
