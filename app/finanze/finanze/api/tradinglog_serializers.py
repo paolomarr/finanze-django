@@ -1,6 +1,5 @@
-from pyexpat import model
 from rest_framework import serializers
-from .models import Order, Stock, OrderOperation, Currency, StockQuote
+from tradinglog.models import Order, Stock, OrderOperation, Currency, StockQuote
 
 class OrderSerializer(serializers.ModelSerializer):
 

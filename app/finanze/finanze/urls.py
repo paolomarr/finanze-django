@@ -30,4 +30,5 @@ urlpatterns = [
     path('password-reset/', auth_views.PasswordChangeView.as_view(), name='password_reset'),
     path('', views.index, name='landing'),
     path('i18n/', include('django.conf.urls.i18n')),
+    path('api/', include('finanze.api.urls')),
 ]

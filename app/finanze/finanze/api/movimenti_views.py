@@ -9,7 +9,7 @@ from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 
 from django.contrib.auth.models import User
 
-from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer, AssetBalanceSerializer
+from finanze.api.movimenti_serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer
 from movimenti.models import AssetBalance, Category, Movement, Subcategory
 
 

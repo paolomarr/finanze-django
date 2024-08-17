@@ -1,12 +1,13 @@
+from requests import post
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser
 from tradinglog.models import Currency, Order, Stock, OrderOperation, StockQuote
-from tradinglog.serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
+from finanze.api.tradinglog_serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
 
+from finanze import logger
 
 class OrderListCreate(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
@@ -14,8 +15,18 @@ class OrderListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).order_by("-date")
 
-    def perform_create(self, serializer):
-        return serializer.save(user=[self.request.user])
+    # def perform_create(self, serializer):
+    #     return serializer.save(user=[self.request.user])
+
+    def post(self, request, *args, **kwargs):
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            logger.debug(f"New order data validated: {request.data}")
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errstr = " - ".join(serializer.errors)
+        logger.error(f"Serialization of new order failed: {errstr}. Data was: {request.data}")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 class RetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
