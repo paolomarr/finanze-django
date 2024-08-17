@@ -1,4 +1,3 @@
-version: "3.9"
 
 x-web-template: &web-template
   build:
@@ -10,7 +9,7 @@ x-web-template: &web-template
   
 
 services:
-  web-dev:
+  web-dev: # deprecated
     <<: *web-template
     volumes:
       - .:/code # override base container code, for live updates
