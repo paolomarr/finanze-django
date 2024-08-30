@@ -87,6 +87,12 @@ else
         error "The .env file has no REACT_APP_API_URL variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
         exit 1
     fi
+    found=`grep REACT_APP_VERSION_INFO ${FE_ENV_FILE}`
+    if [[ -z $found ]]; then
+        info "The .env file has no REACT_APP_VERSION_INFO. Adding it at the end."
+        echo "" >> ${FE_ENV_FILE}
+        echo "REACT_APP_VERSION_INFO=\"${VERSION_INFO}\"" >> $FE_ENV_FILE
+    fi
 fi
 
 
