@@ -48,6 +48,14 @@ services:
       - db
     ports:
       - 127.0.0.1:8003:8000
+    develop:
+      watch: 
+        # sync static content
+        - path: ./app/finanze/finanze
+          action: rebuild
+          # target: /var/www/html
+          # ignore:
+          #   - migrations/
 
   react_frontend:
     build:
@@ -65,8 +73,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
-    profiles:
-      - pg_db
 
 volumes:
   postgres_data:
