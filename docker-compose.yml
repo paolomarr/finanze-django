@@ -3,14 +3,8 @@ x-web-template: &web-template
   build:
     dockerfile: ./Dockerfile_django
   env_file:
-  - path: .env
+  - path: app/finanze/.env
     required: true
-
-  environment:
-    DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE}"
-    RAPIDAPI_KEY: "${RAPIDAPI_KEY}"
-    SECRET_KEY: "${SECRET_KEY}" # to be put in .env file
-  
 
 services:
   web-dev: # deprecated
