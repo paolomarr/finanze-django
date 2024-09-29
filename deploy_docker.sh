@@ -99,4 +99,4 @@ else
 fi
 
 
-docker compose --profile react up -d --build
+docker compose up -d --build

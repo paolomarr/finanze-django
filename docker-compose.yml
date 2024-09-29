@@ -18,7 +18,7 @@ services:
     ports:
       - 127.0.0.1:8001:8000
     
-  web:
+  web: # deprecated
     <<: *web-template
     profiles:
       - production
@@ -27,7 +27,7 @@ services:
     ports:
       - 127.0.0.1:8000:8000
 
-  web-staging:
+  web-staging: # deprecated
     <<: *web-template
     profiles:
       - staging
@@ -39,8 +39,6 @@ services:
   react_backend:
     <<: *web-template
     command: []
-    profiles:
-      - react
     depends_on:
       - db
     ports:
@@ -60,7 +58,7 @@ services:
       tags:
       - $REACT_FRONTEND_TAG
     profiles:
-      - react
+      - frontend
     ports:
       - 127.0.0.1:3300:3000
     env_file:
