@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.authtoken import views as rf_views
+
+from app.finanze.finanze.api.scanreceipt_views import scan_receipt
 from . import movimenti_views, tradinglog_views
 
 urlpatterns = [
@@ -26,6 +28,7 @@ urlpatterns = [
     # authentication
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rf_views.obtain_auth_token),
+    path('scan_receipt', scan_receipt)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
