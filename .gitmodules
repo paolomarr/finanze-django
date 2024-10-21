@@ -1,0 +1,3 @@
+[submodule "app/finanze/receipt_scanner"]
+	path = app/finanze/receipt_scanner
+	url = git@github.com:paolomarr/receipt_scanner.git
