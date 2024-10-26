@@ -1,8 +1,11 @@
+import datetime
+import stat
 from requests import post
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
+from app.finanze.tradinglog.lib import yahoo_finance
 from tradinglog.models import Currency, Order, Stock, OrderOperation, StockQuote
 from finanze.api.tradinglog_serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
@@ -77,8 +80,73 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
             base_queryset = base_queryset.filter(stock=stock)
         return base_queryset
 
+    def get(self, request, *args, **kwargs):
+        if "update" in request.query_params:
+            self._update_current_price(request.query_params.getlist("update"))
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         '''
         User does not actually create a quote but asks for quotes update
         '''
-        pass
+        if "symbols" in request.data:
+            try:
+                results = self._update_current_price(request.data.get("update"))
+                return Response(results, status=status.HTTP_200_OK)
+            except Exception as ex:
+                return Response({"server error": str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response({"invalid input": "missing 'symbols' list"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    def _update_current_price(symbols):
+        results = []
+        for symid in symbols:
+            stock = Stock.objects.get(id=symid)
+            if stock is None:
+                logger.info("No stocks for symbol ID '%s'" % symid)
+                results.append({"symbol": symid, "error": "not found"})
+                continue
+            sym = stock.symbol
+            symdata = yahoo_finance.getLatestQuoteForSymbol(sym)
+            # check for errors
+            if symdata.get('error', None) is not None:
+                # return error
+                results.append({"stock": stock, "error": symdata['error']})
+
+            # update current price
+            rmp = symdata['regular_market_price']
+            rmt = datetime.fromtimestamp(symdata['regular_market_time'])
+            logger.info("[VIEWS][updateCurrentPrice] updating stock {}:\
+    price {} at {}".format(sym, rmp, rmt))
+            stock.regular_market_price = rmp
+            stock.regular_market_time = rmt
+            stock.last_price_update = datetime.now()
+            stock.save()
+            existing_quotes = StockQuote.objects.filter(
+                stock__symbol=sym,
+                close_timestamp__exact=datetime.fromtimestamp(
+                    symdata['close_timestamp']))
+
+            cval = symdata['close_val']
+            ctime = datetime.fromtimestamp(symdata['close_timestamp'])
+            if len(existing_quotes) > 0:
+                # update?
+                logger.info("[VIEWS][updateCurrentPrice] Updating existing quote {}: \
+    closeval {} at {}".format(sym, cval, ctime))
+                existing_quotes.update(
+                    close_val=cval,
+                    close_timestamp=ctime)
+                results.append({"stock": stock, "res": "updated existing"})
+            else:
+                # insert anew
+                logger.info("[VIEWS][updateCurrentPrice] Inserting new quote {}: \
+    closeval {} at {}".format(sym, cval, ctime))
+                newqoute = StockQuote(
+                    stock=stock,
+                    close_val=cval,
+                    close_timestamp=ctime)
+                newqoute.save()
+                results.append({"stock": stock, "res": "inserted new"})
+        logger.debug("[updateCurrentPrice] Results: %s" % str(results))
+        return results
