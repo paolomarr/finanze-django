@@ -39,8 +39,17 @@ function generate_secret_key() {
 }
 
 SCRIPT_ROOT=`cd $(dirname $0); pwd`
-MAIN_ENV_FILE=${SCRIPT_ROOT}/.env
+MAIN_ENV_FILE=${SCRIPT_ROOT}/app/finanze/.env
 FE_ENV_FILE=${SCRIPT_ROOT}/movimenti-fe/.env
+PROFILE=${PROFILE:-production}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -p|--profile)PROFILE="$2"; shift;;
+    *) echo "Unknown argument $1">&2; exit 1;; 
+    esac
+    shift
+done
 
 base_version=`grep "\"version\":" movimenti-fe/package.json| head -n 1 | sed -E 's/[^0-9\.]//g'`
 commit=$(git rev-parse --short HEAD || echo "nvc")
@@ -99,4 +108,4 @@ else
 fi
 
 
-docker compose up -d --build
+docker compose --profile $PROFILE up -d --build

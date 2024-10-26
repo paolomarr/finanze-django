@@ -42,6 +42,7 @@ function  parse_subcommand_opt() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -v) VERBOSE=1;;
+        -c|--container-name)CONTAINER_NAME="$2"; shift;;
         -*) error "Unknown option $1"; usage; exit 1;;
         *) parse_positional "$1";;
     esac
@@ -51,6 +52,11 @@ done
 
 if [[ -n "$VERBOSE" ]]; then
     set -x
+fi
+
+if [[ -n "$CONTAINER_NAME" ]]; then # whatever the command (dump/restore), override both the related names
+    PRODUCTION_CONTAINER_NAME=$CONTAINER_NAME
+    LOCAL_CONTAINER_NAME=$CONTAINER_NAME
 fi
 
 case "$COMMAND" in

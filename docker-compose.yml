@@ -7,34 +7,34 @@ x-web-template: &web-template
     required: true
 
 services:
-  web-dev: # deprecated
-    <<: *web-template
-    volumes:
-      - .:/code # override base container code, for live updates
-    profiles:
-      - local_db
-    environment:
-      DJANGO_SETTINGS_MODULE: finanze.settings.dev
-    ports:
-      - 127.0.0.1:8001:8000
+  # web-dev: # deprecated
+  #   <<: *web-template
+  #   volumes:
+  #     - .:/code # override base container code, for live updates
+  #   profiles:
+  #     - local_db
+  #   environment:
+  #     DJANGO_SETTINGS_MODULE: finanze.settings.dev
+  #   ports:
+  #     - 127.0.0.1:8001:8000
     
-  web: # deprecated
-    <<: *web-template
-    profiles:
-      - production
-    depends_on:
-      - db
-    ports:
-      - 127.0.0.1:8000:8000
+  # web: # deprecated
+  #   <<: *web-template
+  #   profiles:
+  #     - production
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 127.0.0.1:8000:8000
 
-  web-staging: # deprecated
-    <<: *web-template
-    profiles:
-      - staging
-    depends_on:
-      - db
-    ports:
-      - 127.0.0.1:8002:8000
+  # web-staging: # deprecated
+  #   <<: *web-template
+  #   profiles:
+  #     - staging
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 127.0.0.1:8002:8000
 
   react_backend:
     <<: *web-template
@@ -43,6 +43,9 @@ services:
       - db
     ports:
       - 127.0.0.1:8003:8000
+    profiles:
+    - development
+    - production
     develop:
       watch: 
         # sync static content
@@ -59,6 +62,7 @@ services:
       - $REACT_FRONTEND_TAG
     profiles:
       - frontend
+      - production
     ports:
       - 127.0.0.1:3300:3000
     env_file:
@@ -67,6 +71,9 @@ services:
     
   db:
     image: postgres:13
+    profiles:
+    - development
+    - production
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
