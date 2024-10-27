@@ -15,3 +15,4 @@ movimenti-fe/node_modules
 .vscode
 .env*
 .aider*
+.openaikey
