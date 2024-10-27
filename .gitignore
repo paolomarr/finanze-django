@@ -14,3 +14,4 @@ movimenti-fe/build
 movimenti-fe/node_modules
 .vscode
 .env*
+.aider*
