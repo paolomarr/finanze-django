@@ -152,7 +152,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         return serializer.save(user=[self.request.user])
 
-class CategoryDetail(generics.RetrieveAPIView):
+class CategoryDetail(generics.RetrieveUpdateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -164,7 +164,7 @@ class SubcategoryListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         return serializer.save(user=[self.request.user])
 
-class SubcategoryDetail(generics.RetrieveAPIView):
+class SubcategoryDetail(generics.RetrieveUpdateAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategorySerializer
 

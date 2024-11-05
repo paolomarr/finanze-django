@@ -16,9 +16,18 @@ class SubcategorySerializer(serializers.ModelSerializer):
         fields = ["id", "subcategory"]
 
 class CategorySerializer(serializers.ModelSerializer):
+    direction = serializers.FloatField()
+
     class Meta:
         model = Category
         fields = ["id", "category", "direction"]
+        
+    def validate_direction(self, value):
+        try:
+            value = float(value)
+            return value
+        except Exception:
+            raise serializers.ValidationError(f"Invalid 'direction' value: {value}")
 
 class AssetBalanceSerializer(serializers.ModelSerializer):
     submission_id = serializers.CharField(read_only=True)
