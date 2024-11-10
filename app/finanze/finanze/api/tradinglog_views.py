@@ -1,11 +1,11 @@
-import datetime
+from datetime import datetime
 import stat
 from requests import post
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
-from app.finanze.tradinglog.lib import yahoo_finance
+from tradinglog.lib.yahoo_finance import getLatestQuoteForSymbol
 from tradinglog.models import Currency, Order, Stock, OrderOperation, StockQuote
 from finanze.api.tradinglog_serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
@@ -81,8 +81,6 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
         return base_queryset
 
     def get(self, request, *args, **kwargs):
-        if "update" in request.query_params:
-            self._update_current_price(request.query_params.getlist("update"))
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -91,28 +89,33 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
         '''
         if "symbols" in request.data:
             try:
-                results = self._update_current_price(request.data.get("update"))
+                results = self._update_current_price(request.data.get("symbols"))
+
                 return Response(results, status=status.HTTP_200_OK)
             except Exception as ex:
-                return Response({"server error": str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"errors": [f"server error: {str(ex)}"]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            return Response({"invalid input": "missing 'symbols' list"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"errors": ["invalid input: missing 'symbols' list"]}, status=status.HTTP_400_BAD_REQUEST)
         
 
-    def _update_current_price(symbols):
-        results = []
+    def _update_current_price(self, symbols):
+        results = {
+            "stocks": [],
+            "quotes": [],
+            "errors": [],
+        }
         for symid in symbols:
             stock = Stock.objects.get(id=symid)
             if stock is None:
                 logger.info("No stocks for symbol ID '%s'" % symid)
-                results.append({"symbol": symid, "error": "not found"})
+                results.errors.append({"symbol": symid, "error": "not found"})
                 continue
             sym = stock.symbol
-            symdata = yahoo_finance.getLatestQuoteForSymbol(sym)
+            symdata = getLatestQuoteForSymbol(sym)
             # check for errors
             if symdata.get('error', None) is not None:
                 # return error
-                results.append({"stock": stock, "error": symdata['error']})
+                results.errors.append({"stock": stock, "error": symdata['error']})
 
             # update current price
             rmp = symdata['regular_market_price']
@@ -137,7 +140,9 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
                 existing_quotes.update(
                     close_val=cval,
                     close_timestamp=ctime)
-                results.append({"stock": stock, "res": "updated existing"})
+                for quote in existing_quotes:
+                    results["quotes"].append(self.serializer_class(quote).data)
+                results["stocks"].append(StockSerializer(stock).data)
             else:
                 # insert anew
                 logger.info("[VIEWS][updateCurrentPrice] Inserting new quote {}: \
@@ -147,6 +152,7 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
                     close_val=cval,
                     close_timestamp=ctime)
                 newqoute.save()
-                results.append({"stock": stock, "res": "inserted new"})
+                results["quotes"].append(self.serializer_class(newquote).data)
+                results["stocks"].append(StockSerializer(stock).data)
         logger.debug("[updateCurrentPrice] Results: %s" % str(results))
         return results
