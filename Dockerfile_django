@@ -18,4 +18,9 @@ RUN apt-get update && apt-get install -y gettext
 COPY docker-entrypoint.sh ./
 COPY ./app/finanze/ ./app/finanze
 
+WORKDIR /code/app/finanze/receipt_scanner
+RUN pip install -r requirements.txt
+
+WORKDIR /code
+
 ENTRYPOINT [ "./docker-entrypoint.sh" ]
