@@ -49,11 +49,12 @@ services:
     develop:
       watch: 
         # sync static content
-        - path: ./app/finanze/finanze
+        - path: ./app/finanze
           action: rebuild
-          # target: /var/www/html
-          # ignore:
-          #   - migrations/
+          ignore:
+          - templates
+          - manage.py
+          
 
   react_frontend:
     build:
