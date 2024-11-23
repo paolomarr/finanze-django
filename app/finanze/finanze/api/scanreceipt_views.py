@@ -29,6 +29,10 @@ class ScanReceipt(APIView):
                     "date": summary.date,
                     "amount": summary.total_guess()
                 })
+            else:
+                return Response({
+                    "warning": "Could not extract receipt data",
+                })
         except Exception as ex:
             logger.error(f"receipt_scanner.api_scan failed with error: {str(ex)}")
             return Response({"error": "Image scan failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
