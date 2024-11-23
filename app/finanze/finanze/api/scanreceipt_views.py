@@ -27,7 +27,7 @@ class ScanReceipt(APIView):
                 return Response({
                     "description": summary.vendor,
                     "date": summary.date,
-                    "amount": summary.total_guess()
+                    "abs_amount": summary.total_guess()
                 })
             else:
                 return Response({
