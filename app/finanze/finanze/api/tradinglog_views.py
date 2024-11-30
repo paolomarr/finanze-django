@@ -135,8 +135,7 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
             ctime = datetime.fromtimestamp(symdata['close_timestamp'])
             if len(existing_quotes) > 0:
                 # update?
-                logger.info("[VIEWS][updateCurrentPrice] Updating existing quote {}: \
-    closeval {} at {}".format(sym, cval, ctime))
+                logger.info(f"[VIEWS][updateCurrentPrice] Updating existing quote {sym}: closeval {cval} at {ctime}")
                 existing_quotes.update(
                     close_val=cval,
                     close_timestamp=ctime)
@@ -145,13 +144,12 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
                 results["stocks"].append(StockSerializer(stock).data)
             else:
                 # insert anew
-                logger.info("[VIEWS][updateCurrentPrice] Inserting new quote {}: \
-    closeval {} at {}".format(sym, cval, ctime))
-                newqoute = StockQuote(
+                logger.info(f"[VIEWS][updateCurrentPrice] Inserting new quote {sym}: closeval {cval} at {ctime}")
+                newquote = StockQuote(
                     stock=stock,
                     close_val=cval,
                     close_timestamp=ctime)
-                newqoute.save()
+                newquote.save()
                 results["quotes"].append(self.serializer_class(newquote).data)
                 results["stocks"].append(StockSerializer(stock).data)
         logger.debug("[updateCurrentPrice] Results: %s" % str(results))
