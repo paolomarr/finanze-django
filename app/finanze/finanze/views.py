@@ -1,18 +1,45 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import JsonResponse
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user
 import re
 from . import logger
+from base64 import b64decode
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from receipt_scanner.api import api_scan
+from receipt_scanner.ocr_space import ReceiptSummary
+import io
 
-def index(request):
-    if request.user.is_authenticated:
-        return render(request,
-                      'landing.html')
-    else:
-        return redirect('/login/')
+
+class ScanReceipt(APIView):
+
+    def post(self, request):
+        # the body is actually the whole image, b64-encoded
+        b64image = request.data.get("base64image")
+        if not b64image:
+            return Response({
+                "error": "Invalid input"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        img_bytes = b64decode(b64image)
+        try:
+            img_buf = io.BytesIO(img_bytes)
+            restext = api_scan(img_buf)
+            summary = ReceiptSummary.fromOCRSpaceJsonResponse(restext)
+            if summary.total_guess() != ReceiptSummary.TOTAL_GUESS_NOT_AVALABLE_STRING:
+                return Response({
+                    "description": summary.vendor,
+                    "date": summary.date,
+                    "abs_amount": summary.total_guess()
+                })
+            else:
+                return Response({
+                    "warning": "Could not extract receipt data",
+                })
+        except Exception as ex:
+            logger.error(f"receipt_scanner.api_scan failed with error: {str(ex)}")
+            return Response({"error": "Image scan failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @login_required
@@ -61,22 +88,3 @@ def update_parameters(request) -> tuple:
             user.__setattr__(ap, param)
             user.save()
             return None
-
-
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        if request.path.find('password-change') > 0:
-            changed = change_password(request)
-            if changed is None:
-                return JsonResponse({})
-            else:
-                return JsonResponse({"error": [changed]})
-        else: # other non-password parameters
-            updated = update_parameters(request)
-            if updated is None:
-                return JsonResponse({})
-            else:
-                return JsonResponse({"error": {updated[0]: updated[1]}})
-    else:
-        return render(request, 'profile.html')

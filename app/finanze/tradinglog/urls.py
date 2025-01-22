@@ -1,13 +1,14 @@
-from django.urls import path, include
+from django.urls import path
 
 from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('orders', views.orders, name='orders'),
-    path('orders/new', views.neworder, name='neworder'),
-    path('updatecurrentprice', views.updateCurrentPrice, name='updatePrice'),
-    path('tradingstats', views.tradingStats, name='tradingStats'),
-    path('tradinghistory', views.tradingHistory, name='tradingHistory'),
+    path('orders/', views.OrderList.as_view()),
+    path('orders/<int:pk>', views.OrderDetail.as_view()),
+    path('stocks/', views.StocksList.as_view()),
+    path('stocks/<int:pk>', views.StocksDetail.as_view()),
+    path('quotes/', views.StockQuoteListCreate.as_view()),
+    path('operations/', views.OrderOperationList.as_view()),
+    path('currencies/', views.CurrencyList.as_view()),
 ]

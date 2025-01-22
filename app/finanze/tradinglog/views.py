@@ -12,7 +12,7 @@ from finanze.permissions import IsOwnerOrDeny
 
 from finanze import logger
 
-class OrderListCreate(generics.ListCreateAPIView):
+class OrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     
     def get_queryset(self):
@@ -32,22 +32,25 @@ class OrderListCreate(generics.ListCreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-class RetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAdminUser|IsOwnerOrDeny]
+    
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).order_by("-date")
 
 
-class StocksListCreate(generics.ListCreateAPIView):
+class StocksList(generics.ListCreateAPIView):
     serializer_class = StockSerializer
 
     def get_queryset(self):
         return Stock.objects.all()
     
 
-class StocksRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAdminUser|IsOwnerOrDeny]
+class StocksDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
     serializer_class = StockSerializer
-
+    queryset = Stock.objects.all()
 
 class OrderOperationList(generics.ListAPIView):
     serializer_class = OrderOperationSerializer
