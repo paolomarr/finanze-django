@@ -3,18 +3,14 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('movement/<int:id>', views.movement, name='movement'),
-    path('movement/delete', views.deleteMovement, name='movement'),
-    path('list', views.list, name='list'),
-    path('new', views.newmovement, name='newmovement'),
-    path('summary', views.summary, name='summary'),
-    path('assets', views.assets, name='assets'),
-    path('assets/json', views.assets, name='assetsxhr'),
-    path('categories', views.categories, name='categories'),
-    path('categories/new', views.newcategory, name='categories.new'),
-    path('summary/json', views.summaryXHR, name='summaryxhjson'),
-    path('summary/fetch', views.summaryXHR, name='summaryxhr'),
-    path('timeseries', views.time_series, name='time_series'),
-    path('timeseries/json', views.time_series, name='time_series_xhr'),
+    path('', views.MovementList.as_view()),
+    path('<int:pk>', views.MovementDetail.as_view()),
+    path('users/', views.UserList.as_view()),
+    path('user/', views.LoggedInUserDetail.as_view()),
+    path('users/<int:pk>/', views.UserDetail.as_view()),
+    path('categories/', views.CategoryListCreate.as_view()),
+    path('categories/<int:pk>', views.CategoryDetail.as_view()),
+    path('subcategories/', views.SubcategoryListCreate.as_view()),
+    path('subcategories/<int:pk>', views.SubcategoryDetail.as_view()),
+    path('balances/', views.BalanceMovementList.as_view()),
 ]

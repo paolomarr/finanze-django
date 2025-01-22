@@ -87,7 +87,10 @@ else
 fi
 if [[ ! -f $FE_ENV_FILE ]]; then
     info "Generating .env file for REACT runtime environment variables" >&2
-    echo 'REACT_APP_API_URL="http://localhost:8003/api/"' >> $FE_ENV_FILE
+    echo 'BACKEND_API_MOVEMENTS_URL="http://localhost:8003/movements"' > $FE_ENV_FILE
+    echo 'BACKEND_API_TRADINGLOG_URL="http://localhost:8003/tradinglog"' > $FE_ENV_FILE
+    echo 'BACKEND_API_TOKENAUTH_URL="http://localhost:8003/api-token-auth"' > $FE_ENV_FILE
+    echo 'BACKEND_API_SCANRECEIPT_URL="http://localhost:8003/scan-receipt"' > $FE_ENV_FILE
     echo "REACT_APP_VERSION_INFO=\"${VERSION_INFO}\"" >> $FE_ENV_FILE
 else
     info "$FE_ENV_FILE file found"

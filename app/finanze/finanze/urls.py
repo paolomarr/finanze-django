@@ -17,25 +17,23 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 from django.contrib.auth import views as auth_views
+from rest_framework.authtoken import views as rf_views
 
 urlpatterns = [
     # path('tradinglog/', include('tradinglog.urls')),
     # path('movimenti/', include('movimenti.urls')),
     path('admin/', admin.site.urls),
-    path('profile/', views.profile, name='profile'),
-    path('profile/password-change', views.profile, name='password_change'),
     # path('accounts/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password-reset/', auth_views.PasswordChangeView.as_view(), name='password_reset'),
-    path('', views.index, name='landing'),
     path('i18n/', include('django.conf.urls.i18n')),
     # authentication
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rf_views.obtain_auth_token),
     # scan-receipt
-    path('scan-receipt', scanreceipt_views.ScanReceipt.as_view()),
+    path('scan-receipt', views.ScanReceipt.as_view()),
     # API
-    path('api/movements', include('movimenti.urls')),
-    path('api/tradinglog', include('traginglog.urls')),
+    path('movements/', include('movimenti.urls')),
+    path('tradinglog/', include('tradinglog.urls')),
 ]
