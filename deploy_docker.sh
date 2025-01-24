@@ -87,18 +87,17 @@ else
 fi
 if [[ ! -f $FE_ENV_FILE ]]; then
     info "Generating .env file for REACT runtime environment variables" >&2
-    echo 'BACKEND_API_MOVEMENTS_URL="http://localhost:8003/movements"' > $FE_ENV_FILE
-    echo 'BACKEND_API_TRADINGLOG_URL="http://localhost:8003/tradinglog"' > $FE_ENV_FILE
-    echo 'BACKEND_API_TOKENAUTH_URL="http://localhost:8003/api-token-auth"' > $FE_ENV_FILE
-    echo 'BACKEND_API_SCANRECEIPT_URL="http://localhost:8003/scan-receipt"' > $FE_ENV_FILE
+    echo 'BACKEND_API_BASE="http://localhost:8003"' >> $FE_ENV_FILE
     echo "REACT_APP_VERSION_INFO=\"${VERSION_INFO}\"" >> $FE_ENV_FILE
 else
     info "$FE_ENV_FILE file found"
-    found=`grep REACT_APP_API_URL ${FE_ENV_FILE}`
+    found=`grep BACKEND_API_BASE ${FE_ENV_FILE}`
     if [[ -z $found ]]; then
-        error "The .env file has no REACT_APP_API_URL variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
-        exit 1
+            error "The .env file has no ${path_var_string} variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
+            exit 1
+        fi
     fi
+    done
     found=`grep REACT_APP_VERSION_INFO ${FE_ENV_FILE} | cut -d "=" -f 2`
     if [[ -z $found ]]; then
         info "The .env file has no REACT_APP_VERSION_INFO. Adding it at the end."
