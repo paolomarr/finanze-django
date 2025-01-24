@@ -1,11 +1,2 @@
-django
-gunicorn
-django_bootstrap5
-libsass
-django-compressor
-django-sass-processor
-requests
+-r .requirements.common.txt
 psycopg2-binary==2.9.3
-whitenoise
-djangorestframework
-django-cors-headers

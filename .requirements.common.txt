@@ -1,0 +1,8 @@
+django
+requests
+djangorestframework
+django-cors-headers
+# django_bootstrap5
+# libsass
+# django-compressor
+django-sass-processor
