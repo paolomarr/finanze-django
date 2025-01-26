@@ -17,7 +17,25 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 from django.contrib.auth import views as auth_views
+from django.urls import re_path
+from rest_framework import permissions
 from rest_framework.authtoken import views as rf_views
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+api_info = openapi.Info(
+    title="Finanze API",
+    default_version='v1',
+    description="Handle your financial movements and trading operations",
+    #   terms_of_service="https://www.google.com/policies/terms/",
+    contact=openapi.Contact(email="paolo.marcehtti.it@gmail.com"),
+    license=openapi.License(name="BSD License"),
+)
+   
+schema_view = get_schema_view(
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     # path('tradinglog/', include('tradinglog.urls')),
@@ -40,4 +58,6 @@ urlpatterns = [
     # API
     path('movements/', include('movimenti.urls')),
     path('tradinglog/', include('tradinglog.urls')),
+    re_path(r'^playground/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^docs/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc')
 ]

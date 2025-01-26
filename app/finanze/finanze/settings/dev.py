@@ -14,6 +14,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+INSTALLED_APPS += [
+    'drf_yasg',
+]
+SWAGGER_SETTINGS = {
+   'DEFAULT_INFO': 'finanze.urls.api_info',
+}
 LOGGING['loggers']['tradinglog']['level'] = 'DEBUG'
 LOGGING['loggers']['movimenti']['level'] = 'DEBUG'
 LOGGING['loggers']['finanze']['level'] = 'DEBUG'
