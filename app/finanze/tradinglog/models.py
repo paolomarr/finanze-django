@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum, ExpressionWrapper, F, FloatField
 from datetime import datetime, timedelta
 
 TAX_RATE = 0.26

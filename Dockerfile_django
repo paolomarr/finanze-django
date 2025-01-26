@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install dependencies
-COPY ./requirements.txt .
+COPY ./requirements.txt ./.requirements.common.txt ./
 RUN pip install -r requirements.txt
 RUN apt-get update && apt-get install -y gettext
 

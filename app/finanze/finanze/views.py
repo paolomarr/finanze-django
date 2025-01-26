@@ -8,8 +8,13 @@ from base64 import b64decode
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
 from receipt_scanner.api import api_scan
 from receipt_scanner.ocr_space import ReceiptSummary
+from rest_framework.permissions import IsAdminUser
+from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
+from finanze.serializers import UserSerializer
+
 import io
 
 
@@ -88,3 +93,24 @@ def update_parameters(request) -> tuple:
             user.__setattr__(ap, param)
             user.save()
             return None
+
+class UserList(generics.ListAPIView):
+    permission_classes = [IsAdminUser]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class LoggedInUserDetail(UserList):
+    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
+    
+    def get(self, request, *args, **kwargs):
+        self.queryset = self.queryset.filter(id=request.user.id)
+        return super().get(request, *args, **kwargs)
+
+

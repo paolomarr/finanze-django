@@ -9,7 +9,7 @@ from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 
 from django.contrib.auth.models import User
 
-from finanze.api.movimenti_serializers import CategorySerializer, MovementSerializer, SubcategorySerializer, UserSerializer
+from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer
 from movimenti.models import AssetBalance, Category, Movement, Subcategory
 
 
@@ -119,26 +119,6 @@ class MovementDetail(APIView):
         movement = self.get_object(pk)
         movement.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class UserList(generics.ListAPIView):
-    permission_classes = [IsAdminUser]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class LoggedInUserDetail(UserList):
-    permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
-    
-    def get(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(id=request.user.id)
-        return super().get(request, *args, **kwargs)
 
 
 class CategoryListCreate(generics.ListCreateAPIView):

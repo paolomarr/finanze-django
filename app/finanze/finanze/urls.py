@@ -31,6 +31,10 @@ urlpatterns = [
     # authentication
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', rf_views.obtain_auth_token),
+    # user
+    path('users/', views.UserList.as_view()),
+    path('user/', views.LoggedInUserDetail.as_view()),
+    path('users/<int:pk>/', views.UserDetail.as_view()),
     # scan-receipt
     path('scan-receipt', views.ScanReceipt.as_view()),
     # API

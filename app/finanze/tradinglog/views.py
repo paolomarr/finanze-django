@@ -1,13 +1,11 @@
 from datetime import datetime
-import stat
-from requests import post
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from tradinglog.lib.yahoo_finance import getLatestQuoteForSymbol
 from tradinglog.models import Currency, Order, Stock, OrderOperation, StockQuote
-from finanze.api.tradinglog_serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
+from tradinglog.serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
 
 from finanze import logger
