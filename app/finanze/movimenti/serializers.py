@@ -2,13 +2,6 @@ from rest_framework import serializers
 from movimenti.models import Movement, Category, Subcategory, AssetBalance
 from django.contrib.auth.models import User
 
-class UserSerializer(serializers.ModelSerializer):
-    category_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Category.objects.all())
-    subcategory_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Subcategory.objects.all())
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined', 'category_set', 'subcategory_set']
 
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
