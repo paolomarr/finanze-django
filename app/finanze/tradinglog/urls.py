@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views as tradinglog_views
 
 
 urlpatterns = [

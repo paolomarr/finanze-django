@@ -1,6 +1,6 @@
 from django.urls import include, path
 
-from . import views
+from . import views as movimenti_views
 
 urlpatterns = [
     path('movements/', views.MovementList.as_view()),
