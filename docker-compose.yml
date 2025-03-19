@@ -37,7 +37,11 @@ services:
   #     - 127.0.0.1:8002:8000
 
   react_backend:
-    <<: *web-template
+    build:
+      dockerfile: ./Dockerfile_django
+    env_file:
+    - path: app/finanze/.env
+      required: true
     command: []
     depends_on:
       - db
