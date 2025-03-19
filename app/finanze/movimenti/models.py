@@ -120,6 +120,9 @@ class Movement(models.Model):
 
 class AssetBalanceManager(models.Manager):
     def balance_to_date(self, user: User, date: date) -> tuple[date, float]:
+        '''
+        Look for the date of the latest balance records that have been recorded before the reference date and sum all the records submitted in such a date
+        '''
         outbalance = 0.0
         refdate = None
         for entry in self.filter(user=user, date__lte=date).order_by("-date"):
