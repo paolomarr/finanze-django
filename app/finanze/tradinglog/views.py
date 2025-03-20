@@ -10,7 +10,7 @@ from finanze.permissions import IsOwnerOrDeny
 
 from finanze import logger
 
-class OrderList(generics.ListCreateAPIView):
+class OrderListCreate(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     
     def get_queryset(self):
@@ -38,7 +38,7 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
         return Order.objects.filter(user=self.request.user).order_by("-date")
 
 
-class StocksList(generics.ListCreateAPIView):
+class StocksListCreate(generics.ListCreateAPIView):
     serializer_class = StockSerializer
 
     def get_queryset(self):
