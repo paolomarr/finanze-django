@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
@@ -62,11 +62,34 @@ class MovementList(APIView):
 
         aggregates = movements.aggregate(minDate=Min("date"), maxDate=Max("date"))
 
-        baseline = AssetBalance.objects.balance_to_date(user=request.user, date=aggregates["minDate"])
-        
-
         serializer = MovementSerializer(movements, many=True)
-        return Response({"movements": serializer.data, "baseline": baseline, "minDate": aggregates.get("minDate"), "maxDate": aggregates.get("maxDate")})
+
+        filtered = {
+            "count": len(serializer.data),
+            "movements": serializer.data,
+            "minDate": aggregates.get("minDate"), 
+            "maxDate": aggregates.get("maxDate")
+        }
+        previous = {}
+        if filterdict.get("date__gte"):
+            previous_movements_query = Movement.objects.filter(user=request.user, date__lte=filterdict.get("date__gte"))
+            aggregates = previous_movements_query.aggregate(minDate=Min("date"), maxDate=Max("date"), count=Count("id"))
+            baseline = AssetBalance.objects.balance_to_date(user=request.user, date=aggregates["maxDate"])
+            
+            previous = {
+                "count": aggregates.get("count"),
+                "minDate": aggregates.get("minDate"), 
+                "maxDate": aggregates.get("maxDate"),
+                "balance": {
+                    "date": baseline[0],
+                    "value": baseline[1],
+                }
+            }
+
+        return Response({
+            "filtered": filtered,
+            "previous": previous,
+            })
 
     def post(self, request):
         # this will require proper CSRF handling
