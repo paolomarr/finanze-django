@@ -37,7 +37,13 @@ class MovementList(APIView):
             ("subcategory", "subcategory_id"),
         ]
         filterdict = filterDict(request, accepted_filter_params)
-            
+
+        # overall, all-time stats
+        alltime = {
+            "count": Movement.objects.count(),
+            "minDate": Movement.objects.all().aggregate(minDate=Min("date"))["minDate"],
+            "maxDate": Movement.objects.all().aggregate(maxDate=Max("date"))["maxDate"],
+        } 
         movements = Movement.objects.filter(**filterdict)
         params = request.GET
         sort_field = params.get("sort_field", "-date")
@@ -70,7 +76,9 @@ class MovementList(APIView):
             "minDate": aggregates.get("minDate"), 
             "maxDate": aggregates.get("maxDate")
         }
-        previous = {}
+        previous = {
+            "count": 0,
+        }
         if filterdict.get("date__gte"):
             previous_movements_query = Movement.objects.filter(user=request.user, date__lte=filterdict.get("date__gte"))
             aggregates = previous_movements_query.aggregate(minDate=Min("date"), maxDate=Max("date"), count=Count("id"))
@@ -89,6 +97,7 @@ class MovementList(APIView):
         return Response({
             "filtered": filtered,
             "previous": previous,
+            "alltime": alltime,
             })
 
     def post(self, request):
