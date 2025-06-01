@@ -82,6 +82,21 @@ class MovementManager(models.Manager):
             amount += movement.amount
         return amount
 
+    def balance_to_date(self, user: User, date: date) -> tuple[date, float]:
+        '''
+        Look for the date of the latest balance records that have been recorded before the reference date and sum all the records submitted in such a date
+        '''
+        outbalance = 0.0
+        refdate = None
+        balance_cat = Category.objects.get(category="BALANCE")
+        for entry in self.filter(user=user, date__lte=date, category_id=balance_cat.id).order_by("-date"):
+            if not refdate:
+                refdate = entry.date
+            elif entry.date != refdate:
+                break
+            else:
+                outbalance += entry.amount
+        return (refdate, outbalance)
 
 class Movement(models.Model):
     objects = MovementManager()
