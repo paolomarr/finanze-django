@@ -82,7 +82,7 @@ class MovementList(APIView):
         if filterdict.get("date__gte"):
             previous_movements_query = Movement.objects.filter(user=request.user, date__lte=filterdict.get("date__gte"))
             aggregates = previous_movements_query.aggregate(minDate=Min("date"), maxDate=Max("date"), count=Count("id"))
-            baseline = AssetBalance.objects.balance_to_date(user=request.user, date=aggregates["maxDate"])
+            baseline = Movement.objects.balance_to_date(user=request.user, date=aggregates["maxDate"])
             
             previous = {
                 "count": aggregates.get("count"),
