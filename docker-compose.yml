@@ -1,40 +1,12 @@
 
-x-web-template: &web-template
-  build:
-    dockerfile: ./Dockerfile_django
-  env_file:
-  - path: app/finanze/.env
-    required: true
+# x-web-template: &web-template
+#   build:
+#     dockerfile: ./Dockerfile_django
+#   env_file:
+#   - path: app/finanze/.env
+#     required: true
 
 services:
-  # web-dev: # deprecated
-  #   <<: *web-template
-  #   volumes:
-  #     - .:/code # override base container code, for live updates
-  #   profiles:
-  #     - local_db
-  #   environment:
-  #     DJANGO_SETTINGS_MODULE: finanze.settings.dev
-  #   ports:
-  #     - 127.0.0.1:8001:8000
-    
-  # web: # deprecated
-  #   <<: *web-template
-  #   profiles:
-  #     - production
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - 127.0.0.1:8000:8000
-
-  # web-staging: # deprecated
-  #   <<: *web-template
-  #   profiles:
-  #     - staging
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - 127.0.0.1:8002:8000
 
   react_backend:
     build:
