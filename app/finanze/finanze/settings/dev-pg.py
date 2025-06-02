@@ -1,4 +1,3 @@
-# import django_heroku
 from .default import *
 
 DEBUG = True

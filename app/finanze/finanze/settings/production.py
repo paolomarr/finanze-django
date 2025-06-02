@@ -1,8 +1,5 @@
-# import django_heroku
 from .default import *
 import os
-import re
-from urllib.parse import urlparse
 
 DEBUG = False
 
@@ -30,10 +27,6 @@ DATABASES = {
         'PASSWORD': dbpass,
     }
 }
-
-MIDDLEWARE += [
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-]
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
