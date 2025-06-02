@@ -93,9 +93,8 @@ else
     info "$FE_ENV_FILE file found"
     found=`grep REACT_APP_BACKEND_API_BASE ${FE_ENV_FILE}`
     if [[ -z $found ]]; then
-            error "The .env file has no REACT_APP_BACKEND_API_BASE variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
-            exit 1
-        fi
+        error "The .env file has no REACT_APP_BACKEND_API_BASE variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
+        exit 1
     fi
     found=`grep REACT_APP_VERSION_INFO ${FE_ENV_FILE} | cut -d "=" -f 2`
     if [[ -z $found ]]; then
