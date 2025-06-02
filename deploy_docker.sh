@@ -87,13 +87,13 @@ else
 fi
 if [[ ! -f $FE_ENV_FILE ]]; then
     info "Generating .env file for REACT runtime environment variables" >&2
-    echo 'BACKEND_API_BASE="http://localhost:8003"' >> $FE_ENV_FILE
+    echo 'REACT_APP_BACKEND_API_BASE="http://localhost:8003"' >> $FE_ENV_FILE
     echo "REACT_APP_VERSION_INFO=\"${VERSION_INFO}\"" >> $FE_ENV_FILE
 else
     info "$FE_ENV_FILE file found"
-    found=`grep BACKEND_API_BASE ${FE_ENV_FILE}`
+    found=`grep REACT_APP_BACKEND_API_BASE ${FE_ENV_FILE}`
     if [[ -z $found ]]; then
-            error "The .env file has no BACKEND_API_BASE variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
+            error "The .env file has no REACT_APP_BACKEND_API_BASE variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
             exit 1
         fi
     fi
