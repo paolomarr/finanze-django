@@ -67,7 +67,7 @@ case "$COMMAND" in
         docker exec -it $PRODUCTION_CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
         docker cp $PRODUCTION_CONTAINER_NAME:$OUTPUT $OUTPUT
 
-        echo $OUTPUT >&2
+        echo $OUTPUT
         ;;
     restore)
         [[ -f $DUMP_FILE ]] || {
