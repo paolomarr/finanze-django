@@ -97,7 +97,6 @@ else
             exit 1
         fi
     fi
-    done
     found=`grep REACT_APP_VERSION_INFO ${FE_ENV_FILE} | cut -d "=" -f 2`
     if [[ -z $found ]]; then
         info "The .env file has no REACT_APP_VERSION_INFO. Adding it at the end."
