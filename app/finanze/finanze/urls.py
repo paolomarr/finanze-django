@@ -28,9 +28,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('password-reset/', auth_views.PasswordChangeView.as_view(), name='password_reset'),
     path('i18n/', include('django.conf.urls.i18n')),
-    # authentication
-    path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', rf_views.obtain_auth_token),
     # user
     path('users/', views.UserList.as_view()),
     path('user/', views.LoggedInUserDetail.as_view()),
@@ -38,6 +35,10 @@ urlpatterns = [
     # scan-receipt
     path('scan-receipt', views.ScanReceipt.as_view()),
     # API
-    path('movements/', include('movimenti.urls')),
-    path('tradinglog/', include('tradinglog.urls')),
+    ## authentication
+    path('api/api-auth/', include('rest_framework.urls')),
+    path('api/api-token-auth/', rf_views.obtain_auth_token),
+    # endpoints
+    path('api/movements/', include('movimenti.urls')),
+    path('api/tradinglog/', include('tradinglog.urls')),
 ]
