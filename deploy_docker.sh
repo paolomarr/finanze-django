@@ -93,7 +93,7 @@ else
     info "$FE_ENV_FILE file found"
     found=`grep BACKEND_API_BASE ${FE_ENV_FILE}`
     if [[ -z $found ]]; then
-            error "The .env file has no ${path_var_string} variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
+            error "The .env file has no BACKEND_API_BASE variable defined. This is required, please edit the $FE_ENV_FILE file and add it."
             exit 1
         fi
     fi
