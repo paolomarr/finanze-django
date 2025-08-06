@@ -1,5 +1,6 @@
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import fetchTradinglog from "../queries/fetchTradinglog";
+import fetchHistoricalCountervalue from "../queries/fetchHistoricalCountervalue";
 import { useNavigate } from "react-router-dom";
 import LoadingDiv from "./LoadingDiv";
 import { format, format_currency } from "../_lib/format_locale";
@@ -17,6 +18,30 @@ import Col from 'react-bootstrap/Col';
 import { useRef, useState } from "react";
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    TimeScale,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-date-fns';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    TimeScale
+);
 
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
     if(error.message === "forbidden"){
@@ -26,6 +51,86 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
     } else{ 
         return failureCount-1;
     }
+};
+
+const TradingHistoryChart = ({ historicalData }) => {
+    const { i18n } = useLingui();
+    
+    if (!historicalData || historicalData.length === 0) {
+        return <div className="text-center text-muted p-4">
+            <Trans>No historical data available</Trans>
+        </div>;
+    }
+
+    const chartData = {
+        datasets: [
+            {
+                label: t`Portfolio Value`,
+                data: historicalData.map(point => ({
+                    x: new Date(point.date),
+                    y: point.countervalue
+                })),
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+            },
+        ],
+    };
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: t`Portfolio Value Over Time`,
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return `${context.dataset.label}: ${format_currency(context.parsed.y)}`;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day',
+                    displayFormats: {
+                        day: 'MMM dd'
+                    }
+                },
+                title: {
+                    display: true,
+                    text: t`Date`
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: t`Value (€)`
+                },
+                ticks: {
+                    callback: function(value) {
+                        return format_currency(value);
+                    }
+                }
+            },
+        },
+    };
+
+    return <Card className="shadow-lg">
+        <Card.Body>
+            <Card.Title>
+                <Trans>Portfolio History</Trans>
+            </Card.Title>
+            <Line data={chartData} options={options} />
+        </Card.Body>
+    </Card>;
 };
 const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
     const [errors] = useState(null);
@@ -380,12 +485,20 @@ const Trading = () => {
     const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
     const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
-    const [stockQuery, orderQuery, quotesQuery, operationsQuery] = useQueries({
+    const [stockQuery, orderQuery, quotesQuery, operationsQuery, historicalQuery] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
             {queryKey: ["orders"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
             {queryKey: ["quotes"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
             {queryKey: ["operations"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
+            {
+                queryKey: ["historical-countervalue", { 
+                    fromDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year ago
+                    toDate: new Date().toISOString().split('T')[0] 
+                }], 
+                queryFn: fetchHistoricalCountervalue, 
+                retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)
+            },
         ]
     });
     const [editOrder, setEditOrder] = useState(null);
@@ -453,10 +566,10 @@ const Trading = () => {
         }
         setEditOrder(order);
     };
-    if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operationsQuery.isLoading){
+    if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operationsQuery.isLoading || historicalQuery.isLoading){
         return <LoadingDiv />
     }
-    if(stockQuery.isError || orderQuery.isError || quotesQuery.isError || operationsQuery.isError){
+    if(stockQuery.isError || orderQuery.isError || quotesQuery.isError || operationsQuery.isError || historicalQuery.isError){
         return <div>Error</div>
     }
     return <div className="container-sm">
@@ -485,6 +598,11 @@ const Trading = () => {
                     operations={operationsQuery.data}
                     update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
                     />
+            </div>
+        </div>
+        <div className="row justify-content-center">
+            <div className="col-md-8">
+                <TradingHistoryChart historicalData={historicalQuery.data} />
             </div>
         </div>
         <div className="row justify-content-center">
