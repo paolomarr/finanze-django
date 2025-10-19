@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # DEFAULTS
-PRODUCTION_CONTAINER_NAME=${PRODUCTION_CONTAINER_NAME:-finanze-django-db-1}
-LOCAL_CONTAINER_NAME=${LOCAL_CONTAINER_NAME:-finanzeapp-db-1}
+PRODUCTION_CONTAINER_NAME=finanze-django-db-1
+LOCAL_CONTAINER_NAME=finanzeapp-db-1
 
 function usage() {
     cat << EOF

@@ -1,16 +1,10 @@
-
-# x-web-template: &web-template
-#   build:
-#     dockerfile: ./Dockerfile_django
-#   env_file:
-#   - path: app/finanze/.env
-#     required: true
-
 services:
 
-  react_backend:
+  backend:
     build:
       dockerfile: ./Dockerfile_django
+      args:
+        - REQUIREMENTS_TXT # defined only if set from .env
     env_file:
     - path: app/finanze/.env
       required: true
@@ -19,9 +13,6 @@ services:
       - db
     ports:
       - 127.0.0.1:8003:8000
-    profiles:
-    - development
-    - production
     develop:
       watch: 
         # sync static content
@@ -30,27 +21,9 @@ services:
           ignore:
           - templates
           - manage.py
-          
-
-  react_frontend:
-    build:
-      dockerfile: ./Dockerfile_react
-      tags:
-      - $REACT_FRONTEND_TAG
-    profiles:
-      - frontend
-      - production
-    ports:
-      - 127.0.0.1:3300:3000
-    env_file:
-      - path: movimenti-fe/.env
-        required: true
     
   db:
     image: postgres:13
-    profiles:
-    - development
-    - production
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
