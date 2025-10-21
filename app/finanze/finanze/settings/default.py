@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-
+    'voice_movements',
 ]
 
 MIDDLEWARE = [
@@ -208,3 +208,6 @@ LOGOUT_REDIRECT_URL = "/login"
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, "translations")
 ]
+
+# OpenAI Configuration
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')

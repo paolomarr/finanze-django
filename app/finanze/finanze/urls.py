@@ -41,4 +41,5 @@ urlpatterns = [
     # endpoints
     path('api/movements/', include('movimenti.urls')),
     path('api/tradinglog/', include('tradinglog.urls')),
+    path('api/voice/', include('voice_movements.urls')),
 ]
