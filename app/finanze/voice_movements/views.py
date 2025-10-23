@@ -11,23 +11,24 @@ import json
 from datetime import datetime, timedelta
 from typing import Dict, Any
 import os
-import logging
+from io import BytesIO
+from . import logger
 
 # Import your existing models
 from movimenti.models import Movement, Category
 
 from django.conf import settings
 
-class VoiceMovementView(View):
-    """
-    Django view to handle voice recording uploads and convert to Movement
-    """
-    
-    @method_decorator(login_required)
-    @method_decorator(csrf_exempt)  # If using token auth, otherwise remove
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-    
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+
+
+class VoiceMovementView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         """
         POST /api/voice-movement/
@@ -37,17 +38,17 @@ class VoiceMovementView(View):
             # Get audio file from request
             audio_file = request.FILES.get('audio')
             if not audio_file:
-                return JsonResponse({
+                return Response({
                     'success': False,
                     'error': 'No audio file provided'
-                }, status=400)
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Validate file type
             if not self._is_valid_audio(audio_file):
-                return JsonResponse({
+                return Response({
                     'success': False,
                     'error': 'Invalid audio format. Supported: mp3, wav, m4a, webm'
-                }, status=400)
+                }, status=status.HTTP_400_BAD_REQUEST)
             
             # Step 1: Transcribe audio
             transcript = self._transcribe_audio(audio_file)
@@ -58,24 +59,24 @@ class VoiceMovementView(View):
             # Step 3: Create Movement in database
             movement = self._create_movement(request.user, movement_data)
             
-            return JsonResponse({
+            return Response({
                 'success': True,
                 'movement': {
                     'id': movement.id,
                     'date': movement.date.isoformat(),
                     'amount': float(movement.amount),
-                    'category': movement.category.name,
+                    'category': movement.category.category,
                     'description': movement.description,
                     'transcript': transcript
                 }
-            }, status=201)
+            }, status=status.HTTP_201_CREATED)
             
         except Exception as e:
-            return JsonResponse({
+            return Response({
                 'success': False,
                 'error': str(e)
-            }, status=500)
-    
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def _is_valid_audio(self, file: UploadedFile) -> bool:
         """Validate audio file format"""
         valid_extensions = ['.mp3', '.wav', '.m4a', '.webm', '.ogg', '.mp4']
@@ -83,6 +84,8 @@ class VoiceMovementView(View):
                           'audio/ogg', 'video/mp4']
         
         file_ext = file.name.lower().split('.')[-1]
+        logger.info(f"File extension: {file_ext}")
+        logger.info(f"File mimetype: {file.content_type}")
         return (f'.{file_ext}' in valid_extensions or 
                 file.content_type in valid_mimetypes)
     
@@ -92,13 +95,19 @@ class VoiceMovementView(View):
         Configure openai.api_key in settings.py
         """
         try:
+            client = OpenAI(
+                # This is the default and can be omitted
+                api_key=os.environ.get("OPENAI_API_KEY"),
+            )
             # Read file content
             audio_file.seek(0)
-            
+            audio_data = audio_file.read()
+            buffer = BytesIO(audio_data)
+            buffer.name = audio_file.name
             # Call Whisper API
-            response = openai.Audio.transcribe(
+            response = client.audio.transcriptions.create(
                 model="whisper-1",
-                file=audio_file,
+                file=buffer,
                 response_format="text"
             )
             
@@ -138,7 +147,7 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
             
             content = response.output_text
 
-            logging.info(f'Transcript content: {content}')  # Log the transcript content)
+            logger.info(f'Transcript content: {content}')  # Log the transcript content)
             
             # Clean markdown formatting if present
             if content.startswith("```"):
@@ -191,7 +200,6 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
             
         except Exception as e:
             raise Exception(f"Failed to create movement: {str(e)}")
-
 
 @login_required
 @require_http_methods(["POST"])
