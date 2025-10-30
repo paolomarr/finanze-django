@@ -4,6 +4,11 @@
 PRODUCTION_CONTAINER_NAME=finanze-django-db-1
 LOCAL_CONTAINER_NAME=finanzeapp-db-1
 
+function db_container_name() {
+    cname=`docker compose ps db | tail -1 | awk '{print $1}'`
+    echo $cname
+}
+
 function usage() {
     cat << EOF
 Usage: `basename $0` (dump|restore DUMP_FILE)
@@ -42,7 +47,6 @@ function  parse_subcommand_opt() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -v) VERBOSE=1;;
-        -c|--container-name)CONTAINER_NAME="$2"; shift;;
         -*) error "Unknown option $1"; usage; exit 1;;
         *) parse_positional "$1";;
     esac
@@ -54,16 +58,16 @@ if [[ -n "$VERBOSE" ]]; then
     set -x
 fi
 
-if [[ -n "$CONTAINER_NAME" ]]; then # whatever the command (dump/restore), override both the related names
-    PRODUCTION_CONTAINER_NAME=$CONTAINER_NAME
-    LOCAL_CONTAINER_NAME=$CONTAINER_NAME
-fi
+CONTAINER_NAME=`db_container_name`
 
 case "$COMMAND" in
     dump)
         DATE=`date "+%Y%m%d"`
+        
         OUTPUT=/tmp/finanze_db.$DATE.tar
-
+        
+        [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$PRODUCTION_CONTAINER_NAME
+        
         docker exec -it $PRODUCTION_CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
         docker cp $PRODUCTION_CONTAINER_NAME:$OUTPUT $OUTPUT
 
@@ -75,6 +79,9 @@ case "$COMMAND" in
             exit 1
         }
         DEST=/tmp/`basename $DUMP_FILE`
+
+        [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$LOCAL_CONTAINER_NAME
+
         docker cp $DUMP_FILE $LOCAL_CONTAINER_NAME:$DEST
         docker exec -it $LOCAL_CONTAINER_NAME pg_restore -d postgres -U postgres -c $DEST
         ;;

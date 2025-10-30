@@ -74,4 +74,6 @@ else
     done
 fi
 
-docker compose --profile $PROFILE up -d --build
+docker compose up -d --build
+imagename=`docker compose images | tail -1 | awk  '{print $2}'`
+docker tag $imagename $imagename:$version_info

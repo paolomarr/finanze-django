@@ -1,6 +1,7 @@
+name: finanzeapp-backend
 services:
 
-  backend:
+  django:
     build:
       dockerfile: ./Dockerfile_django
       args:
