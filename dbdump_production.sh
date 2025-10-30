@@ -68,8 +68,8 @@ case "$COMMAND" in
         
         [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$PRODUCTION_CONTAINER_NAME
         
-        docker exec -it $PRODUCTION_CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
-        docker cp $PRODUCTION_CONTAINER_NAME:$OUTPUT $OUTPUT
+        docker exec -it $CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
+        docker cp $CONTAINER_NAME:$OUTPUT $OUTPUT
 
         echo $OUTPUT
         ;;
@@ -82,8 +82,8 @@ case "$COMMAND" in
 
         [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$LOCAL_CONTAINER_NAME
 
-        docker cp $DUMP_FILE $LOCAL_CONTAINER_NAME:$DEST
-        docker exec -it $LOCAL_CONTAINER_NAME pg_restore -d postgres -U postgres -c $DEST
+        docker cp $DUMP_FILE $CONTAINER_NAME:$DEST
+        docker exec -it $CONTAINER_NAME pg_restore -d postgres -U postgres -c $DEST
         ;;
     *)
         error "Unknown command $COMMAND".
