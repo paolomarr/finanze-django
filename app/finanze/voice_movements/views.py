@@ -15,14 +15,14 @@ from io import BytesIO
 from . import logger
 
 # Import your existing models
-from movimenti.models import Movement, Category
+from movimenti.models import Movement, Category, Subcategory
 
 from django.conf import settings
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class VoiceMovementView(APIView):
@@ -123,6 +123,7 @@ class VoiceMovementView(APIView):
         try:
             # Get available categories from database
             categories = list(Category.objects.values_list('category', flat=True))
+            subcategories = list(Subcategory.objects.values_list('subcategory', flat=True))
 
             client = OpenAI(
                 # This is the default and can be omitted
@@ -131,9 +132,12 @@ class VoiceMovementView(APIView):
             
             system_prompt = f"""You are a financial assistant extracting transaction data.
 Extract and return ONLY valid JSON with these exact keys:
-- date: ISO format (YYYY-MM-DD). "yesterday" = {(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')}, "today" = {datetime.now().strftime('%Y-%m-%d')}
+- date: ISO format datetime (YYYY-MM-DDTHH:MM). "yesterday" = {(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}, 
+    "today" = {datetime.now().strftime('%Y-%m-%dT%H:%M')}, "tomorrow" = {(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}.
+    Try and guess time if not given: if the description is about "lunch" or "dinner", then set time to 12pm/8pm; if it's about "morning" set 10am, "afternoon" 4pm, "evening" 8pm.
 - amount: Numeric value only (no currency symbols)
 - category: Must match one of: {', '.join(categories)}
+- subcategory: Optional field whose value must match one of: {', '.join(subcategories)}. Don't overstate it: if no strong match is found, set it to "other" if available or don't set it at all.
 - description: Brief transaction description
 
 Current date: {datetime.now().strftime('%Y-%m-%d')}"""
@@ -186,6 +190,12 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
                     category__iexact='other'
                 ).first() or Category.objects.first()
             
+            # optional field
+            opt_fields = {}
+            subcategory = Subcategory.objects.filter(
+                subcategory__iexact=data.get('subcategory')).first()
+            if subcategory:
+                opt_fields['subcategory'] = subcategory
             # Create movement
             movement = Movement.objects.create(
                 user=user,
@@ -194,6 +204,7 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
                 category=category,
                 description=data.get('description', ''),
                 # Add any other fields your Movement model has
+                **opt_fields
             )
             
             return movement
@@ -201,42 +212,42 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
         except Exception as e:
             raise Exception(f"Failed to create movement: {str(e)}")
 
-@login_required
-@require_http_methods(["POST"])
-@csrf_exempt
-def text_movement_view(request):
+class TextMovementView(APIView):
+    permission_classes = [AllowAny]
     """
     Alternative endpoint for testing with text directly
-    POST /api/text-movement/
-    Body: {"text": "I bought groceries yesterday for $50"}
     """
-    try:
-        data = json.loads(request.body)
-        transcript = data.get('text', '')
-        
-        if not transcript:
+    def post(self, request):
+        return self._text_movement_view(request)
+
+    def _text_movement_view(self, request):
+        """
+        Alternative endpoint for testing with text directly
+        POST /api/text-movement/
+        Body: {"text": "I bought groceries yesterday for $50"}
+        """
+        try:
+            data = json.loads(request.body)
+            transcript = data.get('text', '')
+            
+            if not transcript:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No text provided'
+                }, status=400)
+            
+            view = VoiceMovementView()
+            movement_data = view._parse_transcript(transcript)
+            # This is mock, no need to create movement
+            # movement = view._create_movement(request.user, movement_data)
+            
+            return JsonResponse({
+                'success': True,
+                'movement': movement_data,
+            }, status=201)
+            
+        except Exception as e:
             return JsonResponse({
                 'success': False,
-                'error': 'No text provided'
-            }, status=400)
-        
-        view = VoiceMovementView()
-        movement_data = view._parse_transcript(transcript)
-        movement = view._create_movement(request.user, movement_data)
-        
-        return JsonResponse({
-            'success': True,
-            'movement': {
-                'id': movement.id,
-                'date': movement.date.isoformat(),
-                'amount': float(movement.amount),
-                'category': movement.category.category,
-                'description': movement.description
-            }
-        }, status=201)
-        
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+                'error': str(e)
+            }, status=500)
