@@ -75,5 +75,5 @@ else
 fi
 
 docker compose up -d --build
-imagename=`docker compose images | tail -1 | awk  '{print $2}'`
-docker tag $imagename $imagename:$version_info
+# imagename=`docker compose images | tail -1 | awk  '{print $2}'`
+# docker tag ${imagename}:latest ${imagename}:$version_info
