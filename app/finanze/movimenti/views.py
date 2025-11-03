@@ -39,10 +39,11 @@ class MovementList(APIView):
         filterdict = filterDict(request, accepted_filter_params)
 
         # overall, all-time stats
+        usermovements = Movement.objects.filter(user=request.user)
         alltime = {
-            "count": Movement.objects.count(),
-            "minDate": Movement.objects.all().aggregate(minDate=Min("date"))["minDate"],
-            "maxDate": Movement.objects.all().aggregate(maxDate=Max("date"))["maxDate"],
+            "count": usermovements.count(),
+            "minDate": usermovements.aggregate(minDate=Min("date"))["minDate"],
+            "maxDate": usermovements.aggregate(maxDate=Max("date"))["maxDate"],
         } 
         movements = Movement.objects.filter(**filterdict)
         params = request.GET
@@ -180,4 +181,47 @@ class SubcategoryDetail(generics.RetrieveUpdateAPIView):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategorySerializer
 
+class AllTimeMovementsView(APIView):
+    permission_classes = [IsAuthenticatedSelfUser]
+
+    def get(self, request):
+        usermovements = Movement.objects.filter(user=request.user)
+    # overall, all-time stats
+        alltime = {
+            "count": usermovements.count(),
+            "minDate": usermovements.aggregate(minDate=Min("date"))["minDate"],
+            "maxDate": usermovements.aggregate(maxDate=Max("date"))["maxDate"],
+        } 
+        return Response(alltime)
     
+
+class BalanceAtDateView(APIView):
+    permission_classes = [IsAuthenticatedSelfUser]
+
+    def get(self, request, year, month, day):
+        """
+        Returns the balance and movement count up to the given date.
+        
+        Parameters:
+        year (int): The year of the date.
+        month (int): The month of the date.
+        day (int): The day of the date.
+        
+        Returns:
+        Response: A JSON response containing the balance and movement count.
+        """
+        previous_movements_query = Movement.objects.filter(user=request.user, date__lte=f"{year}-{month}-{day}")
+        aggregates = previous_movements_query.aggregate(minDate=Min("date"), maxDate=Max("date"), count=Count("id"))
+        baseline = Movement.objects.balance_to_date(user=request.user, date=aggregates["maxDate"])
+        
+        previous = {
+            "count": aggregates.get("count"),
+            "minDate": aggregates.get("minDate"), 
+            "maxDate": aggregates.get("maxDate"),
+            "balance": {
+                "date": baseline[0],
+                "value": baseline[1],
+            }
+        }
+
+        return Response(previous)

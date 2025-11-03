@@ -10,4 +10,6 @@ urlpatterns = [
     path('subcategories/', views.SubcategoryListCreate.as_view()),
     path('subcategories/<int:pk>', views.SubcategoryDetail.as_view()),
     path('balances/', views.BalanceMovementList.as_view()),
+    path('all-time/', views.AllTimeMovementsView.as_view()),
+    path('balance-to-date/<int:year>/<int:month>/<int:day>', views.BalanceAtDateView.as_view()),
 ]
