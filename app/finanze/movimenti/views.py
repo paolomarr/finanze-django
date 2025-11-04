@@ -1,3 +1,4 @@
+from math import ceil
 from django.http import Http404
 from django.db.models import Min, Max, Count
 from rest_framework.response import Response
@@ -39,12 +40,7 @@ class MovementList(APIView):
         filterdict = filterDict(request, accepted_filter_params)
 
         # overall, all-time stats
-        usermovements = Movement.objects.filter(user=request.user)
-        alltime = {
-            "count": usermovements.count(),
-            "minDate": usermovements.aggregate(minDate=Min("date"))["minDate"],
-            "maxDate": usermovements.aggregate(maxDate=Max("date"))["maxDate"],
-        } 
+        
         movements = Movement.objects.filter(**filterdict)
         params = request.GET
         sort_field = params.get("sort_field", "-date")
@@ -53,7 +49,11 @@ class MovementList(APIView):
         if sort_dir:
             if sort_dir == "desc":
                 movements = movements.expressions.desc()
-            
+        
+        total = len(movements)
+        filtered = {
+            "total": total, # Django doc says it's more efficient than a count() query
+        }
         if params.get("all") is None:
             try:
                 page = int(params.get("page", 1))
@@ -66,40 +66,19 @@ class MovementList(APIView):
             start = (page-1)*size
             end = start + size
             movements = movements[start:end]
-
-        aggregates = movements.aggregate(minDate=Min("date"), maxDate=Max("date"))
+            filtered["page"] = page
+            filtered["size"] = size
+            filtered["pages"] = ceil(total/size)
+        else:
+            filtered["page"] = 1
+            filtered["size"] = total
+            filtered["pages"] = 1
 
         serializer = MovementSerializer(movements, many=True)
 
-        filtered = {
-            "count": len(serializer.data),
-            "movements": serializer.data,
-            "minDate": aggregates.get("minDate"), 
-            "maxDate": aggregates.get("maxDate")
-        }
-        previous = {
-            "count": 0,
-        }
-        if filterdict.get("date__gte"):
-            previous_movements_query = Movement.objects.filter(user=request.user, date__lte=filterdict.get("date__gte"))
-            aggregates = previous_movements_query.aggregate(minDate=Min("date"), maxDate=Max("date"), count=Count("id"))
-            baseline = Movement.objects.balance_to_date(user=request.user, date=aggregates["maxDate"])
-            
-            previous = {
-                "count": aggregates.get("count"),
-                "minDate": aggregates.get("minDate"), 
-                "maxDate": aggregates.get("maxDate"),
-                "balance": {
-                    "date": baseline[0],
-                    "value": baseline[1],
-                }
-            }
-
-        return Response({
-            "filtered": filtered,
-            "previous": previous,
-            "alltime": alltime,
-            })
+        filtered["movements"] = serializer.data
+        
+        return Response(filtered)
 
     def post(self, request):
         # this will require proper CSRF handling
