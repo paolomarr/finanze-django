@@ -17,7 +17,12 @@ def filterDict(request, accepted_filter_params: list[tuple]):
     params = request.GET
     filterdict = {"user": request.user}
     for (param, column) in accepted_filter_params:
-        val = params.get(param)
+        if column.endswith("__in"):
+            s_val = params.get(param)
+            if s_val:
+                val = s_val.split(",")
+        else:
+            val = params.get(param)
         if val:
             filterdict[column] = val
     return filterdict
@@ -33,8 +38,10 @@ class MovementList(APIView):
             ("datefrom", "date__gte"),
             ("dateto", "date__lt"),
             ("description", "description_icontains"),
-            ("category", "category_id"),
-            ("subcategory", "subcategory_id"),
+            ("category", "category_id__in"),
+            ("subcategory", "subcategory_id__in"),
+            ("minamount", "amount__gte"),
+            ("maxamount", "amount__lte"),
         ]
         filterdict = filterDict(request, accepted_filter_params)
 
