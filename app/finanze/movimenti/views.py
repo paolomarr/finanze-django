@@ -12,17 +12,19 @@ from django.contrib.auth.models import User
 from movimenti.serializers import CategorySerializer, MovementSerializer, SubcategorySerializer
 from movimenti.models import AssetBalance, Category, Movement, Subcategory
 
+from . import logger
 
 def filterDict(request, accepted_filter_params: list[tuple]):
-    params = request.GET
+    params = request.query_params
     filterdict = {"user": request.user}
     for (param, column) in accepted_filter_params:
+        raw_val = params.get(param, None)
+        if raw_val is None:
+            continue
         if column.endswith("__in"):
-            s_val = params.get(param)
-            if s_val:
-                val = s_val.split(",")
+            val = raw_val.split(",")
         else:
-            val = params.get(param)
+            val = raw_val
         if val:
             filterdict[column] = val
     return filterdict
@@ -43,8 +45,9 @@ class MovementList(APIView):
             ("minamount", "amount__gte"),
             ("maxamount", "amount__lte"),
         ]
+        logger.debug(f"Request params: {request.query_params}")
         filterdict = filterDict(request, accepted_filter_params)
-
+        logger.debug(f"Filter dict: {filterdict}")
         # overall, all-time stats
         alltime = {
             "count": Movement.objects.count(),
