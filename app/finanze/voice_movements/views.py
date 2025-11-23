@@ -134,7 +134,8 @@ class VoiceMovementView(APIView):
 Extract and return ONLY valid JSON with these exact keys:
 - date: ISO format datetime (YYYY-MM-DDTHH:MM). "yesterday" = {(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}, 
     "today" = {datetime.now().strftime('%Y-%m-%dT%H:%M')}, "tomorrow" = {(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}.
-    Try and guess time if not given: if the description is about "lunch" or "dinner", then set time to 12pm/8pm; if it's about "morning" set 10am, "afternoon" 4pm, "evening" 8pm.
+    Try and guess time if not explicitly given: if the description is about "lunch" or "dinner", then set time to 12pm/8pm; if it's about "morning" set 10am, "afternoon" 4pm, "evening" 8pm.
+    If no time indication is given at all, use the current time.
 - amount: Numeric value only (no currency symbols)
 - category: Must match one of: {', '.join(categories)}
 - subcategory: Optional field whose value must match one of: {', '.join(subcategories)}. Don't overstate it: if no strong match is found, set it to "other" if available or don't set it at all.
