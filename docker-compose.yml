@@ -6,6 +6,8 @@ services:
       dockerfile: ./Dockerfile_django
       args:
         - REQUIREMENTS_TXT # defined only if set from .env
+      labels:
+        - "app.finanze.build=${GIT_HASH}"
     env_file:
     - path: app/finanze/.env
       required: true
