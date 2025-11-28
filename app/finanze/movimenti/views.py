@@ -40,7 +40,7 @@ class MovementList(APIView):
         accepted_filter_params = [
             ("datefrom", "date__gte"),
             ("dateto", "date__lt"),
-            ("description", "description_icontains"),
+            ("description", "description__icontains"),
             ("category", "category_id__in"),
             ("subcategory", "subcategory_id__in"),
             ("minamount", "amount__gte"),
