@@ -132,8 +132,8 @@ class VoiceMovementView(APIView):
             
             system_prompt = f"""You are a financial assistant extracting transaction data.
 Extract and return ONLY valid JSON with these exact keys:
-- date: ISO format datetime (YYYY-MM-DDTHH:MM). "yesterday" = {(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}, 
-    "today" = {datetime.now().strftime('%Y-%m-%dT%H:%M')}, "tomorrow" = {(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M')}.
+- date: ISO format datetime (YYYY-MM-DDTHH:MM:SS). "yesterday" = {(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S')}, 
+    "today" = {datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}, "tomorrow" = {(datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S')}.
     Try and guess time if not explicitly given: if the description is about "lunch" or "dinner", then set time to 12pm/8pm; if it's about "morning" set 10am, "afternoon" 4pm, "evening" 8pm.
     If no time indication is given at all, use the current time.
 - amount: Numeric value only (no currency symbols)
@@ -178,7 +178,7 @@ Current date: {datetime.now().strftime('%Y-%m-%d')}"""
         """
         try:
             # Parse date
-            movement_date = datetime.fromisoformat(data['date']).date()
+            movement_date = datetime.fromisoformat(data['date']).astimezone()
             
             # Get or match category (case-insensitive)
             category = Category.objects.filter(
