@@ -1,10 +1,13 @@
 from datetime import datetime
+from django.utils.timezone import now as tz_now
+from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
-from tradinglog.lib.yahoo_finance import getLatestQuoteForSymbol
-from tradinglog.models import Currency, Order, Stock, OrderOperation, StockQuote
+from tradinglog.lib import finance_provider
+from tradinglog.lib.providers.yahoo import get_latest_quote as getLatestQuoteForSymbol
+from tradinglog.models import Currency, Market, Order, Stock, OrderOperation, StockQuote
 from tradinglog.serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
 
@@ -20,14 +23,52 @@ class OrderListCreate(generics.ListCreateAPIView):
     #     return serializer.save(user=[self.request.user])
 
     def post(self, request, *args, **kwargs):
-        serializer = OrderSerializer(data=request.data)
+        data = request.data.copy() if hasattr(request.data, "copy") else dict(request.data)
+        stock_payload = data.get("stock")
+        if isinstance(stock_payload, dict):
+            stock = _resolve_inline_stock(stock_payload)
+            data["stock"] = stock.id
+        serializer = OrderSerializer(data=data)
         if serializer.is_valid():
-            logger.debug(f"New order data validated: {request.data}")
+            logger.debug(f"New order data validated: {data}")
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         errstr = " - ".join(serializer.errors)
-        logger.error(f"Serialization of new order failed: {errstr}. Data was: {request.data}")
+        logger.error(f"Serialization of new order failed: {errstr}. Data was: {data}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def _resolve_inline_stock(payload):
+    """Get-or-create a Stock from a search-result-shaped payload.
+
+    Best-effort quote refresh after creation: a brand-new Stock with no quote
+    would render as 0€ in the portfolio chart until manually refreshed.
+    """
+    currency_sym = payload.get("currency") or "EUR"
+    market_name = payload.get("market") or "UNKNOWN"
+    currency, _ = Currency.objects.get_or_create(symbol=currency_sym)
+    market, _ = Market.objects.get_or_create(name=market_name)
+    stock, created = Stock.objects.get_or_create(
+        symbol=payload["symbol"],
+        defaults={
+            "name": payload.get("name") or payload["symbol"],
+            "currency": currency,
+            "market": market,
+            "regular_market_time": tz_now(),
+            "last_price_update": tz_now(),
+        },
+    )
+    if created:
+        try:
+            quote = finance_provider.get_latest_quote(stock.symbol)
+            if quote and "regular_market_price" in quote:
+                stock.regular_market_price = quote["regular_market_price"]
+                stock.regular_market_time = datetime.fromtimestamp(quote["regular_market_time"])
+                stock.last_price_update = tz_now()
+                stock.save()
+        except Exception as ex:
+            logger.warning(f"Initial quote refresh for {stock.symbol} failed: {ex}")
+    return stock
     
 
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -36,6 +77,25 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user).order_by("-date")
+
+
+class StockSearch(APIView):
+    """Search market-data provider for symbols matching a free-text query.
+
+    Read-only; no DB writes. Stocks are persisted at order-create time via
+    _resolve_inline_stock.
+    """
+    def get(self, request, *args, **kwargs):
+        q = request.query_params.get("q", "").strip()
+        if len(q) < 2:
+            return Response([], status=status.HTTP_200_OK)
+        try:
+            results = finance_provider.search(q)
+        except Exception as ex:
+            logger.error(f"Stock search for q={q!r} failed: {ex}")
+            return Response({"errors": [f"search failed: {str(ex)}"]},
+                            status=status.HTTP_502_BAD_GATEWAY)
+        return Response(results, status=status.HTTP_200_OK)
 
 
 class StocksListCreate(generics.ListCreateAPIView):
