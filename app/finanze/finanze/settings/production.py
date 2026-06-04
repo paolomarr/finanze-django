@@ -3,7 +3,7 @@ import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['paolomarchetti.tk', 'paolomarchetti.my.to', '.localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['paolo-marchetti.my.to', 'paolomarchetti.my.to', '.localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS.append('https://paolomarchetti.my.to')
 
