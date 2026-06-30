@@ -1,11 +1,12 @@
 #!/bin/bash
 
+ROOT=$(cd `dirname $0`; pwd)
 # DEFAULTS
 PRODUCTION_CONTAINER_NAME=finanze-django-db-1
 LOCAL_CONTAINER_NAME=finanzeapp-db-1
 
 function db_container_name() {
-    cname=`docker compose ps db | tail -1 | awk '{print $1}'`
+    cname=`docker compose -f $ROOT/docker-compose.yml ps db | tail -1 | awk '{print $1}'`
     echo $cname
 }
 
