@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from . import views
 from django.contrib.auth import views as auth_views
-from rest_framework.authtoken import views as rf_views
+from knox import views as knox_views
 
 urlpatterns = [
     # path('tradinglog/', include('tradinglog.urls')),
@@ -37,7 +37,9 @@ urlpatterns = [
     # API
     ## authentication
     path('api/api-auth/', include('rest_framework.urls')),
-    path('api/api-token-auth/', rf_views.obtain_auth_token),
+    path('api/api-token-auth/', views.TokenLoginView.as_view(), name='knox_login'),
+    path('api/api-token-logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
+    path('api/api-token-logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
     # endpoints
     path('api/movements/', include('movimenti.urls')),
     path('api/tradinglog/', include('tradinglog.urls')),

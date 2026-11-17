@@ -1,3 +1,4 @@
+from datetime import timedelta
 """
 Django settings for finanze project.
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'finanze.apps.FinanzeConfig',
     'sass_processor',
     'rest_framework',
-    'rest_framework.authtoken',
+    'knox',
     'corsheaders',
     'voice_movements',
 ]
@@ -66,13 +67,22 @@ CSRF_TRUSTED_ORIGINS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
     # ...
+}
+
+# django-rest-knox: hashed, expiring, per-device tokens
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(days=2),
+    'AUTO_REFRESH': True,           # extend expiry on each authenticated request
+    'MIN_REFRESH_INTERVAL': 60,     # seconds between expiry DB updates
+    'TOKEN_LIMIT_PER_USER': 10,     # max concurrent devices per user
+    'AUTH_HEADER_PREFIX': 'Token',  # same header format as DRF's TokenAuthentication
 }
 
 ROOT_URLCONF = 'finanze.urls'

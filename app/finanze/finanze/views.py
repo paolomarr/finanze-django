@@ -7,9 +7,28 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from knox.views import LoginView as KnoxLoginView
 
 from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
+
+
+class TokenLoginView(KnoxLoginView):
+    """Issue a Knox token from username/password in the request body.
+
+    Same request format as DRF's obtain_auth_token, so clients only need to
+    read the extra `expiry` field. Each login creates a separate token
+    (one per device), stored hashed and expiring after REST_KNOX TOKEN_TTL.
+    """
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        serializer = AuthTokenSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        request.user = serializer.validated_data['user']
+        return super().post(request, format=format)
 
 
 import re
