@@ -2,26 +2,8 @@
 
 from django.conf import settings
 from django.db import migrations, models
-from django.contrib.auth.models import User
 import django.db.models.deletion
-import logging
 
-
-def forwards_func(apps, schema_editor):
-    Movement = apps.get_model("movimenti", "Movement")
-    try:
-        Movement.objects.filter(user=None).update(user=User.objects.get(username='paolo'))
-    except Exception as ex:
-        logging.error("forward migration %s failed: %s" % (__file__, str(ex)))
-
-
-def reverse_func(apps, schema_editor):
-    Movement = apps.get_model("movimenti", "Movement")
-    try:
-        Movement.objects.filter(user=User.objects.get(username='paolo')).update(
-            user=None)
-    except Exception as ex:
-        logging.error("reverse migration %s failed: %s" % (__file__, str(ex)))
 
 class Migration(migrations.Migration):
 
@@ -36,5 +18,4 @@ class Migration(migrations.Migration):
             name='user',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL),
         ),
-        migrations.RunPython(forwards_func, reverse_func)
     ]
