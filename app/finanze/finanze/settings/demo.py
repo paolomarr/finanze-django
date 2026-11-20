@@ -24,3 +24,6 @@ _https = os.environ.get("DEMO_HTTPS") == "1"
 SECURE_SSL_REDIRECT = _https
 SESSION_COOKIE_SECURE = _https
 CSRF_COOKIE_SECURE = _https
+
+# Offline fictional market (tradinglog/demo): no RapidAPI key needed.
+FINANCE_PROVIDER = "demo"

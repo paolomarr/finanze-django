@@ -1,9 +1,11 @@
 """
-Populate a demo instance: demo user, optional superuser, categories and
-~2 years of generated movements (see movimenti/demo/).
+Populate a demo instance: demo user, optional superuser, categories,
+~2 years of generated movements (see movimenti/demo/) and trading data
+(fictional stocks, daily quotes and orders; see tradinglog/demo/).
 
-Idempotent: if the demo user already has movements, nothing is generated
-unless --reset is given.
+Idempotent: movements and orders are generated only if the demo user has
+none (unless --reset is given). Stock quotes are topped up to today on every
+run, so restarting the demo container keeps prices current.
 
 Env vars (all optional):
   DEMO_USERNAME / DEMO_PASSWORD                     default: demo / demo
@@ -20,6 +22,9 @@ from django.utils import timezone
 
 from movimenti.demo.generator import BALANCE_CATEGORY, generate, load_spec
 from movimenti.models import Category, Movement, Subcategory
+from tradinglog.demo import seed as trading
+from tradinglog.demo.market import Market
+from tradinglog.models import Order
 
 
 class Command(BaseCommand):
@@ -29,17 +34,22 @@ class Command(BaseCommand):
         parser.add_argument("--seed", type=int, default=42)
         parser.add_argument("--months", type=int, default=24)
         parser.add_argument("--reset", action="store_true",
-                            help="Delete the demo user's movements and regenerate them.")
+                            help="Delete the demo user's movements and orders and regenerate them.")
 
     @transaction.atomic
     def handle(self, *args, seed, months, reset, **options):
         self._ensure_superuser()
         user = self._ensure_demo_user()
 
+        today = timezone.localdate()
+        self._seed_movements(user, today, seed, months, reset)
+        self._seed_trading(user, today, seed, months, reset)
+
+    def _seed_movements(self, user, today, seed, months, reset):
         existing = Movement.objects.filter(user=user)
         if existing.exists():
             if not reset:
-                self.stdout.write(f"Demo user '{user.username}' already has data; skipping (use --reset).")
+                self.stdout.write(f"Demo user '{user.username}' already has movements; skipping (use --reset).")
                 return
             n, _ = existing.delete()
             self.stdout.write(f"Deleted {n} existing movements.")
@@ -47,7 +57,6 @@ class Command(BaseCommand):
         spec = load_spec()
         categories, subcategories = self._ensure_categories(spec, user)
 
-        today = timezone.localdate()
         rows = generate(spec, end=today, months=months, seed=seed)
         tz = timezone.get_current_timezone()
         Movement.objects.bulk_create(
@@ -63,6 +72,24 @@ class Command(BaseCommand):
         )
         self.stdout.write(self.style.SUCCESS(
             f"Created {len(rows)} movements for '{user.username}' "
+            f"({rows[0].date} .. {rows[-1].date}, seed={seed})."))
+
+    def _seed_trading(self, user, today, seed, months, reset):
+        market = Market()
+        stocks = trading.ensure_stocks(market)
+        n = trading.update_quotes(market, stocks, trading.quotes_start(today, months), timezone.now())
+        self.stdout.write(f"Stored {n} new demo stock quotes.")
+
+        existing = Order.objects.filter(user=user)
+        if existing.exists():
+            if not reset:
+                self.stdout.write(f"Demo user '{user.username}' already has orders; skipping (use --reset).")
+                return
+            n, _ = existing.delete()
+            self.stdout.write(f"Deleted {n} existing orders.")
+        rows = trading.create_orders(market, stocks, user, today, months, seed)
+        self.stdout.write(self.style.SUCCESS(
+            f"Created {len(rows)} orders for '{user.username}' "
             f"({rows[0].date} .. {rows[-1].date}, seed={seed})."))
 
     # ----------------------------------------------------------------- helpers
