@@ -1,0 +1,51 @@
+# Fictional stock catalogue for the demo market-data provider.
+# Symbols end in ".DMO" so they can never be mistaken for real tickers.
+#
+#   start_price  price on the market epoch (see market.py)
+#   drift        yearly trend (0.06 = +6%/year)
+#   volatility   yearly volatility of the random part (0.25 = 25%);
+#                prices typically stay within ~volatility/3 of the trend
+market: DEMO
+currency: EUR
+
+stocks:
+  - symbol: GLBX.DMO
+    name: Globex World Equity ETF
+    start_price: 80.0
+    drift: 0.09
+    volatility: 0.14
+  - symbol: SOLV.DMO
+    name: Solvera Renewables
+    start_price: 12.5
+    drift: 0.11
+    volatility: 0.3
+  - symbol: FERR.DMO
+    name: Ferrovie Alpine
+    start_price: 24.0
+    drift: 0.06
+    volatility: 0.18
+  - symbol: NBLA.DMO
+    name: Nebula Semiconductors
+    start_price: 145.0
+    drift: 0.12
+    volatility: 0.35
+  - symbol: CASA.DMO
+    name: Casalinga Foods
+    start_price: 38.0
+    drift: 0.07
+    volatility: 0.16
+  - symbol: BNCV.DMO
+    name: Banca del Vento
+    start_price: 6.2
+    drift: 0.08
+    volatility: 0.25
+  - symbol: ORBT.DMO
+    name: Orbita Telecom
+    start_price: 3.1
+    drift: 0.03
+    volatility: 0.25
+  - symbol: BOND.DMO
+    name: Globex Euro Govt Bond ETF
+    start_price: 100.0
+    drift: 0.025
+    volatility: 0.05
