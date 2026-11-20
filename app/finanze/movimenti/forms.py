@@ -25,6 +25,7 @@ class NewMovementForm(ModelForm):
             'date': MyDateTimeInputWidget(),
         }
 
+# Deprecated?
 class NewAssetsBalanceForm(ModelForm):
     class Meta:
         model = AssetBalance

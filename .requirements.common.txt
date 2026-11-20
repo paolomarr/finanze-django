@@ -8,3 +8,4 @@ django-cors-headers
 # django-compressor
 django-sass-processor
 openai
+PyYAML==6.0.2

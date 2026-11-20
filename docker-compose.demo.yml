@@ -1,0 +1,33 @@
+# Standalone demo stack: separate project name, image, volume and env file,
+# so it can run next to the regular instance without touching its data.
+#   ./deploy_demo.sh            (creates .env.demo and starts the stack)
+#   docker compose -f docker-compose.demo.yml down -v   (wipe the demo)
+name: finanzeapp-demo
+services:
+
+  django:
+    build:
+      dockerfile: ./Dockerfile_django
+    env_file:
+      - path: .env.demo        # outside app/finanze: not copied into the image
+        required: true
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - ${DEMO_BIND:-127.0.0.1}:${DEMO_PORT:-8004}:8000
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_demo_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  postgres_demo_data:

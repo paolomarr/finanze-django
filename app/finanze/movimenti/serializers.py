@@ -22,6 +22,7 @@ class CategorySerializer(serializers.ModelSerializer):
         except Exception:
             raise serializers.ValidationError(f"Invalid 'direction' value: {value}")
 
+# Deprecated
 class AssetBalanceSerializer(serializers.ModelSerializer):
     submission_id = serializers.CharField(read_only=True)
     class Meta:

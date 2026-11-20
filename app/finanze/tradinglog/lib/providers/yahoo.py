@@ -52,6 +52,10 @@ def get_historical(symbol, from_timestamp, to_timestamp=0, interval=ONE_DAY, reg
         "events": ""
     }
 
+    if not yf_secrets.RAPIDAPI_CONFIGURED:
+        logging.warning("[YAHOOFINANCE] RAPIDAPI_KEY not configured; skipping %s" % symbol)
+        return {'error': "rapidapi key not configured"}
+
     response = requests.request(
         "GET", url, headers=yf_secrets.APIDOJO_APIKEYS, params=querystring)
 
@@ -104,6 +108,10 @@ def get_latest_quote(symbol):
 def search(query, region="IT"):
     url = APIDOJO_BASEURL + AUTO_COMPLETE_API
     querystring = {"q": query, "region": region}
+
+    if not yf_secrets.RAPIDAPI_CONFIGURED:
+        logging.warning("[YAHOOFINANCE][search] RAPIDAPI_KEY not configured; skipping q=%s" % query)
+        return []
 
     response = requests.request(
         "GET", url, headers=yf_secrets.APIDOJO_APIKEYS, params=querystring)

@@ -1,0 +1,556 @@
+# Generation profiles, one per (category, subcategory).
+#
+# schedule (exactly one of):
+#   monthly:  {day: N, jitter: days, months: [..]}   fixed recurring; `months` optional
+#                                                    (omit = every month)
+#   poisson:  {per_month: rate, boost: {month: factor}}
+#                                                    random occurrences; `boost` optional
+#                                                    multiplies the rate in given months
+#   seasonal: {months: [..], per_month: rate}        poisson, only in given months
+# amount (exactly one of):
+#   lognormal: {median, sigma, min, max}
+#   fixed:     {value, drift_per_year}               drift compounds yearly (price rises)
+# account: which simulated account the movement hits (for BALANCE coherence).
+#          Every movement profile hits Checking; kept explicit for future use.
+# templates: placeholders are filled from `pools` of the same profile, plus the
+#            built-ins {month_name}, {year}, {quarter}.
+# pools: list of strings, or {range: [lo, hi]} for an integer, or
+#        {pattern: "[A-Z]{6}"} for a random code.
+#
+# Expected volume: ~34 movements/month + 3 BALANCE rows/month
+#                  -> ~900 rows over 24 months.
+
+profiles:
+
+  # ------------------------------------------------------------------ Salary (+)
+  - category: Salary
+    subcategory: Monthly pay
+    account: Checking
+    schedule: {monthly: {day: 27, jitter: 1}}
+    amount: {fixed: {value: 2350.00, drift_per_year: 0.03}}
+    templates:
+      - "Salary {month_name} {year} - {employer}"
+    pools:
+      employer: ["Northwind Logistics Ltd"]   # one employer: recurring rows stay consistent
+
+  - category: Salary
+    subcategory: Bonus
+    account: Checking
+    schedule: {monthly: {day: 15, jitter: 2, months: [7, 12]}}
+    amount: {lognormal: {median: 900.0, sigma: 0.3, min: 400.0, max: 2000.0}}
+    templates:
+      - "{kind} - {employer}"
+    pools:
+      kind: [Performance bonus, Holiday bonus]
+      employer: ["Northwind Logistics Ltd"]
+
+  - category: Salary
+    subcategory: Expense refund
+    account: Checking
+    schedule: {poisson: {per_month: 0.3}}
+    amount: {lognormal: {median: 85.0, sigma: 0.7, min: 12.0, max: 600.0}}
+    templates:
+      - "Expense reimbursement {ref} - {employer}"
+      - "Travel expenses refund {month_name}"
+    pools:
+      employer: ["Northwind Logistics Ltd"]
+      ref: {pattern: "EXP-[0-9]{5}"}
+
+  # ------------------------------------------------------------ Other income (+)
+  - category: Other income
+    subcategory: Gifts received
+    account: Checking
+    schedule: {poisson: {per_month: 0.05, boost: {12: 10}}}
+    amount: {lognormal: {median: 100.0, sigma: 0.5, min: 20.0, max: 400.0}}
+    templates:
+      - "Transfer from {person} - {reason}"
+    pools:
+      person: [Aunt Margaret, Grandpa Joe, Mum and Dad, Uncle Frank]
+      reason: [Happy birthday!, Merry Christmas, A little something, For the holidays]
+
+  - category: Other income
+    subcategory: Resale
+    account: Checking
+    schedule: {poisson: {per_month: 0.2}}
+    amount: {lognormal: {median: 35.0, sigma: 0.8, min: 5.0, max: 350.0}}
+    templates:
+      - "{platform} sale - {item}"
+      - "Payout {platform} #{order}"
+    pools:
+      platform: [ShelfSwap, ReUse Market, BidBox]
+      item: [old bike, bookshelf, winter jacket, board games, camera lens, baby stroller, guitar amp]
+      order: {range: [100000, 999999]}
+
+  - category: Other income
+    subcategory: Interest & dividends
+    account: Checking
+    schedule: {monthly: {day: 31, jitter: 0, months: [3, 6, 9, 12]}}
+    amount: {lognormal: {median: 28.0, sigma: 0.4, min: 5.0, max: 120.0}}
+    templates:
+      - "Interest credit Q{quarter} {year} - {bank}"
+    pools:
+      bank: [Harbor Savings Bank]
+
+  - category: Other income
+    subcategory: Tax refund
+    account: Checking
+    schedule: {monthly: {day: 20, jitter: 10, months: [8]}}
+    amount: {lognormal: {median: 320.0, sigma: 0.5, min: 50.0, max: 1200.0}}
+    templates:
+      - "Tax refund {prev_year} - Revenue Office"
+    pools: {}
+
+  # ----------------------------------------------------------------- Housing (-)
+  - category: Housing
+    subcategory: Rent
+    account: Checking
+    schedule: {monthly: {day: 1, jitter: 2}}
+    amount: {fixed: {value: 780.00, drift_per_year: 0.02}}
+    templates:
+      - "Rent {month_name} {year} - {landlord}"
+    pools:
+      landlord: [Greenway Property Management]
+
+  - category: Housing
+    subcategory: Condo fees
+    account: Checking
+    schedule: {monthly: {day: 10, jitter: 3, months: [1, 4, 7, 10]}}
+    amount: {fixed: {value: 165.00, drift_per_year: 0.0}}
+    templates:
+      - "Condo fees Q{quarter} {year} - {admin}"
+    pools:
+      admin: [Linden Court Residents Assoc.]
+
+  - category: Housing
+    subcategory: Maintenance
+    account: Checking
+    schedule: {poisson: {per_month: 0.2}}
+    amount: {lognormal: {median: 95.0, sigma: 0.7, min: 15.0, max: 700.0}}
+    templates:
+      - "{trade} - {job}"
+      - "Invoice {ref} {trade}"
+    pools:
+      trade: [QuickFix Plumbing, Brightline Electric, HandyHome Services, Tom's Locksmith]
+      job: [leaking tap, boiler check, light fittings, door lock, bathroom sealant, radiator bleed]
+      ref: {pattern: "INV[0-9]{4}"}
+
+  - category: Housing
+    subcategory: Furniture
+    account: Checking
+    schedule: {poisson: {per_month: 0.1}}
+    amount: {lognormal: {median: 180.0, sigma: 0.8, min: 25.0, max: 1500.0}}
+    templates:
+      - "{store} - {item}"
+      - "Card payment {store}"
+    pools:
+      store: [Hearth & Home, NordNest Furniture, Oakline]
+      item: [desk chair, bookshelf, sofa, bed frame, dining table, wardrobe, rug]
+
+  # --------------------------------------------------------------- Utilities (-)
+  - category: Utilities
+    subcategory: Electricity
+    account: Checking
+    schedule: {monthly: {day: 18, jitter: 3, months: [1, 3, 5, 7, 9, 11]}}
+    amount: {lognormal: {median: 95.0, sigma: 0.2, min: 50.0, max: 190.0}}
+    templates:
+      - "Direct debit {supplier} electricity bill {ref}"
+    pools:
+      supplier: [VoltEra Energy]
+      ref: {pattern: "[0-9]{8}"}
+
+  - category: Utilities
+    subcategory: Gas
+    account: Checking
+    schedule: {monthly: {day: 22, jitter: 3, months: [2, 4, 6, 8, 10, 12]}}
+    amount: {lognormal: {median: 85.0, sigma: 0.5, min: 20.0, max: 260.0}}   # winter-heavy in practice
+    templates:
+      - "Direct debit {supplier} gas bill {ref}"
+    pools:
+      supplier: [VoltEra Energy]
+      ref: {pattern: "[0-9]{8}"}
+
+  - category: Utilities
+    subcategory: Water
+    account: Checking
+    schedule: {monthly: {day: 5, jitter: 4, months: [2, 5, 8, 11]}}
+    amount: {lognormal: {median: 60.0, sigma: 0.2, min: 30.0, max: 110.0}}
+    templates:
+      - "{supplier} water bill {month_name}"
+    pools:
+      supplier: [Riverton Water Co.]
+
+  - category: Utilities
+    subcategory: Internet
+    account: Checking
+    schedule: {monthly: {day: 12, jitter: 0}}
+    amount: {fixed: {value: 29.90, drift_per_year: 0.0}}
+    templates:
+      - "{isp} Fibre {month_name}"
+    pools:
+      isp: [Lumen Fibre]
+
+  - category: Utilities
+    subcategory: Mobile phone
+    account: Checking
+    schedule: {monthly: {day: 3, jitter: 0}}
+    amount: {fixed: {value: 12.99, drift_per_year: 0.0}}
+    templates:
+      - "{carrier} mobile top-up"
+    pools:
+      carrier: [Wavelink Mobile]
+
+  # --------------------------------------------------------------- Groceries (-)
+  - category: Groceries
+    subcategory: Supermarket
+    account: Checking
+    schedule: {poisson: {per_month: 5}}
+    amount: {lognormal: {median: 38.0, sigma: 0.6, min: 4.5, max: 210.0}}
+    templates:
+      - "Card payment {merchant} {city}"
+      - "{merchant} #{store_no}"
+      - "POS {merchant}"
+      - "Weekly shopping {merchant}"
+    pools:
+      merchant: [FreshFare, GreenBasket, ValueMart, Corner Grocer, DailyHarvest, MegaSaver, Orchard Market]
+      city: [Riverton, Millbrook, Eastvale, Old Harbor]
+      store_no: {range: [100, 899]}
+
+  - category: Groceries
+    subcategory: Local market
+    account: Checking
+    schedule: {poisson: {per_month: 1.5}}
+    amount: {lognormal: {median: 18.0, sigma: 0.5, min: 3.0, max: 70.0}}
+    templates:
+      - "{stall} - Saturday market"
+      - "Card payment {stall}"
+    pools:
+      stall: [Hillside Farm Produce, Riverton Fishmonger, Cheese Corner, Organic Acres]
+
+  - category: Groceries
+    subcategory: Bakery
+    account: Checking
+    schedule: {poisson: {per_month: 1.5}}
+    amount: {lognormal: {median: 7.5, sigma: 0.4, min: 1.5, max: 30.0}}
+    templates:
+      - "{bakery}"
+      - "POS {bakery} {city}"
+    pools:
+      bakery: [Golden Crust, The Rolling Pin, Flour & Co.]
+      city: [Riverton, Millbrook]
+
+  # -------------------------------------------------------------- Eating out (-)
+  - category: Eating out
+    subcategory: Restaurants
+    account: Checking
+    schedule: {poisson: {per_month: 2}}
+    amount: {lognormal: {median: 42.0, sigma: 0.5, min: 12.0, max: 180.0}}
+    templates:
+      - "{restaurant} {city}"
+      - "Dinner at {restaurant}"
+      - "Card payment {restaurant}"
+    pools:
+      restaurant: [La Lanterna, The Copper Pot, Sakura House, Bistro 22, El Patio, The Salt Room, Mamma Rosa]
+      city: [Riverton, Millbrook, Eastvale, Old Harbor]
+
+  - category: Eating out
+    subcategory: Coffee & snacks
+    account: Checking
+    schedule: {poisson: {per_month: 2.5}}
+    amount: {lognormal: {median: 4.2, sigma: 0.4, min: 1.2, max: 18.0}}
+    templates:
+      - "{cafe}"
+      - "Contactless {cafe}"
+    pools:
+      cafe: [Bean There, Daily Grind, Café Mosaic, The Kettle, Station Kiosk]
+
+  - category: Eating out
+    subcategory: Takeaway
+    account: Checking
+    schedule: {poisson: {per_month: 1.5}}
+    amount: {lognormal: {median: 24.0, sigma: 0.35, min: 9.0, max: 65.0}}
+    templates:
+      - "{app} order - {place}"
+      - "{app} *{place}"
+    pools:
+      app: [FoodDash, QuickBite]
+      place: [Pizza Napoli, Golden Dragon, Burger Barn, Spice Route, Poke Bowl Co.]
+
+  # --------------------------------------------------------------- Transport (-)
+  - category: Transport
+    subcategory: Fuel
+    account: Checking
+    schedule: {poisson: {per_month: 2}}
+    amount: {lognormal: {median: 55.0, sigma: 0.25, min: 20.0, max: 95.0}}
+    templates:
+      - "{station} {city}"
+      - "Fuel {station} pump {pump}"
+    pools:
+      station: [PetroMax, FuelStop, GreenLine Energy]
+      city: [Riverton, Millbrook, Eastvale]
+      pump: {range: [1, 12]}
+
+  - category: Transport
+    subcategory: Public transport
+    account: Checking
+    schedule: {poisson: {per_month: 1.5}}
+    amount: {lognormal: {median: 3.5, sigma: 0.6, min: 1.5, max: 45.0}}
+    templates:
+      - "{operator} ticket"
+      - "{operator} travelcard top-up"
+    pools:
+      operator: [Riverton Metro, Coastline Rail, CityBus]
+
+  - category: Transport
+    subcategory: Car maintenance
+    account: Checking
+    schedule: {poisson: {per_month: 0.2}}
+    amount: {lognormal: {median: 160.0, sigma: 0.7, min: 30.0, max: 1200.0}}
+    templates:
+      - "{garage} - {job}"
+    pools:
+      garage: [Millbrook Motors, AutoCare Centre, Tyre Point]
+      job: [annual service, tyre change, brake pads, MOT inspection, battery replacement, wiper blades]
+
+  - category: Transport
+    subcategory: Car insurance
+    account: Checking
+    schedule: {monthly: {day: 14, jitter: 0, months: [3]}}
+    amount: {fixed: {value: 520.00, drift_per_year: 0.04}}
+    templates:
+      - "{insurer} car insurance renewal {year}"
+    pools:
+      insurer: [SafeRoad Insurance]
+
+  - category: Transport
+    subcategory: Parking & tolls
+    account: Checking
+    schedule: {poisson: {per_month: 1}}
+    amount: {lognormal: {median: 4.0, sigma: 0.7, min: 1.0, max: 40.0}}
+    templates:
+      - "{operator} parking {city}"
+      - "Motorway toll {road}"
+    pools:
+      operator: [ParkEasy, CityPark]
+      city: [Riverton, Old Harbor, Eastvale]
+      road: [A12, A7, M3 Coastal]
+
+  # ------------------------------------------------------------------ Health (-)
+  - category: Health
+    subcategory: Pharmacy
+    account: Checking
+    schedule: {poisson: {per_month: 1}}
+    amount: {lognormal: {median: 14.0, sigma: 0.6, min: 2.5, max: 80.0}}
+    templates:
+      - "{pharmacy}"
+      - "Card payment {pharmacy} {city}"
+    pools:
+      pharmacy: [WellCare Pharmacy, Green Cross Chemist]
+      city: [Riverton, Millbrook]
+
+  - category: Health
+    subcategory: Doctor visits
+    account: Checking
+    schedule: {poisson: {per_month: 0.25}}
+    amount: {lognormal: {median: 70.0, sigma: 0.4, min: 25.0, max: 200.0}}
+    templates:
+      - "{clinic} - {visit}"
+    pools:
+      clinic: [Riverton Medical Centre, Dr. A. Patel, Eastvale Clinic]
+      visit: [consultation, blood tests, specialist visit, eye exam]
+
+  - category: Health
+    subcategory: Dentist
+    account: Checking
+    schedule: {poisson: {per_month: 0.15}}
+    amount: {lognormal: {median: 90.0, sigma: 0.6, min: 40.0, max: 600.0}}
+    templates:
+      - "{dentist} - {treatment}"
+    pools:
+      dentist: [Bright Smile Dental]
+      treatment: [check-up, cleaning, filling, x-ray]
+
+  # ----------------------------------------------------------------- Leisure (-)
+  - category: Leisure
+    subcategory: Subscriptions
+    account: Checking
+    schedule: {monthly: {day: 8, jitter: 0}}
+    amount: {fixed: {value: 11.99, drift_per_year: 0.08}}
+    templates:
+      - "{service} monthly subscription"
+    pools:
+      service: [StreamBox]
+
+  - category: Leisure
+    subcategory: Sports
+    account: Checking
+    schedule: {monthly: {day: 2, jitter: 0}}
+    amount: {fixed: {value: 39.00, drift_per_year: 0.0}}
+    templates:
+      - "{gym} membership {month_name}"
+    pools:
+      gym: [PulseFit Gym]
+
+  - category: Leisure
+    subcategory: Books & media
+    account: Checking
+    schedule: {poisson: {per_month: 0.8}}
+    amount: {lognormal: {median: 15.0, sigma: 0.5, min: 3.0, max: 70.0}}
+    templates:
+      - "{store}"
+      - "{store} order {order}"
+    pools:
+      store: [Pageturner Books, Vinyl Vault, GameHub Store]
+      order: {pattern: "[0-9]{3}-[0-9]{7}"}
+
+  - category: Leisure
+    subcategory: Events
+    account: Checking
+    schedule: {poisson: {per_month: 0.4}}
+    amount: {lognormal: {median: 35.0, sigma: 0.6, min: 8.0, max: 180.0}}
+    templates:
+      - "{seller} - {event}"
+    pools:
+      seller: [TixNow, Riverton Arts Centre, Old Harbor Cinema]
+      event: [concert tickets, cinema, theatre, comedy night, museum entry, football match]
+
+  # ------------------------------------------------------------------ Travel (-)
+  - category: Travel
+    subcategory: Flights
+    account: Checking
+    schedule: {seasonal: {months: [3, 6, 7, 11, 12], per_month: 0.4}}
+    amount: {lognormal: {median: 180.0, sigma: 0.5, min: 45.0, max: 900.0}}
+    templates:
+      - "{airline} flight {from}-{to}"
+      - "{airline} booking ref {ref}"
+      - "Return flight to {to_city} ({airline})"
+    pools:
+      airline: [SkyLark Air, BlueWing, Atlantica Airways, JetHopper]
+      from: [RVT]
+      to: [LIS, BCN, AMS, ATH, DUB, CPH]
+      to_city: [Lisbon, Barcelona, Amsterdam, Athens, Dublin, Copenhagen]
+      ref: {pattern: "[A-Z]{6}"}
+
+  - category: Travel
+    subcategory: Accommodation
+    account: Checking
+    schedule: {seasonal: {months: [4, 6, 7, 8, 12], per_month: 0.4}}
+    amount: {lognormal: {median: 260.0, sigma: 0.6, min: 60.0, max: 1400.0}}
+    templates:
+      - "{site} - {place}"
+      - "Hotel {place} {nights} nights"
+    pools:
+      site: [StayFinder, NestAway]
+      place: [Lisbon, Barcelona, Amsterdam, Athens, Dublin, Copenhagen, Lake Ardmore cabin]
+      nights: {range: [2, 7]}
+
+  - category: Travel
+    subcategory: Holiday expenses
+    account: Checking
+    schedule: {seasonal: {months: [7, 8, 12], per_month: 2}}
+    amount: {lognormal: {median: 30.0, sigma: 0.8, min: 3.0, max: 250.0}}
+    templates:
+      - "Card payment {merchant} {place}"
+      - "Foreign transaction {merchant}"
+    pools:
+      merchant: [Museu Nacional, Taverna Kostas, Harbour Boat Tours, Café Central, Rent-a-Scooter, Souvenir Shop]
+      place: [Lisbon, Barcelona, Athens, Copenhagen]
+
+  # ---------------------------------------------------------------- Shopping (-)
+  - category: Shopping
+    subcategory: Clothing
+    account: Checking
+    schedule: {poisson: {per_month: 0.6, boost: {1: 2, 7: 2}}}   # sales season
+    amount: {lognormal: {median: 45.0, sigma: 0.6, min: 8.0, max: 300.0}}
+    templates:
+      - "{store}"
+      - "{store} online order {order}"
+    pools:
+      store: [Threadline, Urban Fold, Trailmark Outdoor, Basics & Co.]
+      order: {pattern: "[0-9]{8}"}
+
+  - category: Shopping
+    subcategory: Electronics
+    account: Checking
+    schedule: {poisson: {per_month: 0.15, boost: {11: 3}}}   # Black Friday
+    amount: {lognormal: {median: 120.0, sigma: 0.9, min: 10.0, max: 1400.0}}
+    templates:
+      - "{store} - {item}"
+    pools:
+      store: [Circuit Hub, VoltBox Electronics]
+      item: [headphones, phone charger, smartwatch, laptop, keyboard, e-reader, router]
+
+  - category: Shopping
+    subcategory: Home goods
+    account: Checking
+    schedule: {poisson: {per_month: 0.8}}
+    amount: {lognormal: {median: 22.0, sigma: 0.6, min: 3.0, max: 150.0}}
+    templates:
+      - "{store}"
+      - "Card payment {store} {city}"
+    pools:
+      store: [HomeStuff, The Hardware Den, Kitchen Corner]
+      city: [Riverton, Eastvale]
+
+  - category: Shopping
+    subcategory: Gifts
+    account: Checking
+    schedule: {poisson: {per_month: 0.3, boost: {12: 8}}}
+    amount: {lognormal: {median: 35.0, sigma: 0.6, min: 8.0, max: 200.0}}
+    templates:
+      - "{store} - gift for {person}"
+      - "{store}"
+    pools:
+      store: [Pageturner Books, Threadline, The Gift Box, Circuit Hub]
+      person: [Mum, Dad, Anna, Leo, Sophie, Grandma]
+
+  # ------------------------------------------------------------ Taxes & fees (-)
+  - category: Taxes & fees
+    subcategory: Income tax
+    account: Checking
+    schedule: {monthly: {day: 30, jitter: 0, months: [6, 11]}}
+    amount: {lognormal: {median: 380.0, sigma: 0.4, min: 100.0, max: 1200.0}}
+    templates:
+      - "Income tax payment {year} - Revenue Office"
+    pools: {}
+
+  - category: Taxes & fees
+    subcategory: Bank fees
+    account: Checking
+    schedule: {monthly: {day: 31, jitter: 0}}   # day clamped to month end
+    amount: {fixed: {value: 3.50, drift_per_year: 0.0}}
+    templates:
+      - "Account maintenance fee {month_name} - {bank}"
+    pools:
+      bank: [Harbor Savings Bank]
+
+  - category: Taxes & fees
+    subcategory: Car tax
+    account: Checking
+    schedule: {monthly: {day: 20, jitter: 5, months: [4]}}
+    amount: {fixed: {value: 210.00, drift_per_year: 0.0}}
+    templates:
+      - "Vehicle tax {year} - plate {plate}"
+    pools:
+      plate: ["RT 482 KX"]
+
+# Monthly BALANCE declarations: one row per account, same date, no subcategory.
+# Checking is driven by the simulated movements; Savings and Brokerage have no
+# movements of their own, so they evolve by a slow drift.
+balance:
+  schedule: {monthly: {day: random, jitter: 0}}
+  noise: 0.015          # +/- relative error on each declared amount
+  accounts:
+    - name: Checking
+      description: "Checking account - {bank}"
+      start: 4200.00
+    - name: Savings
+      description: "Savings account - {bank}"
+      start: 18500.00
+      drift: {monthly_mean: 120.0, monthly_sigma: 60.0}
+    - name: Brokerage
+      description: "Brokerage account - {broker}"
+      start: 9000.00
+      drift: {monthly_return_mean: 0.005, monthly_return_sigma: 0.03}
+  pools:
+    bank: [Harbor Savings Bank]
+    broker: [TradeNest]
