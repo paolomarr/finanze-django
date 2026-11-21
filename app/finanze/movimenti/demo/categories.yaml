@@ -1,0 +1,61 @@
+# Demo category tree.
+# direction: 1 = income, -1 = outcome, 0 = null (BALANCE only)
+# NOTE: in the DB, Subcategory is not linked to Category; the nesting here only
+# tells the generator which subcategories are plausible for each category.
+
+categories:
+  - name: Salary
+    direction: 1
+    subcategories: [Monthly pay, Bonus, Expense refund]
+
+  - name: Other income
+    direction: 1
+    subcategories: [Gifts received, Resale, Interest & dividends, Tax refund]
+
+  - name: Housing
+    direction: -1
+    subcategories: [Rent, Condo fees, Maintenance, Furniture]
+
+  - name: Utilities
+    direction: -1
+    subcategories: [Electricity, Gas, Water, Internet, Mobile phone]
+
+  - name: Groceries
+    direction: -1
+    subcategories: [Supermarket, Local market, Bakery]
+
+  - name: Eating out
+    direction: -1
+    subcategories: [Restaurants, Coffee & snacks, Takeaway]
+
+  - name: Transport
+    direction: -1
+    subcategories: [Fuel, Public transport, Car maintenance, Car insurance, Parking & tolls]
+
+  - name: Health
+    direction: -1
+    subcategories: [Pharmacy, Doctor visits, Dentist]
+
+  - name: Leisure
+    direction: -1
+    subcategories: [Subscriptions, Sports, Books & media, Events]
+
+  - name: Travel
+    direction: -1
+    subcategories: [Flights, Accommodation, Holiday expenses]
+
+  - name: Shopping
+    direction: -1
+    subcategories: [Clothing, Electronics, Home goods, Gifts]
+
+  - name: Taxes & fees
+    direction: -1
+    subcategories: [Income tax, Bank fees, Car tax]
+
+  # BALANCE already exists (migration 0011, direction 0): seed_demo reuses it,
+  # never creates it. Its rows have no subcategory; the account is named in the
+  # description (see `balance` in profiles.yaml).
+  - name: BALANCE
+    direction: 0
+    existing: true
+    subcategories: []

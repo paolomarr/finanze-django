@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from tradinglog.lib import finance_provider
-from tradinglog.lib.providers.yahoo import get_latest_quote as getLatestQuoteForSymbol
 from tradinglog.models import Currency, Market, Order, Stock, OrderOperation, StockQuote
 from tradinglog.serializers import OrderSerializer, StockSerializer, OrderOperationSerializer, CurrencySerializer, StockQuoteSerializer
 from finanze.permissions import IsOwnerOrDeny
@@ -172,7 +171,7 @@ class StockQuoteListCreate(generics.ListCreateAPIView):
                 results.errors.append({"symbol": symid, "error": "not found"})
                 continue
             sym = stock.symbol
-            symdata = getLatestQuoteForSymbol(sym)
+            symdata = finance_provider.get_latest_quote(sym)
             # check for errors
             if symdata.get('error', None) is not None:
                 # return error

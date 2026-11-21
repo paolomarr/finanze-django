@@ -1,3 +1,6 @@
+import os
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
@@ -45,6 +48,32 @@ from finanze.permissions import IsOwnerOrDeny, IsAuthenticatedSelfUser
 from finanze.serializers import UserSerializer
 
 import io
+
+
+class InstanceInfo(APIView):
+    """Public description of this instance, read by the frontend at startup.
+
+    `features` tells which optional features have the external service key
+    they need, so the UI can disable them with an explanation instead of
+    failing on use. On a demo instance `demo_credentials` lets the login
+    page show (and prefill) the shared demo account.
+    """
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        info = {
+            "demo": settings.DEMO_MODE,
+            "features": {
+                "voice": bool(os.environ.get("OPENAI_API_KEY")),
+            },
+        }
+        if settings.DEMO_MODE:
+            info["demo_credentials"] = {
+                "username": os.environ.get("DEMO_USERNAME", "demo"),
+                "password": os.environ.get("DEMO_PASSWORD", "demo"),
+            }
+        return Response(info)
 
 
 class ScanReceipt(APIView):

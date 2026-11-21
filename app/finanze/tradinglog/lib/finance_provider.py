@@ -1,15 +1,16 @@
 """Provider-agnostic facade for market data.
 
-Today this dispatches to the Yahoo Finance provider; in the future selection
-can be driven by a setting (e.g. settings.FINANCE_PROVIDER). The three
+The provider is chosen by settings.FINANCE_PROVIDER: "yahoo" (default) or
+"demo" (offline fictional market, used by the demo instance). The three
 functions below define the interface every provider module must expose.
 """
 from django.conf import settings
 
-from tradinglog.lib.providers import yahoo
+from tradinglog.lib.providers import demo, yahoo
 
 _PROVIDERS = {
     "yahoo": yahoo,
+    "demo": demo,
 }
 
 
