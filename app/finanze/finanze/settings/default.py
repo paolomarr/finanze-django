@@ -226,3 +226,6 @@ LOCALE_PATHS = [
 
 # OpenAI Configuration
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+
+# True only on the self-hosted demo instance (settings/demo.py)
+DEMO_MODE = False

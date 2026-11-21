@@ -7,13 +7,15 @@
 #   ./deploy_demo.sh             build and start (seeds data on first start)
 #   ./deploy_demo.sh --wipe      drop the demo database first, then start fresh
 #
-# DEMO_PORT (default 8004) and DEMO_BIND (default 127.0.0.1; use 0.0.0.0 to
-# expose it) are read from the calling environment.
+# DEMO_PORT (default 8004), DEMO_BIND (default 127.0.0.1; use 0.0.0.0 to
+# expose it) and FRONTEND_SOURCE (frontend build context, default: the public
+# GitHub repo; e.g. ../finanzeapp-react-frontend for a local checkout) are read
+# from .env.demo or, with precedence, from the calling environment.
 set -euo pipefail
 
 SCRIPT_ROOT=$(cd "$(dirname "$0")"; pwd)
 ENV_FILE=$SCRIPT_ROOT/.env.demo
-COMPOSE=(docker compose -f "$SCRIPT_ROOT/docker-compose.demo.yml")
+COMPOSE=(docker compose --env-file "$ENV_FILE" -f "$SCRIPT_ROOT/docker-compose.demo.yml")
 WIPE=0
 
 while [[ $# -gt 0 ]]; do
@@ -45,6 +47,10 @@ DJANGO_SUPERUSER_EMAIL=
 # DEMO_CSRF_ORIGINS=https://demo.example.com
 # DEMO_HTTPS=1
 DEMO_ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Frontend build context (default: public GitHub repo, main branch)
+# FRONTEND_SOURCE=../finanzeapp-react-frontend
+# FRONTEND_SOURCE=https://github.com/paolomarr/FinanzeApp-React-Frontend.git#<tag>
 EOF
     echo "[INFO] Created $ENV_FILE (admin password: $ADMIN_PASSWORD)" >&2
 else

@@ -1,9 +1,25 @@
-# Standalone demo stack: separate project name, image, volume and env file,
+# Standalone demo stack: separate project name, images, volume and env file,
 # so it can run next to the regular instance without touching its data.
 #   ./deploy_demo.sh            (creates .env.demo and starts the stack)
 #   docker compose -f docker-compose.demo.yml down -v   (wipe the demo)
+#
+# The only published port is the frontend's nginx, which serves the React app
+# and proxies /api/ and /admin/ to django: frontend and API share one origin.
+#
+# FRONTEND_SOURCE is the frontend build context: by default the public GitHub
+# repo (append #<branch|tag|commit> to pin a version); set it to a local path,
+# e.g. ../finanzeapp-react-frontend, to build from a checkout.
 name: finanzeapp-demo
 services:
+
+  frontend:
+    build:
+      context: ${FRONTEND_SOURCE:-https://github.com/paolomarr/FinanzeApp-React-Frontend.git#main}
+      dockerfile: Dockerfile.demo
+    depends_on:
+      - django
+    ports:
+      - ${DEMO_BIND:-127.0.0.1}:${DEMO_PORT:-8004}:80
 
   django:
     build:
@@ -14,8 +30,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - ${DEMO_BIND:-127.0.0.1}:${DEMO_PORT:-8004}:8000
 
   db:
     image: postgres:13

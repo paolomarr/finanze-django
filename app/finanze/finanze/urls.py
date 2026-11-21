@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/api-token-auth/', views.TokenLoginView.as_view(), name='knox_login'),
     path('api/api-token-logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path('api/api-token-logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
+    path('api/instance/', views.InstanceInfo.as_view()),
     # endpoints
     path('api/movements/', include('movimenti.urls')),
     path('api/tradinglog/', include('tradinglog.urls')),
