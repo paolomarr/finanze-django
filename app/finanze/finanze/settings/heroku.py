@@ -29,9 +29,6 @@ DATABASES = {
     }
 }
 
-MIDDLEWARE += [
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-]
 
 # Configure Django App for Heroku.
 # django_heroku.settings(locals(),
