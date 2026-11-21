@@ -27,3 +27,5 @@ CSRF_COOKIE_SECURE = _https
 
 # Offline fictional market (tradinglog/demo): no RapidAPI key needed.
 FINANCE_PROVIDER = "demo"
+
+DEMO_MODE = True
