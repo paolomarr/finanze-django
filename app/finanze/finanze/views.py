@@ -66,7 +66,6 @@ class InstanceInfo(APIView):
             "demo": settings.DEMO_MODE,
             "features": {
                 "voice": bool(os.environ.get("OPENAI_API_KEY")),
-                "receipt_scan": bool(os.environ.get("OCR_SPACE_KEY")),
             },
         }
         if settings.DEMO_MODE:

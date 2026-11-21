@@ -11,13 +11,12 @@ class InstanceInfoTest(TestCase):
     def test_regular_instance_without_keys(self):
         r = self.client.get(URL)  # no authentication needed
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.json(), {"demo": False,
-                                    "features": {"voice": False, "receipt_scan": False}})
+        self.assertEqual(r.json(), {"demo": False, "features": {"voice": False}})
 
-    @mock.patch.dict("os.environ", {"OPENAI_API_KEY": "k", "OCR_SPACE_KEY": "k"}, clear=True)
+    @mock.patch.dict("os.environ", {"OPENAI_API_KEY": "k"}, clear=True)
     def test_features_follow_keys(self):
         self.assertEqual(self.client.get(URL).json()["features"],
-                         {"voice": True, "receipt_scan": True})
+                         {"voice": True})
 
     @override_settings(DEMO_MODE=True)
     @mock.patch.dict("os.environ", {"DEMO_USERNAME": "guest", "DEMO_PASSWORD": "pw"}, clear=True)
