@@ -9,3 +9,4 @@ django-cors-headers
 django-sass-processor
 openai
 PyYAML==6.0.2
+whitenoise==6.9.0
