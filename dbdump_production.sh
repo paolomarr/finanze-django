@@ -66,11 +66,14 @@ case "$COMMAND" in
         DATE=`date "+%Y%m%d"`
         
         OUTPUT=/tmp/finanze_db.$DATE.tar
+
+        docker compose exec -it db pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
+        docker compose cp db:$OUTPUT $OUTPUT
+         
+        # [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$PRODUCTION_CONTAINER_NAME
         
-        [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$PRODUCTION_CONTAINER_NAME
-        
-        docker exec -it $CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
-        docker cp $CONTAINER_NAME:$OUTPUT $OUTPUT
+        # docker exec -it $CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
+        # docker cp $CONTAINER_NAME:$OUTPUT $OUTPUT
 
         echo $OUTPUT
         ;;
