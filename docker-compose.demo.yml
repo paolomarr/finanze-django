@@ -34,7 +34,7 @@ services:
   db:
     image: postgres:17
     volumes:
-      - postgres_demo_data:/var/lib/postgresql/data/
+      - postgres17_demo_data:/var/lib/postgresql/data/
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
     healthcheck:
@@ -44,4 +44,4 @@ services:
       retries: 30
 
 volumes:
-  postgres_demo_data:
+  postgres17_demo_data:
