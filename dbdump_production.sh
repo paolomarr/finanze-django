@@ -1,9 +1,6 @@
 #!/bin/bash
 
 ROOT=$(cd `dirname $0`; pwd)
-# DEFAULTS
-PRODUCTION_CONTAINER_NAME=finanze-django-db-1
-LOCAL_CONTAINER_NAME=finanzeapp-db-1
 
 function db_container_name() {
     cname=`docker compose -f $ROOT/docker-compose.yml ps db | tail -1 | awk '{print $1}'`
@@ -59,8 +56,6 @@ if [[ -n "$VERBOSE" ]]; then
     set -x
 fi
 
-CONTAINER_NAME=`db_container_name`
-
 case "$COMMAND" in
     dump)
         DATE=`date "+%Y%m%d"`
@@ -69,11 +64,6 @@ case "$COMMAND" in
 
         docker compose exec -it db pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
         docker compose cp db:$OUTPUT $OUTPUT
-         
-        # [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$PRODUCTION_CONTAINER_NAME
-        
-        # docker exec -it $CONTAINER_NAME pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
-        # docker cp $CONTAINER_NAME:$OUTPUT $OUTPUT
 
         echo $OUTPUT
         ;;
@@ -84,10 +74,8 @@ case "$COMMAND" in
         }
         DEST=/tmp/`basename $DUMP_FILE`
 
-        [[ -z "$CONTAINER_NAME" ]] && CONTAINER_NAME=$LOCAL_CONTAINER_NAME
-
-        docker cp $DUMP_FILE $CONTAINER_NAME:$DEST
-        docker exec -it $CONTAINER_NAME pg_restore -d postgres -U postgres -c $DEST
+        docker compose cp $DUMP_FILE db:$DEST
+        docker compose exec -it db pg_restore -d postgres -U postgres -c $DEST
         ;;
     *)
         error "Unknown command $COMMAND".
