@@ -121,13 +121,14 @@ class MovementList(APIView):
 
 class BalanceMovementList(generics.ListAPIView):
     permission_classes = [IsAdminUser|IsAuthenticatedSelfUser]
-    balance_cat = Category.objects.get(category="BALANCE")
-    queryset = Movement.objects.filter(category=balance_cat).order_by("-date")
     serializer_class = MovementSerializer
 
-    def get(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(user=request.user)
-        return self.list(request, *args, **kwargs)
+    def get_queryset(self):
+        # Resolved per request: a class-level query runs at import time and
+        # breaks manage.py commands (e.g. migrate) on an empty database.
+        return Movement.objects.filter(
+            category__category="BALANCE", user=self.request.user
+        ).order_by("-date")
 
 
 class MovementDetail(APIView):
