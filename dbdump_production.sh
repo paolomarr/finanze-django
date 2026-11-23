@@ -1,9 +1,10 @@
 #!/bin/bash
 
 ROOT=$(cd `dirname $0`; pwd)
+DOCKERCOMPOSE_FILE=${ROOT}/docker-compose.yml
 
 function db_container_name() {
-    cname=`docker compose -f $ROOT/docker-compose.yml ps db | tail -1 | awk '{print $1}'`
+    cname=`docker compose -f $DOCKERCOMPOSE_FILE ps db | tail -1 | awk '{print $1}'`
     echo $cname
 }
 
@@ -62,8 +63,8 @@ case "$COMMAND" in
         
         OUTPUT=/tmp/finanze_db.$DATE.tar
 
-        docker compose exec -it db pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
-        docker compose cp db:$OUTPUT $OUTPUT
+        docker compose -f $DOCKERCOMPOSE_FILE exec -it db pg_dump -c -C -F t -U postgres postgres -f $OUTPUT
+        docker compose -f $DOCKERCOMPOSE_FILE cp db:$OUTPUT $OUTPUT
 
         echo $OUTPUT
         ;;
@@ -74,8 +75,8 @@ case "$COMMAND" in
         }
         DEST=/tmp/`basename $DUMP_FILE`
 
-        docker compose cp $DUMP_FILE db:$DEST
-        docker compose exec -it db pg_restore -d postgres -U postgres -c $DEST
+        docker compose -f $DOCKERCOMPOSE_FILE cp $DUMP_FILE db:$DEST
+        docker compose -f $DOCKERCOMPOSE_FILE exec -it db pg_restore -d postgres -U postgres -c $DEST
         ;;
     *)
         error "Unknown command $COMMAND".
